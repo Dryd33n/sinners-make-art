@@ -7,7 +7,7 @@ export default function Header(){
             className="absolute inset-0 w-full h-full object-cover" />
         
             <div className="absolute inset-0 flex items-center justify-center">
-                <h1 className="text-white text-6xl font-extralight tracking-widest">
+                <h1 className="text-white lg:text-6xl md:text-5xl sm:text-4xl text-4xl font-extralight tracking-widest">
                 MARY-JANE LARONDE
                 </h1>
             </div>
