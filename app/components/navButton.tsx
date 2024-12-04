@@ -29,13 +29,14 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
         {links.map((item, index) => {
           if ("text" in item && "link" in item) {
             // Simple MenuItem
+
             return (
               <li key={index} className="hover:bg-grey-600">
                 <a
-                  href={item.link}
+                  href={String(item.link)}
                   className="block px-4 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white"
                 >
-                  {item.text.toUpperCase()}
+                  {String(item.text).toUpperCase()}
                 </a>
               </li>
             );
