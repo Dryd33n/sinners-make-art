@@ -1,16 +1,20 @@
 import Header from "./components/header";
 import NavButton from "./components/navButton";
 import { MenuLink } from "./components/navButton";
+import { getDBVersion } from "@/db";
 
-export default function Home() {
+export default async function Home() {
   const sculpture_links: MenuLink[] = [
     { "Metalwork": [
       { text: "Wire", link: "/cat1/sub1" }, 
       { text: "Welding & Plasma Cutting", link: "/cat1/sub2" }] },
 
-    { text: "Woodwork", link: "/about" },
+    { text: "Woodwork", link: "/about" },];
 
-  ];
+    const { version } = await getDBVersion();
+    console.log({version})
+
+  
 
   return (<>
     <Header />
