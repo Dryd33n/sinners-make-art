@@ -1,0 +1,69 @@
+{
+  "id": "55155675-4794-4d52-9ec8-a34ab7a15094",
+  "prevId": "67bb8eb2-9e85-4d49-a39a-bed65625cf86",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.home_image": {
+      "name": "home_image",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "img_url": {
+          "name": "img_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.home": {
+      "name": "home",
+      "schema": "",
+      "columns": {
+        "about_title": {
+          "name": "about_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "about_text": {
+          "name": "about_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

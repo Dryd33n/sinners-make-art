@@ -1,5 +1,6 @@
 import Header from "./components/header";
 import NavButton from "./components/navButton";
+import AboutMe from "./components/about_me";
 import { MenuLink } from "./components/navButton";
 import { getDBVersion } from "@/db";
 
@@ -25,8 +26,9 @@ export default async function Home() {
       <NavButton text="VIDEO" link="/account" links={sculpture_links} />
       <NavButton text="PAINT" link="/account" links={sculpture_links} />
       <NavButton text="OTHER" link="/account" links={sculpture_links} />
-
       </nav>
+
+      <AboutMe />
     </main>
     </>
   )
