@@ -1,3 +1,5 @@
+import AboutMeForm from "./components/home_edit"
+
 export default function Home() {
 
   return (<>
@@ -5,7 +7,11 @@ export default function Home() {
 
     {/*ABOUT ME IMAGES*/}
 
+
     {/*ABOUT ME TEXT*/}
+    <AboutMeForm />
+
+    {/*MANAGE PROJECTS*/}
 
     {/*MANAGE CATEGORIES*/}
 
