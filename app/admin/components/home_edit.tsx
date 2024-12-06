@@ -41,7 +41,7 @@ const AboutMeForm = () => {
         setErrorMessage("An error occurred. Please try again later.");
       }
     } catch (error) {
-      setErrorMessage("An error occurred. Please try again later.");
+      setErrorMessage("An error occurred. Please try again later." + error);
     } finally {
       setIsSubmitting(false);
     }
