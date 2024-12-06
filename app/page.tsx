@@ -1,6 +1,7 @@
 import Header from "./components/header";
 import NavButton from "./components/navButton";
 import AboutMe from "./components/about_me";
+import AboutSection from "./components/about_section";
 import { MenuLink } from "./components/navButton";
 import { getDBVersion } from "@/db";
 
@@ -28,7 +29,7 @@ export default async function Home() {
       <NavButton text="OTHER" link="/account" links={sculpture_links} />
       </nav>
 
-      <AboutMe />
+      <AboutSection />
     </main>
     </>
   )

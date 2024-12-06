@@ -8,17 +8,21 @@ export default function AboutMe() {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        /*  ASYNC FUNCTION TO FETCH DATA FROM THE SERVER  */
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/about_me'); // Ensure this matches your API route
+                /*  CALLS GET METHOD FORM app/api/about_me/route.ts    */
+                const response = await fetch('/api/about_me');
+
+                /* CHECKS IF RESPONSE IS OK, IF NOT, THROWS AN ERROR  */
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
                 }
     
+                /* PARSES THE RESPONSE INTO JSON FORMAT  */
                 const result = await response.json();
-                console.log('Data fetched successfully:', result);
     
-                // Extract the first item from the response array
+                /* CHECKS IF THE RESPONSE IS SUCCESSFUL, IF SO, SETS THE STATE WITH THE FIRST OBJECT  */
                 if (result.success && Array.isArray(result.response) && result.response.length > 0) {
                     setAboutData(result.response[0]); // Update state with the first object
                 } else {
@@ -45,7 +49,7 @@ export default function AboutMe() {
 
     return (
         <div>
-            <h1>{aboutData.about_title}</h1>
+            <h1 className='text-4xl font-extralight'>{aboutData.about_title.toUpperCase()}</h1>
             <p>{aboutData.about_text}</p>
         </div>
     );

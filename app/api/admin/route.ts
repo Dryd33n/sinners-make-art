@@ -2,9 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from './../../../db/index';
 import { homeTable } from './../../../db/schema';
 
+
+/** POST /api/admin/about
+ * 
+ * This function is used to update the about section of the website. Clears the homeTable and then
+ * populates the first row with content for the about me section
+ * 
+ * @param req request object
+ * @returns returns a response object
+ */
 export async function POST(req: NextRequest) {
+    /* PARSE REQUEST BODY */
     const { title, text } = await req.json();
 
+    /* VALIDATE REQUEST BODY */
     const data = {
         about_title: title,
         about_text: text,
