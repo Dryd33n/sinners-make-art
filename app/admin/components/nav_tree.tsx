@@ -30,7 +30,6 @@ interface NavTreeProps {
  */
 const NavItem: React.FC<NavTreeProps> = ({
   node,
-  isLast = false,
   onRename,
   onAddChild,
   onRemove,

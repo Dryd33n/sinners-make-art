@@ -1,7 +1,6 @@
 import { Node } from "@/app/admin/components/nav_tree";
 
 export const buildTree = (data: { id: number; name: string; path: string; order: number; }[]): Node[] => {
-    const nodes: Node[] = [];                     // Array to hold all nodes
     const nodeMap: Map<string, Node> = new Map(); // Map to hold nodes by path
     const roots: Node[] = [];                     // Array to hold root nodes
     
@@ -134,4 +133,4 @@ export const removeNodeRecursively = (nodes: Node[], nodeId: number): Node[] =>
         children: removeNodeRecursively(node.children || [], nodeId),
     }));
 
-    
+

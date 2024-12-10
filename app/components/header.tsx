@@ -1,5 +1,3 @@
-import { Head } from "next/document";
-
 interface HeaderProps {
     mainText: string;
 }
