@@ -3,6 +3,8 @@ import { db } from './../../../../db/index';
 import { navTreeTable } from './../../../../db/schema';
 
 
+
+
 /** POST /api/admin/about
  * 
  * This function is used to update the about section of the website. Clears the homeTable and then
@@ -12,6 +14,12 @@ import { navTreeTable } from './../../../../db/schema';
  * @returns returns a response object
  */
 export async function POST(req: NextRequest) {
+    interface Node {
+        name: string;
+        path: string;
+        order: number;
+    }
+
     console.log("Beginning POST request to update nav tree...");
 
     /* PARSE REQUEST BODY */
@@ -32,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     /* INSERT DATA */
     try {
-        const insertPromises = treeData.map((node: any) =>
+        const insertPromises = treeData.map((node: Node) =>
             db.insert(navTreeTable).values({
               name: node.name,
               path: node.path,

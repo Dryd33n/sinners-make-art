@@ -256,7 +256,14 @@ const NavTree = () => {
   const postNavTree = async (nodes: Node[]) => {
     setSuccessMessage("Converting Nav Tree");
 
-    const flattenTree = (nodes: Node[], parentPath: string = ''): any[] => {
+    interface FlattenedNode {
+      id: number;
+      name: string;
+      path: string;
+      order: number;
+    }
+
+    const flattenTree = (nodes: Node[], parentPath: string = ''): FlattenedNode[] => {
       return nodes.reduce((acc, node) => {
         const currentPath = parentPath ? `${parentPath}/${node.name}` : node.name;
         acc.push({ id: node.id, name: node.name, path: currentPath, order: node.order });
