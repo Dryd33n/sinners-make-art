@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from 'next/image';
 
 interface ImageStatus {
   status: "loading" | "success" | "error";
@@ -60,7 +61,7 @@ const AboutMeForm = () => {
   const checkImageStatus = (index: number, url: string) => {
     if (!url) return;
 
-    const image = new Image();
+    const image = new window.Image();
     image.src = url;
 
     image.onload = () => updateImageStatus(index, "success");
@@ -232,7 +233,7 @@ const AboutMeForm = () => {
 
                 {imageStatuses[index]?.status === "loading" && <p className="text-gray-500 ml-2">Loading...</p>}
                 {imageStatuses[index]?.status === "success" && (
-                  <img
+                  <Image
                     src={link}
                     alt={`Preview ${index}`}
                     className="ml-2 w-16 h-16 object-cover border border-gray-300 rounded"
