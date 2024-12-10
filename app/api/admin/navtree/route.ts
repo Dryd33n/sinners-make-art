@@ -57,5 +57,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-    return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
-}
+    try {
+      const treeData = await db.select().from(navTreeTable).execute();
+      return NextResponse.json({ success: true, data: treeData }, { status: 200 });
+    } catch (error) {
+      console.error('Error loading navigation tree:', error);
+      return NextResponse.json({ error: 'Error loading navigation tree' }, { status: 500 });
+    }
+  }

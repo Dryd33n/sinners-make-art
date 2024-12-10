@@ -63,7 +63,6 @@ const AboutMeForm = () => {
 
     const image = new window.Image();
     image.src = url;
-
     image.onload = () => updateImageStatus(index, "success");
     image.onerror = () => updateImageStatus(index, "error");
   };

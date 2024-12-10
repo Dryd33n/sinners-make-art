@@ -1,9 +1,9 @@
-interface MenuItem {
+export interface MenuItem {
   text: string;
   link: string;
 }
 
-export type MenuLink = MenuItem | { [category: string]: MenuItem[] };
+export type MenuLink = MenuItem | { MenuItem: MenuItem[] };
 
 interface NavButtonProps {
   text: string;

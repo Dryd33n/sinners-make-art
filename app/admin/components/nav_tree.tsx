@@ -118,7 +118,7 @@ const NavTree = () => {
     const fetchTreeData = async () => {
       try {
         setSuccessMessage("Fetching Nav Tree");
-        const response = await fetch('/api/admin/load_navtree');
+        const response = await fetch('/api/admin/navtree');
         const result = await response.json();
 
         if (result.success) {
