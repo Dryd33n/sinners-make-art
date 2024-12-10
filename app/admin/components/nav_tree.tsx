@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import { addNodeRecursively, buildTree, removeNodeRecursively, renameNodeRecursively } from '@/app/utils/admin/navtree/utils';
+import React, { useState, useEffect } from 'react';
 
-interface Node {
+export interface Node {
   id: number;         // Unique identifier for the node
   name: string;       // Name of the node
   children?: Node[];  // List of child nodes
@@ -52,7 +53,7 @@ const NavItem: React.FC<NavTreeProps> = ({
   const handleMoveDown = () => parentId && onMoveDown(parentId, node.id);
 
   return (
-    <div className="flex flex-col mb-2">
+    <div className="flex flex-col mb-2 bg-grey-700 p-1 rounded">
       <div className="flex">
         <div className="flex items-center mb-1 bg-grey-600 rounded h-8">
           <button onClick={handleAddChild} className="mr-1">➕</button>
@@ -111,40 +112,49 @@ const NavItem: React.FC<NavTreeProps> = ({
 const NavTree = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [treeData, setTreeData] = useState<Node[]>([
-    { id: 1, name: 'DEFAULT', children: [], order: 0 },
-  ]);
+  const [treeData, setTreeData] = useState<Node[]>([ ]);
 
+
+  useEffect(() => {
+    const fetchTreeData = async () => {
+      try {
+        setSuccessMessage("Fetching Nav Tree");
+        const response = await fetch('/api/admin/load_navtree');
+        const result = await response.json();
+
+        if (result.success) {
+          const data = result.data;
+
+          setSuccessMessage("Building Nav Tree");
+          console.log("Nav Tree Data Successfully Loaded:", data);
+
+          const tree = buildTree(data);
+          console.log("Nav Tree Successfully Built:", tree);
+
+          setTreeData(tree);
+          setSuccessMessage("Nav Tree Loaded Successfully");
+        } else {
+          console.error('Failed to load navigation tree');
+          setErrorMessage('Failed to load navigation tree');
+        }
+      } catch (error) {
+        console.error('Error loading navigation tree:', error);
+        setErrorMessage('Error loading navigation tree');
+      }
+    };
+    
+    fetchTreeData();
+  }, []);
+
+
+  
   /** ADD CHILD NODE
    * Adds a child node to the navigation tree using a recursive helper function.
    * 
    * @param parentId id of parent node to create a child node for
    */
   const addChild = (parentId: number) => {
-    /** ADD NODE RECURSIVELY
-     * 
-     * Recursively searches each main category's tree for the parent node to add a child to
-     * when found the child node is added
-     * 
-     * @param nodes list of nodes to be searched
-     * @returns list of nodes with the added child node
-     */
-    const addNodeRecursively = (nodes: Node[]): Node[] =>
-      nodes.map((node) => {
-        if (node.id === parentId) {
-          const nextOrder = (node.children?.length || 0);
-          return {
-            ...node,
-            children: [
-              ...(node.children || []),
-              { id: Date.now(), name: 'New Node', children: [], isNew: true, order: nextOrder },
-            ],
-          };
-        }
-        return { ...node, children: addNodeRecursively(node.children || []) };
-      });
-
-    setTreeData((prevTreeData) => addNodeRecursively(prevTreeData));
+    setTreeData((prevTreeData) => addNodeRecursively(prevTreeData, parentId));
   };
 
 
@@ -170,25 +180,7 @@ const NavTree = () => {
    * @param newName name to be given to the node
    */
   const renameNode = (nodeId: number, newName: string) => {
-    /** RENAME NODE RECURSIVELY
-     * 
-     * Recursively searches each main category's tree for the node to be renamed
-     * when found the node is renamed
-     * 
-     * @param nodes list of nodes to be searched
-     * @returns list of nodes with the renamed node
-     */
-    const renameNodeRecursively = (nodes: Node[]): Node[] =>
-      nodes.map((node) => {
-        // Node Found -> Rename Node
-        if (node.id === nodeId) {
-          return { ...node, name: newName, isNew: false };
-        }
-        // Node Not Found -> Recursively Search Children
-        return { ...node, children: renameNodeRecursively(node.children || []) };
-      });
-
-    setTreeData((prevTreeData) => renameNodeRecursively(prevTreeData));
+    setTreeData((prevTreeData) => renameNodeRecursively(prevTreeData, nodeId, newName));
   };
 
 
@@ -199,21 +191,7 @@ const NavTree = () => {
    * @param nodeId id of node to be removed
    */
   const removeNode = (nodeId: number) => {
-    /**REMOVE NODE RECURSIVELY
-     * 
-     * Recursively searches each main category's tree for the node to be removed
-     * when found the node is removed
-     * 
-     * @param nodes list of nodes to be searched
-     * @returns list of nodes with the removed
-     */
-    const removeNodeRecursively = (nodes: Node[]): Node[] =>
-      nodes.filter((node) => node.id !== nodeId).map((node) => ({
-        ...node,
-        children: removeNodeRecursively(node.children || []),
-      }));
-
-    setTreeData((prevTreeData) => removeNodeRecursively(prevTreeData));
+    setTreeData((prevTreeData) => removeNodeRecursively(prevTreeData, nodeId));
   };
 
 
@@ -323,7 +301,7 @@ const NavTree = () => {
   return (
     <div className="bg-grey-850 rounded-lg p-5">
       <h1 className="text-xl font-bold m-3">Modify Navigation Schema</h1>
-      <div className="bg-grey-800 p-3 rounded-md m-5">
+      <div className="bg-grey-800 p-3 rounded-md m-5 flex space-x-4">
         {treeData.map((node) => (
           <NavItem
             key={node.id}

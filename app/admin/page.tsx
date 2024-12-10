@@ -7,16 +7,17 @@ export default function Home() {
   return (<>
     <Header mainText="ADMIN PANEL"/>
     
-    <div className="flex">
-    <div className="basis-1/2 px-5 py-10">
-    <NavTree />
+
+
+
+    <div className="my-5">
+      <AboutMeForm />
     </div>
 
-    <div className="basis-1/2 px-5 py-10">
-    <AboutMeForm />
+    <div className="my-5 mx-4">
+      <NavTree />
     </div>
-
-    </div>
+  
 
 
     
