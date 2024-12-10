@@ -273,7 +273,7 @@ const NavTree = () => {
         }
   
         return acc;
-      }, [] as any[]);
+      }, [] as FlattenedNode[]);
     };
   
     const flattenedTree = flattenTree(nodes);
