@@ -16,16 +16,7 @@ export default async function Home() {
 
     <NavBar/>
     <main>
-      {/* <nav className="w-full flex">
-      <NavButton text="SCULPTURE" link="/account" links={sculpture_links} />
-      <NavButton text="PHOTO" link="/account" links={sculpture_links} />
-      <NavButton text="VIDEO" link="/account" links={sculpture_links} />
-      <NavButton text="PAINT" link="/account" links={sculpture_links} />
-      <NavButton text="OTHER" link="/account" links={sculpture_links} />
-      </nav> */}
-
-      <AboutSection/>
-   
+      <AboutSection/> 
     </main>
     </>
   )

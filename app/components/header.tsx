@@ -10,9 +10,10 @@ export default function Header({ mainText }: HeaderProps) {
       <Image
         src="/header-bg.webp"
         alt="Wire Sculpture Background Image"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: 'cover' }}
         quality={100}
+        priority
       />
 
       <div className="absolute inset-0 flex items-center justify-center">

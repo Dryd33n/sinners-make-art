@@ -1,9 +1,11 @@
+import { Key } from "react";
+
 export interface MenuItem {
   text: string;
   link: string;
 }
 
-export type MenuLink = MenuItem | { MenuItem: MenuItem[] };
+export type MenuLink = MenuItem | { [category: string]: {categoryItem: MenuItem, subItems: MenuItem[]} };
 
 interface NavButtonProps {
   text: string;
@@ -43,19 +45,20 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
           } else {
             // Category with Subcategories
             const categoryName = Object.keys(item)[0];
-            const subItems = item[categoryName];
+            const categoryItem = item[categoryName].categoryItem;
+            const subItems = item[categoryName].subItems;
 
             return (
               <li key={index} className="bg-grey-800">
-                <div className="px-4 py-2 text-grey-300 font-extralight text-sm tracking-wide hover:bg-grey-600">
+                <a href={categoryItem.link} className="block px-5 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white hover:bg-grey-600">
                   {categoryName.toUpperCase()}
-                </div>
+                </a>
                 <ul>
-                  {subItems.map((subItem, subIndex) => (
+                  {subItems.map((subItem: { link: string | undefined; text: string; }, subIndex: Key | null | undefined) => (
                     <li key={subIndex} className="hover:bg-grey-800">
                       <a
                         href={subItem.link}
-                        className="block px-10 py-2 text-grey-300 font-light text-sm tracking-wide hover:text-white hover:bg-grey-600"
+                        className="block px-10 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white hover:bg-grey-600"
                       >
                         {subItem.text.toUpperCase()}
                       </a>

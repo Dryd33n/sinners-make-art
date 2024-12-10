@@ -235,6 +235,8 @@ const AboutMeForm = () => {
                   <Image
                     src={link}
                     alt={`Preview ${index}`}
+                    width={150}
+                    height={150}
                     className="ml-2 w-16 h-16 object-cover border border-gray-300 rounded"
                   />
                 )}

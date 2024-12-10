@@ -32,17 +32,23 @@ export default function NavBar() {
     }, []);
 
     // Recursive function to convert tree nodes into MenuLinks
-    const buildMenuLinks = (nodes: Node[]): MenuLink[] => {
+    const buildMenuLinks = (nodes: Node[], url_path: string): MenuLink[] => {
         return nodes.map((node) => {
             if (node.children && node.children.length > 0) {
                 return {
-                    [node.name]: buildMenuLinks(node.children),
-                };
+                    [node.name]: {
+                        categoryItem: {
+                            text: node.name,
+                            link: `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}`,
+                        },
+                        subItems: buildMenuLinks(node.children, `${url_path}/${node.name.toLowerCase().replace(/ /g, '-')}`),
+                    }
+                } as MenuLink;
             } else {
                 return {
                     text: node.name,
-                    link: `/${node.name.toLowerCase().replace(/ /g, '-')}`,
-                };
+                    link: `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}`,
+                } as MenuItem;
             }
         });
     };
@@ -50,7 +56,7 @@ export default function NavBar() {
     return (
         <nav className="w-full flex">
             {navTree.map((treeItem) => {
-                const links = buildMenuLinks(treeItem.children || []);
+                const links = buildMenuLinks(treeItem.children || [], treeItem.name);
                 return (
                     <NavButton
                         key={treeItem.id}
