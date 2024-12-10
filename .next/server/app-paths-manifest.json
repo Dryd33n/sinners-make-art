@@ -1,8 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/api/admin/navtree/route": "app/api/admin/navtree/route.js",
-  "/api/about_me/route": "app/api/about_me/route.js",
-  "/api/admin/load_navtree/route": "app/api/admin/load_navtree/route.js"
-}
