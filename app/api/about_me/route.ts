@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { db } from './../../../db/index';
-import { homeTable } from './../../../db/schema';
+import { hometable } from './../../../db/schema';
 
 export async function GET() {
     try {
-        const response = await db.select().from(homeTable).execute();
+        const response = await db.select().from(hometable).execute();
         console.log('Data retrieved successfully:', response);
         return NextResponse.json({ success: true, response }, { status: 200 });
     } catch (error) {

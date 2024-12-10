@@ -1,4 +1,10 @@
-export default function Header(){
+import { Head } from "next/document";
+
+interface HeaderProps {
+    mainText: string;
+}
+
+export default function Header({ mainText }: HeaderProps){
     return (
         <header className="relative w-full h-64">
             <img 
@@ -8,7 +14,7 @@ export default function Header(){
         
             <div className="absolute inset-0 flex items-center justify-center">
                 <h1 className="text-white lg:text-6xl md:text-5xl sm:text-4xl text-4xl font-extralight tracking-widest">
-                MARY-JANE LARONDE
+                {mainText}
                 </h1>
             </div>
         

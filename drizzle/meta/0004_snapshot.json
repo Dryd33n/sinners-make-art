@@ -1,11 +1,11 @@
 {
-  "id": "4b6d2304-86a1-4908-9233-f5ca0e918e3d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ef273ef2-257c-4adb-8473-d17431e7dd21",
+  "prevId": "d46de95c-1d53-4a77-bfbc-d701857b6243",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.home": {
-      "name": "home",
+    "public.hometable": {
+      "name": "hometable",
       "schema": "",
       "columns": {
         "id": {
@@ -29,6 +29,43 @@
         "images": {
           "name": "images",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.nav_tree": {
+      "name": "nav_tree",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }

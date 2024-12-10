@@ -1,34 +1,9 @@
 {
-  "id": "b484d943-1cbb-478d-89e1-d06aea39a140",
-  "prevId": "55155675-4794-4d52-9ec8-a34ab7a15094",
+  "id": "38a08c00-ab53-4b8d-ae1a-170dfa9210b6",
+  "prevId": "3f4f8559-d1a2-4dbd-bdda-92e5781d7e26",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.home_image": {
-      "name": "home_image",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "img_url": {
-          "name": "img_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.home": {
       "name": "home",
       "schema": "",
@@ -47,6 +22,12 @@
         },
         "about_text": {
           "name": "about_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "images": {
+          "name": "images",
           "type": "text",
           "primaryKey": false,
           "notNull": true

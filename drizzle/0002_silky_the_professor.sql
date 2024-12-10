@@ -1,1 +1,0 @@
-ALTER TABLE "home" ADD COLUMN "id" serial PRIMARY KEY NOT NULL;

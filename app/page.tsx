@@ -18,7 +18,7 @@ export default async function Home() {
   
 
   return (<>
-    <Header />
+    <Header mainText="MARY-JANE LARONDE"/>
     <main>
       <nav className="w-full flex">
       <NavButton text="SCULPTURE" link="/account" links={sculpture_links} />

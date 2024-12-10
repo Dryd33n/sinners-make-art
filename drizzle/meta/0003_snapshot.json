@@ -1,11 +1,11 @@
 {
-  "id": "4b6d2304-86a1-4908-9233-f5ca0e918e3d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "d46de95c-1d53-4a77-bfbc-d701857b6243",
+  "prevId": "38a08c00-ab53-4b8d-ae1a-170dfa9210b6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.home": {
-      "name": "home",
+    "public.hometable": {
+      "name": "hometable",
       "schema": "",
       "columns": {
         "id": {

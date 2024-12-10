@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from './../../../db/index';
-import { hometable } from './../../../db/schema';
+import { db } from './../../../../db/index';
+import { navTreeTable } from './../../../../db/schema';
 
 
 /** POST /api/admin/about
@@ -12,29 +12,35 @@ import { hometable } from './../../../db/schema';
  * @returns returns a response object
  */
 export async function POST(req: NextRequest) {
-    /* PARSE REQUEST BODY */
-    const { title, text, images } = await req.json();
+    console.log("Beginning POST request to update nav tree...");
 
-    /* VALIDATE REQUEST BODY */
-    const data = {
-        about_title: title,
-        about_text: text,
-        about_images: images, 
-    };
+    /* PARSE REQUEST BODY */
+    const { treeData } = await req.json();
+
+    console.log("Attempting to update nav tree with data:", treeData);
 
     /* CLEAR TABLE */
     try {
-        await db.delete(hometable).execute();
-        console.log('Table cleared successfully');
+        await db.delete(navTreeTable).execute();
+        console.log('Nav Table cleared successfully');
     } catch (error) {
-        console.error('Error clearing table:', error);
+        console.error('Error clearing nav table:', error);
         return NextResponse.json({ error: 'Error clearing table' }, { status: 500 });
     }
 
+    console.log("Nav Table cleared successfully, inserting data...");
+
     /* INSERT DATA */
     try {
-        const response = await db.insert(hometable).values(data).execute();
-        console.log('Data inserted successfully:', response);
+        const insertPromises = treeData.map((node: any) =>
+            db.insert(navTreeTable).values({
+              name: node.name,
+              path: node.path,
+              order: node.order,
+            })
+          );
+    
+          const response = await Promise.all(insertPromises);
         return NextResponse.json({ success: true, response }, { status: 200 });
     } catch (error) {
         console.error('Error inserting data:', error);
