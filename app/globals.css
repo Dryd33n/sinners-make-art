@@ -19,3 +19,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.image-gallery-content:not(.fullscreen)
+  .image-gallery-slide
+  .image-gallery-image {
+  height: 450px;
+}

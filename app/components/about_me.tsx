@@ -50,7 +50,7 @@ export default function AboutMe() {
     return (
         <div>
             <h1 className='text-4xl font-extralight'>{aboutData.about_title.toUpperCase()}</h1>
-            <p>{aboutData.about_text}</p>
+            <p className='my-10'>{aboutData.about_text}</p>
         </div>
     );
 }
