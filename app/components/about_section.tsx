@@ -55,12 +55,12 @@ export default function AboutSection() {
   }
 
   return (
-    <div className="flex flex-1 mx-72 mt-36">
-      <div className="basis-1/2">
+    <div className="flex mx-72 m-5 mt-36">
+      <div className="flex-1">
         <AboutMe />
       </div>
 
-      <div className="basis-1/2">
+      <div className="flex-1 place-content-center m-10 ">
         <ImageGallery
           items={images}
           showThumbnails={false}

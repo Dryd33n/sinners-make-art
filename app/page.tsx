@@ -1,4 +1,4 @@
-import Header from "./components/header";
+import Header from "./components/header"; 
 import AboutSection from "./components/about_section";
 import { getDBVersion } from "@/db";
 import NavBar from "./components/navBar";
