@@ -28,6 +28,12 @@ export default {
           900: '#0C0C0C', // Darkest
         }
       },
+      dropShadow: {
+        glow: [
+          "0 0px 20px rgba(0,0, 0, 0.35)",
+          "0 0px 65px rgba(0, 0,0, 0.2)"
+        ]
+      }
     },
   },
   plugins: [],

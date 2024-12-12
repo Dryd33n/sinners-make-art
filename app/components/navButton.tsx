@@ -27,7 +27,7 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
       </a>
 
       {/* Dropdown Menu */}
-      <ul className="absolute hidden group-hover:block bg-grey-800 shadow-lg w-full">
+      <ul className="absolute hidden group-hover:block bg-grey-800 shadow-lg w-full drop-shadow-glow">
         {links.map((item, index) => {
           if ("text" in item && "link" in item) {
             // Simple MenuItem
