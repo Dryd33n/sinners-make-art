@@ -212,6 +212,7 @@ const AboutMeForm = () => {
           {/* Right Side */}
           <div className="flex-1">
             <h3 className="text-lg font-medium mb-4">Image Links</h3>
+            
             {imageLinks.map((link, index) => (
               <div key={index} className="mb-4 flex items-center">
                 <input

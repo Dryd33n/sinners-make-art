@@ -60,7 +60,7 @@ export default function AboutSection() {
         <AboutMe />
       </div>
 
-      <div className="flex-col flex-auto place-content-center ml-5">
+      <div className="flex-col flex-auto place-content-center ml-5 -z-10">
         <ImageGallery
           items={images}
           showThumbnails={false}
