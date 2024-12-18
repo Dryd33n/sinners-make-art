@@ -6,6 +6,10 @@ export default async function Home() {
   
 
   return (<>
+    <head>
+      <title>Site under Development</title>
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+    </head>
     <Header mainText="UNDER CONSTRUCTION"/>
       <div className="flex flex-col items-center justify-center pt-20">
         <h1 className="text-3xl mx-auto text-center">SINNERS-MAKE.ART IS CURRENTLY UNDER DEVELOPMENT</h1>
