@@ -1,23 +1,17 @@
 import Header from "./components/header"; 
-import AboutSection from "./components/about_section";
-import { getDBVersion } from "@/db";
-import NavBar from "./components/navBar";
-import Image from 'next/image';
 
 export default async function Home() {
-    const { version } = await getDBVersion();
-    console.log({version})
+
 
   
 
   return (<>
-    <Header mainText="MARY-JANE LARONDE"/>
-
-    <NavBar/>
-
-     <main>
-        <AboutSection/>
-      </main>
+    <Header mainText="UNDER CONSTRUCTION"/>
+      <div className="flex flex-col items-center justify-center pt-20">
+        <h1 className="text-3xl mx-auto">SINNERS-MAKE.ART IS CURRENTLY UNDER DEVELOPMENT</h1>
+        <p>We are working on something great, please check back later!</p>
+      </div>
+      
     </>
   )
 }
