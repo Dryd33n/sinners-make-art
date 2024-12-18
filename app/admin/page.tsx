@@ -3,6 +3,12 @@ import { redirect } from 'next/navigation';
 import Header from '../components/header';
 import AboutMeForm from './components/home_edit';
 import NavTree from './components/nav_tree';
+import ExpandableSection from '../components/expandable_section';
+import Head from 'next/head';
+
+export const metadata = {
+  title: 'Admin Panel',
+};
 
 export default async function AdminPage() {
   // Check auth status from the server-side cookies
@@ -18,10 +24,14 @@ export default async function AdminPage() {
   return (
     <>
       <Header mainText="ADMIN PANEL" />
-      <h1 className='text-4xl m-5 font-extralight'>MODIFY ABOUT ME CONTENT:</h1>
-      <AboutMeForm />
-      <h1 className='text-4xl m-5 font-extralight'>MODIFY NAVIGATION SCHEMA:</h1>
-      <NavTree />
+      
+      <ExpandableSection title="Modify About Me Content">
+        <AboutMeForm />
+      </ExpandableSection>
+      
+      <ExpandableSection title="Modify Navigation Schema">
+        <NavTree />
+      </ExpandableSection>
     </>
   );
 }

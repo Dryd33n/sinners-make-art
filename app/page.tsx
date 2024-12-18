@@ -3,9 +3,14 @@ import AboutSection from "./components/about_section";
 import { getDBVersion } from "@/db";
 import NavBar from "./components/navBar";
 
+export const metadata = {
+  title: 'Sinners Make Art',
+};
+
 export default async function Home() {
     const { version } = await getDBVersion();
     console.log({version})
+
 
   
 

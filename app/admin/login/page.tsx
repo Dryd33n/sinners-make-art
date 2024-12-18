@@ -1,8 +1,6 @@
 'use client'
 
 import Header from '@/app/components/header';
-import { redirect } from 'next/navigation';
-import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -55,8 +53,7 @@ const LoginForm = () => {
       }
     };
 
-    return (
-        <>
+    return (<>
         <Header mainText="ADMIN PANEL LOGIN" />
         <div className="flex  justify-center min-h-screen bg-grey-900">
             <div className="w-full max-w-md max-h-[350] mt-10 p-8 space-y-4 bg-grey-800 rounded-lg shadow-md">
