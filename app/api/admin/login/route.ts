@@ -1,7 +1,7 @@
-// route.ts
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
     const { username, password } = await req.json();
 
     if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
@@ -22,5 +22,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-    return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+    const authCookie = (await cookies()).get('auth');
+    console.log('Server-side authStatus check: ', authCookie);
+    return NextResponse.json({ authenticated: authCookie?.value === 'true' });
 }

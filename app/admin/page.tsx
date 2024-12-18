@@ -1,37 +1,26 @@
-'use client'
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { authStatus } from '@/auth';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import Header from '../components/header';
 import AboutMeForm from './components/home_edit';
 import NavTree from './components/nav_tree';
 
-export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+export default async function AdminPage() {
+  // Check auth status from the server-side cookies
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('auth');
+  const isAuthenticated = authCookie?.value === 'true';
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const status = await authStatus();
-      console.log("Auth status: ", status);
-      setIsAuthenticated(status);
-    };
-
-    checkAuth();
-  }, []);
-
-  if (isAuthenticated === false) {
-    return <p>Not authorized</p>;
-  }
-
-  if (isAuthenticated === null) {
-    return <p>Loading...</p>; // Prevent flashing of the page
+  if (!isAuthenticated) {
+    // Redirect to login page if not authenticated
+    redirect('/admin/login');
   }
 
   return (
     <>
       <Header mainText="ADMIN PANEL" />
+      <h1 className='text-4xl m-5 font-extralight'>MODIFY ABOUT ME CONTENT:</h1>
       <AboutMeForm />
+      <h1 className='text-4xl m-5 font-extralight'>MODIFY NAVIGATION SCHEMA:</h1>
       <NavTree />
     </>
   );

@@ -306,7 +306,7 @@ const NavTree = () => {
 
   return (
     <div className="bg-grey-850 rounded-lg p-5">
-      <h1 className="text-xl font-bold m-3">Modify Navigation Schema</h1>
+      <h1 className="text-xl font-bold m-3">Navigation Schema</h1>
       <div className="bg-grey-800 p-3 rounded-md m-5 flex space-x-4">
         {treeData.map((node) => (
           <NavItem
