@@ -4,7 +4,6 @@ import Header from '../components/header';
 import AboutMeForm from './components/home_edit';
 import NavTree from './components/nav_tree';
 import ExpandableSection from '../components/expandable_section';
-import Head from 'next/head';
 
 export const metadata = {
   title: 'Admin Panel',
