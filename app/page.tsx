@@ -2,7 +2,6 @@ import Header from "./components/header";
 import AboutSection from "./components/about_section";
 import { getDBVersion } from "@/db";
 import NavBar from "./components/navBar";
-import Image from 'next/image';
 
 export default async function Home() {
     const { version } = await getDBVersion();
@@ -18,6 +17,7 @@ export default async function Home() {
      <main>
         <AboutSection/>
       </main>
+    
     </>
   )
 }
