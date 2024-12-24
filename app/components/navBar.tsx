@@ -16,6 +16,10 @@ export default function NavBar() {
                 const response = await fetch('/api/admin/navtree');
                 const result = await response.json();
 
+                console.log("Nav Tree Data:", result.data);
+
+                
+
                 if (result.success) {
                     const data = result.data;
                     const tree = buildTree(data);
@@ -35,12 +39,15 @@ export default function NavBar() {
     // Recursive function to convert tree nodes into MenuLinks
     const buildMenuLinks = (nodes: Node[], url_path: string): MenuLink[] => {
         return nodes.map((node) => {
+            console.log("Node:", node);
+            let link = node.link_override === 'auto' ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}` : node.link_override;
+            console.log("Name:", node.name, "Link:", link, "Override:", node.link_override);
             if (node.children && node.children.length > 0) {
                 return {
                     [node.name]: {
                         categoryItem: {
                             text: node.name,
-                            link: `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}`,
+                            link: link,
                         },
                         subItems: buildMenuLinks(node.children, `${url_path}/${node.name.toLowerCase().replace(/ /g, '-')}`),
                     }
@@ -48,7 +55,7 @@ export default function NavBar() {
             } else {
                 return {
                     text: node.name,
-                    link: `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}`,
+                    link: link,
                 } as MenuItem;
             }
         });

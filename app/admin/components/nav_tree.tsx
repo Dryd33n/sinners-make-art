@@ -4,11 +4,12 @@ import { addNodeRecursively, buildTree, removeNodeRecursively, renameNodeRecursi
 import React, { useState, useEffect } from 'react';
 
 export interface Node {
-  id: number;         // Unique identifier for the node
-  name: string;       // Name of the node
-  children?: Node[];  // List of child nodes
-  isNew?: boolean;    // Flag to indicate if the node is new
-  order: number;      // Order of the node
+  link_override: string; // Link override for the node default is "auto"
+  id: number;            // Unique identifier for the node
+  name: string;          // Name of the node
+  children?: Node[];     // List of child nodes
+  isNew?: boolean;       // Flag to indicate if the node is new
+  order: number;         // Order of the node
 }
 
 interface NavTreeProps {

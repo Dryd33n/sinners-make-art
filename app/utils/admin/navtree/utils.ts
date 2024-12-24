@@ -1,13 +1,15 @@
 import { Node } from "@/app/admin/components/nav_tree";
 
-export const buildTree = (data: { id: number; name: string; path: string; order: number; }[]): Node[] => {
+export const buildTree = (data: { id: number; name: string; path: string; order: number; link_ovveride: string; }[]): Node[] => {
     const nodeMap: Map<string, Node> = new Map(); // Map to hold nodes by path
     const roots: Node[] = [];                     // Array to hold root nodes
     
     
     // ADD NODES TO MAP <path, node>
     data.forEach(item => {
-      const node: Node = { id: item.id, name: item.name, order: item.order, children: undefined};
+      const node: Node = {
+        id: item.id, name: item.name, order: item.order, children: undefined, link_override: item.link_ovveride
+      };
       nodeMap.set(item.path, node);
     });
 
@@ -91,7 +93,7 @@ export const addNodeRecursively = (nodes: Node[], parentId: number): Node[] =>
        ...node,
        children: [
          ...(node.children || []),
-         { id: Date.now(), name: 'New Node', children: [], isNew: true, order: nextOrder },
+         { id: Date.now(), name: 'New Node', children: [], isNew: true, order: nextOrder, link_override: "auto" },
        ],
      };
    }
