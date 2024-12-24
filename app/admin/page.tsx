@@ -5,6 +5,7 @@ import AboutMeForm from './components/home_edit';
 import NavTree from './components/nav_tree';
 import LinkOverrideManager from './components/ovveride_links';
 import NewPost from './components/new_post';
+import ReorderEditPosts from './components/reorder_edit_posts';
 import ExpandableSection from '../components/expandable_section';
 import Tooltip from '../components/tooltip';
 
@@ -63,6 +64,10 @@ export default async function AdminPage() {
           </p>
         </Tooltip>
         <NewPost />
+      </ExpandableSection>
+
+      <ExpandableSection title="Reorder and Edit Posts">
+        <ReorderEditPosts/>
       </ExpandableSection>
     </>
   );

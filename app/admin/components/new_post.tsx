@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import Tooltip from "@/app/components/tooltip";
 import ReactPlayer from "react-player";
+import path from "path";
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
@@ -15,43 +16,81 @@ interface PathItem {
     linkOverride: string;
 }
 
+interface PostItem {
+    title: string;
+    description: string;
+    type: string;        // photo or video
+    content: string;     // images urls csv or video link
+    tag: string;         // category
+    order: number;       // order in category
+    portfolio: boolean;  // show in portfolio
+}
+
 const NewPost = () => {
+    /* FORM VARS */
     const [title, setTitle] = useState("");
-    const [imagePost, setImagePost] = useState(true);
     const [paragraph, setParagraph] = useState("");
+    const [imagePost, setImagePost] = useState(true);
+    const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
+    /* CONTENT VARS */
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
     const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
-    const [embedString, setEmbedString] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [videoString, setVideoString] = useState("");
+    /* POSTS AND TAGS */
+    const [allPosts, setAllPosts] = useState<PostItem[]>([]); // All available posts
+    const [filteredPosts, setFilteredPosts] = useState<PostItem[]>([]); // Posts filtered by tag
     const [allPaths, setAllPaths] = useState<PathItem[]>([]); // All available paths
     const [tag, setTag] = useState<PathItem>();
-    const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
+    /* ERROR AND SUCCESS MESSAGES */
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const fetchPaths = async () => {
+        try {
+            const response = await fetch('/api/admin/navtree/overrides');
+            const result = await response.json();
+
+            console.log('Fetched paths:', result);
+
+            if (result.success) {
+                setAllPaths(result.data.filter((item: PathItem) => item.linkOverride == 'auto'));
+                setErrorMessage('');
+                setSuccessMessage('Tags successfully loaded');
+            } else {
+                console.error('Failed to fetch tags');
+                setErrorMessage('Failed to fetch tags');
+            }
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+            setErrorMessage('Error fetching tags');
+        }
+    };
+   
+    const fetchPosts = async () => {
+        console.log("Fetching posts");
+
+        try {
+            const response = await fetch('/api/posts');
+            const result = await response.json();
+
+            if (result.success) {
+                setAllPosts(result.data);
+                setErrorMessage('');
+                setSuccessMessage('posts successfully loaded');
+            } else {
+                console.error('Failed to fetch posts');
+                setErrorMessage('Failed to fetch posts');
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            setErrorMessage('Error fetching posts');
+        }
+    }
 
     useEffect(() => {
-        const fetchPaths = async () => {
-            try {
-                const response = await fetch('/api/admin/navtree/overrides');
-                const result = await response.json();
-
-                console.log('Fetched paths:', result);
-
-                if (result.success) {
-                    setAllPaths(result.data.filter((item: PathItem) => item.linkOverride == 'auto'));
-                    setErrorMessage('');
-                    setSuccessMessage('Tags successfully loaded');
-                } else {
-                    console.error('Failed to fetch tags');
-                    setErrorMessage('Failed to fetch tags');
-                }
-            } catch (error) {
-                console.error('Error fetching tags:', error);
-                setErrorMessage('Error fetching tags');
-            }
-        };
-
         fetchPaths();
+        fetchPosts();
     }, []);
 
 
@@ -122,62 +161,57 @@ const NewPost = () => {
     };
 
     const handleEmbedChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setEmbedString(e.target.value);
-        console.log("Embed String:", embedString);
+        setVideoString(e.target.value);
+        console.log("Embed String:", videoString);
     };
 
-    // Populate the form with current data
-    const handleLoadData = async () => {
-        setSuccessMessage("");
-        setErrorMessage("");
-
-        try {
-            const response = await fetch("/api/about_me");
-
-            if (!response.ok) {
-                throw new Error("Failed to load current data");
-            }
-
-            const result = await response.json();
-
-            if (result.success && result.response.length > 0) {
-                const data = result.response[0];
-                setTitle(data.about_title || "");
-                setParagraph(data.about_text || "");
-
-                const links = data.about_images ? data.about_images.split(",").map((url: string) => url.trim()) : [""];
-                setImageLinks(links);
-
-                // Update image statuses
-                const statuses = links.map(() => ({ status: "loading" }));
-                setImageStatuses(statuses);
-
-                // Validate image links
-                links.forEach((link: string, index: number) => checkImageStatus(index, link));
-                setSuccessMessage("Data loaded successfully");
-            } else {
-                setErrorMessage("No data available to load");
-            }
-        } catch (error) {
-            console.error("Error loading current data:", error);
-            setErrorMessage("An error occurred while loading data");
-        }
+    const handleCateogryChange = (path: PathItem) => {
+        const filtered = allPosts.filter(
+            (post) => post.tag.trim().toUpperCase() === path.path.trim().toUpperCase()
+        );
+    
+        console.log(
+            "Filtering ", allPosts.length, 
+            " posts by tag", path.path, 
+            "\n Found ", filtered.length, 
+            " matching posts: ", filtered
+        );
+    
+        setTag(path); // Updates the current tag
+        setFilteredPosts(filtered); // Updates filteredPosts state
     };
+    
+
 
     // Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+    
         setIsSubmitting(true);
         setSuccessMessage("");
         setErrorMessage("");
-
-        console.log("Submitting new post: \nTitle:", title, "\nParagraph:", paragraph, "\nType:", imagePost ? "Image" : "Video", "\nTags:", tag);
-
+    
+        console.log(
+            "Submitting new post: \nTitle:", title, 
+            "\nParagraph:", paragraph, 
+            "\nType:", imagePost ? "Image" : "Video", 
+            "\nTags:", tag
+        );
+    
         try {
             const csvString = imageLinks.filter((link) => link.trim() !== "").join(",");
+            
+            let maxOrder = 0;
+            if (tag) {
+                const filtered = allPosts.filter(
+                    (post) => post.tag.trim().toUpperCase() === tag.path.trim().toUpperCase()
+                );
+                maxOrder = filtered.reduce((max, post) => (post.order > max ? post.order : max), 0);
+            }
+    
             console.log("CSV Image Links:", csvString);
-
+            console.log("Max Order:", maxOrder);
+    
             const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {
@@ -187,26 +221,28 @@ const NewPost = () => {
                     title: title,
                     description: paragraph,
                     type: imagePost ? "image" : "video",
-                    content: imagePost ? csvString : embedString,
+                    content: imagePost ? csvString : videoString,
                     tag: tag?.path,
+                    order: maxOrder + 1,
                     portfolio: includeInPortfolio,
                 }),
             });
-
+    
             const result = await response.json();
-
+    
             if (result.success) {
                 setSuccessMessage("Post uploaded successfully");
+                fetchPosts(); // Refresh posts after successful upload
             } else {
                 setErrorMessage("An error occurred. Please try again later.");
             }
         } catch (error) {
-            setErrorMessage("An error occurred. Please try again later." + error);
+            setErrorMessage("An error occurred. Please try again later. " + error);
         } finally {
             setIsSubmitting(false);
         }
     };
-
+    
     return (
         <div className="">
             <div className="p-4 max-w-6xl mx-auto bg-grey-850 rounded-lg">
@@ -230,7 +266,7 @@ const NewPost = () => {
                                     <div
                                         key={path.id}
                                         className="flex justify-between items-center p-2 hover:bg-grey-600 cursor-pointer"
-                                        onClick={() => setTag(path)}
+                                        onClick={() => handleCateogryChange(path)}
                                     >
                                         <span className="text-white">{path.path}</span>
                                     </div>
@@ -378,7 +414,7 @@ const NewPost = () => {
                                 <label>
                                     Enter Video Embed Code:
                                     <textarea
-                                        value={embedString}
+                                        value={videoString}
                                         onChange={handleEmbedChange}
                                         rows={2}
                                         cols={41}
@@ -387,13 +423,13 @@ const NewPost = () => {
                                     />
                                 </label>
                                 <h3 className="text-lg font-medium mb-4">Video Preview</h3>
-                                {embedString ? (
-                                        <ReactPlayer url={embedString} 
+                                {videoString ? (
+                                        <ReactPlayer url={videoString} 
                                                     controls={true}
                                                     width={400}
                                                     height={230}/>                     
                                 ) : (
-                                    <p>No preview available. Paste an embed string to see the result.</p>
+                                    <p>No preview available. Paste an video link to see the result.</p>
                                 )}
                             </div>)
                         }

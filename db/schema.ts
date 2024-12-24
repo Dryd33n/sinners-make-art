@@ -35,6 +35,7 @@ export const postsTable = pgTable("posts_table", {
   type: text().notNull(),
   content: text().notNull(),
   tag: text().notNull(),
+  order: integer().notNull(),
   portfolio: boolean().default(false).notNull(),
 });
 

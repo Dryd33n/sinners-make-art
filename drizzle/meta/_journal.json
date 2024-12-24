@@ -50,6 +50,13 @@
       "when": 1735000173165,
       "tag": "0006_daffy_mentor",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1735066605061,
+      "tag": "0007_pale_hydra",
+      "breakpoints": true
     }
   ]
 }
