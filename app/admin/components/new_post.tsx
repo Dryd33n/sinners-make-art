@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import Tooltip from "@/app/components/tooltip";
+import ReactPlayer from "react-player";
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
@@ -361,7 +362,16 @@ const NewPost = () => {
                             (<div className="bg-grey-700 p-2">
                                 <div className="flex">
                                     <Tooltip>
-                                        <p>Make sure you use embed links from trusted sources only since this form can be easily exploited</p>
+                                        <p>Video links from the following sites are supported:</p>
+                                        <ol className="list-disc pl-4">
+                                           <li>Youtube</li>
+                                           <li>Vimeo</li>
+                                           <li>DailyMotion</li>
+                                           <li>Facebook</li> 
+                                           <li>Streamable</li>
+                                           <li>Twitch</li>
+                                        </ol>
+                                        <p>And more... Refer to guide for all supported formats</p>
                                     </Tooltip>
                                     <h3 className="text-lg font-medium mb-4">Video Embed</h3>
                                 </div>
@@ -370,23 +380,18 @@ const NewPost = () => {
                                     <textarea
                                         value={embedString}
                                         onChange={handleEmbedChange}
-                                        rows={4}
+                                        rows={2}
                                         cols={41}
-                                        placeholder="Paste your video embed string here"
+                                        placeholder="Paste your video link here:"
                                         className=" p-2 border border-gray-300 rounded text-black m-2"
                                     />
                                 </label>
                                 <h3 className="text-lg font-medium mb-4">Video Preview</h3>
                                 {embedString ? (
-                                    <div
-                                        dangerouslySetInnerHTML={{ __html: embedString }}
-                                        style={{
-                                            border: "1px solid #ccc",
-                                            padding: "10px",
-                                            borderRadius: "5px",
-                                            overflow: "hidden",
-                                        }}
-                                    />
+                                        <ReactPlayer url={embedString} 
+                                                    controls={true}
+                                                    width={400}
+                                                    height={230}/>                     
                                 ) : (
                                     <p>No preview available. Paste an embed string to see the result.</p>
                                 )}
