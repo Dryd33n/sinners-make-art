@@ -11,7 +11,7 @@ const Tooltip = ({ children }: { children: ReactNode }) => {
     <div className="relative inline-block">
       {/* Question Mark */}
       <span
-        className="text-lg font-bold text-grey-600 cursor-pointer bg-white rounded-full w-6 h-6 flex items-center justify-center m-1"
+        className="text-lg font-bold text-grey-600 cursor-pointer bg-white rounded-full w-5 h-5 flex items-center justify-center m-1"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

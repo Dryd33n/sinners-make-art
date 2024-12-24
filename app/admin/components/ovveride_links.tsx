@@ -1,5 +1,6 @@
 'use client';
 
+import Tooltip from '@/app/components/tooltip';
 import React, { useEffect, useState } from 'react';
 
 interface OverrideItem {
@@ -110,7 +111,16 @@ const LinkOverrideManager: React.FC = () => {
 
         {/* List of overrides */}
         <div className="w-1/2 bg-grey-800 p-3 rounded-md">
-          <h2 className="font-semibold mb-2">Overrides</h2>
+          <div className='flex'>
+            <Tooltip>
+              <p>
+                Here you type the path in the file structure which points to the desired destination.
+                use the format "/path/to/destination" to override the default behavior. The path must
+                lead to a valid page in the application routing file structure.
+              </p>
+            </Tooltip>
+            <h2 className="font-semibold mb-2">Overrides</h2>
+          </div>
           <div className="space-y-3">
             {overrides.map((override) => (
               <div

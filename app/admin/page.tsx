@@ -4,6 +4,7 @@ import Header from '../components/header';
 import AboutMeForm from './components/home_edit';
 import NavTree from './components/nav_tree';
 import LinkOverrideManager from './components/ovveride_links';
+import NewPost from './components/new_post';
 import ExpandableSection from '../components/expandable_section';
 import Tooltip from '../components/tooltip';
 
@@ -47,13 +48,21 @@ export default async function AdminPage() {
       <ExpandableSection title="Modify Navigation Destinations">
         <Tooltip>
           <p>
-            This section is used to ovveride the default destination of a navigation link. By default, a page is created based
-            on the order of the link and it is populated with posts tagged in that category, use this page for special pages that
-            will not be populated automatically with posts. For custom paths use the format "/path/to/destination" such that the result
-            would be "https://sinners-make-art.com/path/to/destination".
+            This section is used to modify certain links in the navigation tree to redirect to premade pages 
+            instead of the default behavior of auto generating the pages based on the posts tagged with the category.
           </p>
         </Tooltip>
         <LinkOverrideManager />
+      </ExpandableSection>
+
+      <ExpandableSection title="Create New Post">
+        <Tooltip>
+          <p>
+            This section is used to create a new post. The post will be added to the database and will be displayed on the home page
+            if it is tagged with the appropriate category.
+          </p>
+        </Tooltip>
+        <NewPost />
       </ExpandableSection>
     </>
   );
