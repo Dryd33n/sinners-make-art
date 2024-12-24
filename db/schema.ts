@@ -20,6 +20,7 @@ export const navTreeTable = pgTable('nav_tree', {
   id: serial('id').primaryKey().notNull(),
   name: text('name').notNull(),
   path: text('path').notNull(), // e.g., "1/2/3"
+  link_ovveride: text('link_ovveride').notNull().default('auto'), // "auto" or "/path/to/destination"
   order: integer('order').notNull(),
 });
 

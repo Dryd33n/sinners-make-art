@@ -1,0 +1,1 @@
+ALTER TABLE "nav_tree" ADD COLUMN "link_ovveride" text NOT NULL;
