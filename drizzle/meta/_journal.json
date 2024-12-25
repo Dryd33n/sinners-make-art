@@ -57,6 +57,13 @@
       "when": 1735066605061,
       "tag": "0007_pale_hydra",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1735117174182,
+      "tag": "0008_peaceful_gravity",
+      "breakpoints": true
     }
   ]
 }

@@ -12,6 +12,10 @@ interface PathItem {
     linkOverride: string;
 }
 
+interface ImageStatus {
+    status: "loading" | "success" | "error";
+}
+
 interface PostItem {
     id: number;
     title: string;

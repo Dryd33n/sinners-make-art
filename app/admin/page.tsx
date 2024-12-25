@@ -8,6 +8,7 @@ import NewPost from './components/new_post';
 import ReorderEditPosts from './components/reorder_edit_posts';
 import ExpandableSection from '../components/expandable_section';
 import Tooltip from '../components/tooltip';
+import SocialLinks from './components/social_links';
 
 export const metadata = {
   title: 'Admin Panel',
@@ -69,6 +70,10 @@ export default async function AdminPage() {
       <ExpandableSection title="Reorder and Edit Posts">
         <ReorderEditPosts/>
       </ExpandableSection>
+
+      <ExpandableSection title="Social Media Links">
+        <SocialLinks />
+      </ExpandableSection>  
     </>
   );
 }

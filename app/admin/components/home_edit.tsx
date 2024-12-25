@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from 'next/image';
+import Tooltip from "@/app/components/tooltip";
 
 interface ImageStatus {
   status: "loading" | "success" | "error";
@@ -211,7 +212,14 @@ const AboutMeForm = () => {
 
           {/* Right Side */}
           <div className="flex-1">
-            <h3 className="text-lg font-medium mb-4">Image Links</h3>
+            <div className="flex flex-row">
+              <Tooltip>
+                <p>
+                  While varying image sizes are supported, I.E landscape and portrait, it is best to use images with all the same size due to how the images are displayed on mobile.
+                </p>
+              </Tooltip>
+              <h3 className="text-lg font-medium mb-4">Image Links</h3>
+            </div>
             
             {imageLinks.map((link, index) => (
               <div key={index} className="mb-4 flex items-center">

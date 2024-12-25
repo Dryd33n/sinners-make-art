@@ -39,6 +39,13 @@ export const postsTable = pgTable("posts_table", {
   portfolio: boolean().default(false).notNull(),
 });
 
+export const socialLinks = pgTable("social_links", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "social_links_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	url: text().notNull(),
+	name: text().notNull(),
+});
+
+
 
 export type insertNavTree = typeof navTreeTable.$inferInsert;
 export type selectNavTree = typeof navTreeTable.$inferSelect;

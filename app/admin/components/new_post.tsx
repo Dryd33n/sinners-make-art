@@ -190,14 +190,7 @@ const NewPost = () => {
         setIsSubmitting(true);
         setSuccessMessage("");
         setErrorMessage("");
-    
-        console.log(
-            "Submitting new post: \nTitle:", title, 
-            "\nParagraph:", paragraph, 
-            "\nType:", imagePost ? "Image" : "Video", 
-            "\nTags:", tag
-        );
-    
+
         try {
             const csvString = imageLinks.filter((link) => link.trim() !== "").join(",");
             
@@ -208,9 +201,6 @@ const NewPost = () => {
                 );
                 maxOrder = filtered.reduce((max, post) => (post.order > max ? post.order : max), 0);
             }
-    
-            console.log("CSV Image Links:", csvString);
-            console.log("Max Order:", maxOrder);
     
             const response = await fetch("/api/posts", {
                 method: "POST",
@@ -233,6 +223,12 @@ const NewPost = () => {
             if (result.success) {
                 setSuccessMessage("Post uploaded successfully");
                 fetchPosts(); // Refresh posts after successful upload
+                // CLEAR FORM
+                setTitle("");
+                setParagraph("");
+                setImageLinks([""]);
+                setImageStatuses([{ status: "loading" }]);
+                setVideoString("");
             } else {
                 setErrorMessage("An error occurred. Please try again later.");
             }

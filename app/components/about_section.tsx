@@ -55,7 +55,7 @@ export default function AboutSection() {
   }
 
   return (
-    <div className="flex md:flex-row sm:flex-col xl:mx-52 lg:mx-40 md:mx-30 sm: mx-10  object-fit">
+    <div className="flex md:flex-row flex-col xl:mx-52 lg:mx-40 md:mx-30 sm: mx-10  object-fit">
       <div className="flex-col mr-5 md:min-w-[50%] md:max-w-[50%] sm:min-w-[95%] sm:max-w-[95%] ">
         <AboutMe />
       </div>
