@@ -70,3 +70,30 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ error: 'Error deleting post' }, { status: 500 });
     }
 }
+
+export async function PUT(req: NextRequest) {
+    const { id, title, description, type, content, tag, order, portfolio } = await req.json();
+
+    if (!id) {
+        return NextResponse.json({ error: 'Post ID is required' }, { status: 400 });
+    }
+
+    const data = {
+        title: title,
+        description: description,
+        type: type,
+        content: content,
+        tag: tag,
+        order: order,
+        portfolio: portfolio,
+    };
+
+    try {
+        await db.update(postsTable).set(data).where(eq(postsTable.id, id)).execute();
+        console.log('Post updated successfully:', id);
+        return NextResponse.json({ success: true, message: 'Post updated successfully' }, { status: 200 });
+    } catch (error) {
+        console.error('Error updating post:', error);
+        return NextResponse.json({ error: 'Error updating post' }, { status: 500 });
+    }
+}
