@@ -21,8 +21,6 @@ const LinkOverrideManager: React.FC = () => {
         const response = await fetch('/api/admin/navtree/overrides');
         const result = await response.json();
 
-        console.log('Fetched paths:', result);
-
         if (result.success) {
           setAllPaths(result.data);
 
@@ -76,7 +74,6 @@ const LinkOverrideManager: React.FC = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Overrides successfully saved:', result);
         setSuccessMessage('Overrides successfully saved');
       } else {
         console.error('Failed to save overrides:', response.statusText);

@@ -66,7 +66,6 @@ export default function ReorderEditPosts() {
 
             if (result.success) {
                 setAllPosts(result.data);
-                console.log('Posts:', result.data);
                 setReorderPostErrorMessage
                 setReorderPostSuccessMessage('All posts successfully loaded');
             } else {
@@ -146,7 +145,6 @@ export default function ReorderEditPosts() {
             const result = await response.json();
 
             if (result.success) {
-                console.log('Post deleted successfully:', result.message);
                 setReorderPostErrorMessage('');
                 setReorderPostSuccessMessage("Post deleted successfully");
             } else {
@@ -313,13 +311,6 @@ export default function ReorderEditPosts() {
     const handleCateogryChange = async (path: PathItem) => {
         const filtered = allPosts.filter(
             (post) => post.tag.trim().toUpperCase() === path.path.trim().toUpperCase()
-        );
-
-        console.log(
-            "Filtering ", allPosts.length,
-            " posts by tag", path.path,
-            "\n Found ", filtered.length,
-            " matching posts: ", filtered
         );
 
         setTagId(path.path);

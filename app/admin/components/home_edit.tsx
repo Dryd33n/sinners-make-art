@@ -125,7 +125,6 @@ const AboutMeForm = () => {
 
     try {
       const csvString = imageLinks.filter((link) => link.trim() !== "").join(",");
-      console.log("CSV Image Links:", csvString);
 
       const response = await fetch("/api/admin", {
         method: "POST",

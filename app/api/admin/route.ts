@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
     /* CLEAR TABLE */
     try {
         await db.delete(hometable).execute();
-        console.log('Table cleared successfully');
     } catch (error) {
         console.error('Error clearing table:', error);
         return NextResponse.json({ error: 'Error clearing table' }, { status: 500 });
@@ -34,7 +33,6 @@ export async function POST(req: NextRequest) {
     /* INSERT DATA */
     try {
         const response = await db.insert(hometable).values(data).execute();
-        console.log('Data inserted successfully:', response);
         return NextResponse.json({ success: true, response }, { status: 200 });
     } catch (error) {
         console.error('Error inserting data:', error);

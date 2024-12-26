@@ -5,6 +5,7 @@ import Header from '../components/header';
 import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
+import Loading from '../components/loading';
 
 type Post = {
     id: number;
@@ -50,14 +51,14 @@ const PortfolioPage = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div><Loading/></div>;
     }
 
     return (
         <>
             <Header mainText="PORTFOLIO" />
             <NavBar />
-            <div className='mt-20 mx-5 md:mx-20 lg:mx-40 xl:mx-64 2xl:mx-80'>
+            <div className='mt-20'>
                 {posts.map(post => (
                     <Post key={post.id} post={post} />
                 ))}

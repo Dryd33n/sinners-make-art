@@ -2,6 +2,7 @@
 
 import { addNodeRecursively, buildTree, removeNodeRecursively, renameNodeRecursively } from '@/app/utils/admin/navtree/utils';
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Node {
   link_override: string; // Link override for the node default is "auto"
@@ -126,10 +127,9 @@ const NavTree = () => {
           const data = result.data;
 
           setSuccessMessage("Building Nav Tree");
-          console.log("Nav Tree Data Successfully Loaded:", data);
+
 
           const tree = buildTree(data);
-          console.log("Nav Tree Successfully Built:", tree);
 
           setTreeData(tree);
           setSuccessMessage("Nav Tree Loaded Successfully");
@@ -167,7 +167,7 @@ const NavTree = () => {
     // Add a new main category to the navigation tree
     setTreeData((prevTreeData) => [
       ...prevTreeData,
-      { id: Date.now(), name: 'New Main Category', children: [], isNew: true, order: prevTreeData.length },
+      { id: Date.now(), name: 'New Main Category', children: [], isNew: true, order: prevTreeData.length, link_override: 'auto' },
     ]);
   };
 

@@ -51,8 +51,6 @@ const NewPost = () => {
             const response = await fetch('/api/admin/navtree/overrides');
             const result = await response.json();
 
-            console.log('Fetched paths:', result);
-
             if (result.success) {
                 setAllPaths(result.data.filter((item: PathItem) => item.linkOverride == 'auto'));
                 setErrorMessage('');

@@ -43,15 +43,10 @@ function WebNavBar() {
                 const response = await fetch('/api/admin/navtree');
                 const result = await response.json();
 
-                console.log("Nav Tree Data:", result.data);
-
-
-
                 if (result.success) {
                     const data = result.data;
                     const tree = buildTree(data);
                     setNavTree(tree);
-                    console.log("Nav Tree Data Successfully Loaded:", tree);
                 } else {
                     console.error('Failed to load navigation tree');
                 }
@@ -66,9 +61,7 @@ function WebNavBar() {
     // Recursive function to convert tree nodes into MenuLinks
     const buildMenuLinks = (nodes: Node[], url_path: string): MenuLink[] => {
         return nodes.map((node) => {
-            console.log("Node:", node);
             let link = node.link_override === 'auto' ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}` : node.link_override;
-            console.log("Name:", node.name, "Link:", link, "Override:", node.link_override);
             if (node.children && node.children.length > 0) {
                 return {
                     [node.name]: {
