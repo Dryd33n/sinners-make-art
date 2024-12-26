@@ -6,7 +6,6 @@ import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
 import Loading from '../components/loading';
-import Head from 'next/head';
 
 type Post = {
     id: number;
