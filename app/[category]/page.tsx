@@ -5,12 +5,6 @@ import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
 
-interface PageProps {
-  params: {
-    category: string;
-  };
-}
-
 interface FilterPostsByCategory {
   (posts: PostType[], category: string): PostType[];
 }
