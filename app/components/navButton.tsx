@@ -1,11 +1,13 @@
+import Link from "next/link";
 import { Key } from "react";
+import { convertToDestinationLink } from "../utils/admin/navtree/utils";
 
 export interface MenuItem {
   text: string;
   link: string;
 }
 
-export type MenuLink = MenuItem | { [category: string]: {categoryItem: MenuItem, subItems: MenuItem[]} };
+export type MenuLink = MenuItem | { [category: string]: { categoryItem: MenuItem, subItems: MenuItem[] } };
 
 interface NavButtonProps {
   text: string;
@@ -34,12 +36,12 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
 
             return (
               <li key={index} className="hover:bg-grey-600">
-                <a
-                  href={String(item.link)}
+                <Link
+                  href={convertToDestinationLink( String(item.link))}
                   className="block px-4 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white"
                 >
                   {String(item.text).toUpperCase()}
-                </a>
+                </Link>
               </li>
             );
           } else {
@@ -47,21 +49,22 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
             const categoryName = Object.keys(item)[0];
             const categoryItem = item[categoryName].categoryItem;
             const subItems = item[categoryName].subItems;
+            console.log("SubItems:", subItems);
 
             return (
               <li key={index} className="bg-grey-800">
-                <a href={categoryItem.link} className="block px-5 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white hover:bg-grey-600">
+                <Link href={convertToDestinationLink( categoryItem.link)} className="block px-5 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white hover:bg-grey-600">
                   {categoryName.toUpperCase()}
-                </a>
+                </Link>
                 <ul>
                   {subItems.map((subItem: { link: string | undefined; text: string; }, subIndex: Key | null | undefined) => (
                     <li key={subIndex} className="hover:bg-grey-800">
-                      <a
-                        href={subItem.link}
+                      <Link
+                        href={convertToDestinationLink(subItem.link ?? "")}
                         className="block px-10 py-2 text-grey-200 font-light text-sm tracking-wide hover:text-white hover:bg-grey-600"
                       >
                         {subItem.text.toUpperCase()}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

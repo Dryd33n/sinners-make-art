@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '../components/header';
 import Post from '../components/post';
 import NavBar from '../components/navBar';
+import Footer from '../components/footer';
 
 interface PageProps {
   params: {
@@ -90,18 +91,20 @@ const Page = async ({ params }: PageProps) => {
 
 
     <div>
-            {Object.keys(groupedPosts).map(tag => (
-                <div key={tag} id={tag}>
-                    <h2 className="text-3xl font-extralight mb-2 ml-10 tracking-wider">{tag.replace(/\//g, ' - ')}</h2>
-                    <div className='bg-white opacity-25 h-[0.1] mx-10'></div>
-                    <div className="posts">
-                        {groupedPosts[tag].map(post => (
-                          <Post key={post.id} post={post} />
-                        ))}
-                    </div>
-                </div>
+      {Object.keys(groupedPosts).map(tag => (
+        <div key={tag} id={tag.toLowerCase().replace(/[\s/]+/g, "-")}>
+          <h2 className="text-3xl font-extralight mb-2 ml-10 tracking-wider">{tag.replace(/\//g, ' - ')}</h2>
+          <div className='bg-white opacity-25 h-[0.1] mx-10'></div>
+          <div className="posts">
+            {groupedPosts[tag].map(post => (
+              <Post key={post.id} post={post} />
             ))}
+          </div>
         </div>
+      ))}
+    </div>
+
+    <Footer />
   </>);
 };
 
