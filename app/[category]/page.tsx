@@ -4,6 +4,7 @@ import Header from '../components/header';
 import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
+import { capitalizeFirstLetter } from '../utils/utils';
 
 interface FilterPostsByCategory {
   (posts: PostType[], category: string): PostType[];
@@ -24,9 +25,21 @@ type PostsByTag = {
   [tag: string]: PostType[];
 };
 
+const baseUrl = 'https://sinners-make.art';
+//const baseUrl = 'http://localhost:3000';
+
+export async function generateMetadata({ params }: { params: { category: string } }) {
+  const { category } = params;
+  return {
+    title: `${capitalizeFirstLetter(category)} | Sinners Make Art`,
+    description: `Explore posts in the ${category} category`,
+  };
+}
+
 
 async function fetchValidCategories() {
-  const res = await fetch(`https://sinners-make.art/api/admin/navtree`);
+  console.log(`Fetching valid categories from (${baseUrl}/api/admin/navtree)`);
+  const res = await fetch(`${baseUrl}/api/admin/navtree`);
   const result = await res.json();
 
   if (!result.success) {
@@ -38,7 +51,7 @@ async function fetchValidCategories() {
 
 const fetchPosts = async () => {
   try {
-    const response = await fetch(`https://sinners-make.art/api/posts`);
+    const response = await fetch(`${baseUrl}/api/posts`);
     const result = await response.json();
 
     if (result.success) {
@@ -57,7 +70,7 @@ const filterPostsByCategory: FilterPostsByCategory = (posts, category) => {
   return posts.filter(post => post.tag.startsWith(`${category.toUpperCase()}/`));
 };
 
-const Page = async ({ params, }: { params: Promise<{ category: string }>}) => {
+const Page = async ({ params, }: { params: Promise<{ category: string }> }) => {
   // Use `await` if you need to fetch data related to `category`
   const { category } = await Promise.resolve(params);
 
@@ -84,22 +97,22 @@ const Page = async ({ params, }: { params: Promise<{ category: string }>}) => {
   }
 
   return (<>
-    <Header mainText={category.toUpperCase()} />
-    <NavBar />
-
-
-    <div>
-      {Object.keys(groupedPosts).map(tag => (
-        <div key={tag} id={tag.toLowerCase().replace(/[\s/]+/g, "-")}>
-          <h2 className="text-3xl font-extralight mb-2 ml-10 tracking-wider">{tag.replace(/\//g, ' - ')}</h2>
-          <div className='bg-white opacity-25 h-[0.1] mx-10'></div>
-          <div className="posts">
-            {groupedPosts[tag].map(post => (
-              <Post key={post.id} post={post} />
-            ))}
+    <div className='grey-900'>
+      <Header mainText={category.toUpperCase()} />
+      <NavBar />
+      <div>
+        {Object.keys(groupedPosts).map(tag => (
+          <div key={tag} id={tag.toLowerCase().replace(/[\s/]+/g, "-")}>
+            <h2 className="text-3xl font-extralight mb-2 ml-10 tracking-wider">{tag.replace(/\//g, ' - ')}</h2>
+            <div className='bg-white opacity-25 h-[0.1] mx-10'></div>
+            <div className="posts">
+              {groupedPosts[tag].map(post => (
+                <Post key={post.id} post={post} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
 
     <Footer />

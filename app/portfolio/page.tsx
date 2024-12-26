@@ -6,6 +6,7 @@ import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
 import Loading from '../components/loading';
+import Head from 'next/head';
 
 type Post = {
     id: number;
@@ -23,6 +24,8 @@ const PortfolioPage = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        document.title = "Portfolio | Sinners Make Art";
+
         const fetchPosts = async () => {
             try {
                 const response = await fetch("/api/portfolio");

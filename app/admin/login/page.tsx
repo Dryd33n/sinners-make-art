@@ -12,6 +12,8 @@ const LoginForm = () => {
     const [isClient, setIsClient] = useState(false);
   
     useEffect(() => {
+      document.title = "Admin Login | Sinners Make Art";
+
       setIsClient(true);
     }, []);
   
