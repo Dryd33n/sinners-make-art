@@ -308,10 +308,6 @@ export default function ReorderEditPosts() {
     };
 
     const handleCateogryChange = async (path: PathItem) => {
-        const filtered = allPosts.filter(
-            (post) => post.tag.trim().toUpperCase() === path.path.trim().toUpperCase()
-        );
-
         setTagId(path.path);
     }
 
