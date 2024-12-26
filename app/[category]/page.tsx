@@ -63,7 +63,7 @@ const filterPostsByCategory: FilterPostsByCategory = (posts, category) => {
   return posts.filter(post => post.tag.startsWith(`${category.toUpperCase()}/`));
 };
 
-const Page = async ({ params }: PageProps) => {
+const Page = async ({ params, }: { params: Promise<{ category: string }>}) => {
   // Use `await` if you need to fetch data related to `category`
   const { category } = await Promise.resolve(params);
 
