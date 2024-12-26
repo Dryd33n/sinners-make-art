@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import Tooltip from "@/app/components/tooltip";
 import ReactPlayer from "react-player";
-import path from "path";
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
@@ -38,7 +37,6 @@ const NewPost = () => {
     const [videoString, setVideoString] = useState("");
     /* POSTS AND TAGS */
     const [allPosts, setAllPosts] = useState<PostItem[]>([]); // All available posts
-    const [filteredPosts, setFilteredPosts] = useState<PostItem[]>([]); // Posts filtered by tag
     const [allPaths, setAllPaths] = useState<PathItem[]>([]); // All available paths
     const [tag, setTag] = useState<PathItem>();
     /* ERROR AND SUCCESS MESSAGES */
@@ -176,7 +174,6 @@ const NewPost = () => {
         );
     
         setTag(path); // Updates the current tag
-        setFilteredPosts(filtered); // Updates filteredPosts state
     };
     
 

@@ -61,7 +61,7 @@ function WebNavBar() {
     // Recursive function to convert tree nodes into MenuLinks
     const buildMenuLinks = (nodes: Node[], url_path: string): MenuLink[] => {
         return nodes.map((node) => {
-            let link = node.link_override === 'auto' ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}` : node.link_override;
+            const link = node.link_override === 'auto' ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}` : node.link_override;
             if (node.children && node.children.length > 0) {
                 return {
                     [node.name]: {

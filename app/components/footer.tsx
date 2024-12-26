@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 
 interface SocialLink {
@@ -37,7 +38,7 @@ const Footer = () => {
       <p className='text-grey-200'>&copy; {new Date().getFullYear()} Sinners Make Art. All rights reserved.</p>
       <p className='italic text-grey-200'>Thank you for visiting!</p>
       <div className="mt-5 mb-3 flex flex-col">
-        <a href='/' className=" underline mx-2 text-white hover:text-gray-400 my-3">Back To Home</a>
+        <Link href='/' className=" underline mx-2 text-white hover:text-gray-400 my-3">Back To Home</Link>
 
         <div>
           {socialLinks.map((link, index) => (

@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { buildTree } from "../utils/admin/navtree/utils";
-import NavButton, { MenuItem, MenuLink } from "./navButton";
+import { MenuItem, MenuLink } from "./navButton";
 import { Node } from "../admin/components/nav_tree";
-import Image from 'next/image';
 import { HiMenu, HiX } from "react-icons/hi";
 import Link from "next/link";
 import { convertToDestinationLink } from "../utils/admin/navtree/utils";
@@ -38,7 +37,7 @@ export default function MobileNavBar() {
     // Recursive function to convert tree nodes into MenuLinks
     const buildMenuLinks = (nodes: Node[], url_path: string): MenuLink[] => {
         return nodes.map((node) => {
-            let link = node.link_override === 'auto' 
+            const link = node.link_override === 'auto' 
                 ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}` 
                 : node.link_override;
 
@@ -99,7 +98,7 @@ interface MobileNavButtonProps {
     links: MenuLink[];
 }
 
-const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, link, links }) => {
+const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, links }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (

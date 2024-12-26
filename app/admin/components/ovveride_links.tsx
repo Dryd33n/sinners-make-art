@@ -73,7 +73,6 @@ const LinkOverrideManager: React.FC = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
         setSuccessMessage('Overrides successfully saved');
       } else {
         console.error('Failed to save overrides:', response.statusText);
@@ -112,7 +111,7 @@ const LinkOverrideManager: React.FC = () => {
             <Tooltip>
               <p>
                 Here you type the path in the file structure which points to the desired destination.
-                use the format "/path/to/destination" to override the default behavior. The path must
+                use the format /path/to/destination to override the default behavior. The path must
                 lead to a valid page in the application routing file structure.
               </p>
             </Tooltip>

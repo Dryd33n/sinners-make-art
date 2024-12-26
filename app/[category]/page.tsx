@@ -11,6 +11,10 @@ interface PageProps {
   };
 }
 
+interface FilterPostsByCategory {
+  (posts: PostType[], category: string): PostType[];
+}
+
 type PostType = {
   id: number;
   title: string;
@@ -35,7 +39,7 @@ async function fetchValidCategories() {
     throw new Error('Failed to fetch navigation tree');
   }
 
-  return result.data.map((item: any) => item.path.toLowerCase());
+  return result.data.map((item: { path: string; }) => item.path.toLowerCase());
 }
 
 const fetchPosts = async () => {
@@ -55,7 +59,7 @@ const fetchPosts = async () => {
   }
 };
 
-const filterPostsByCategory = (posts: any[], category: string) => {
+const filterPostsByCategory: FilterPostsByCategory = (posts, category) => {
   return posts.filter(post => post.tag.startsWith(`${category.toUpperCase()}/`));
 };
 

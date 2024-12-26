@@ -1,9 +1,7 @@
 'use client';
 import Tooltip from "@/app/components/tooltip";
-import { assert } from "console";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
-import { unstable_batchedUpdates } from "react-dom";
 import ReactPlayer from 'react-player';
 
 interface PathItem {
@@ -53,7 +51,6 @@ export default function ReorderEditPosts() {
     const [imagePost, setImagePost] = useState(true);
     const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
     const [tagId, setTagId] = useState("");
-    const [filteredTagPosts, setFilteredTagPosts] = useState<PostItem[]>([]);
     /* CONTENT VARS */
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
     const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
@@ -66,7 +63,7 @@ export default function ReorderEditPosts() {
 
             if (result.success) {
                 setAllPosts(result.data);
-                setReorderPostErrorMessage
+                setReorderPostErrorMessage('')
                 setReorderPostSuccessMessage('All posts successfully loaded');
             } else {
                 console.error('Failed to fetch posts');
@@ -195,6 +192,7 @@ export default function ReorderEditPosts() {
         } catch (error) {
             setReorderPostSuccessMessage('');
             setReorderPostErrorMessage("Error updating post order");
+            console.log('Error updating post order:', error);
         }
     };
 
@@ -243,6 +241,7 @@ export default function ReorderEditPosts() {
         } catch (error) {
             setUpdateErrorMessage("An error occurred. Please try again later.");
             setUpdateSuccessMessage("");
+            console.error("Error updating post:", error);
         } finally {
             setIsSubmitting(false);
         }
@@ -314,7 +313,6 @@ export default function ReorderEditPosts() {
         );
 
         setTagId(path.path);
-        setFilteredTagPosts(filtered);
     }
 
     const canSubmit = () => {

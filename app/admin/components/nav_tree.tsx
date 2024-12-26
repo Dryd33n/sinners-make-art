@@ -2,7 +2,6 @@
 
 import { addNodeRecursively, buildTree, removeNodeRecursively, renameNodeRecursively } from '@/app/utils/admin/navtree/utils';
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface Node {
   link_override: string; // Link override for the node default is "auto"

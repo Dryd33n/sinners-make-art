@@ -10,7 +10,7 @@ import { eq } from 'drizzle-orm';
  * @param req request object
  * @returns returns a response object
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const portfolioPosts = await db.select().from(postsTable).where(eq(postsTable.portfolio, true)).execute();
         return NextResponse.json({ success: true, data: portfolioPosts }, { status: 200 });

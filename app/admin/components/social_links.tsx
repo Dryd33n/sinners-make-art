@@ -61,6 +61,7 @@ const SocialLinks: React.FC = () => {
         } catch (error) {
             setSuccessMessage('');
             setErrorMessage('Error saving links');
+            console.log('Error saving links:', error);
         }
     };
 

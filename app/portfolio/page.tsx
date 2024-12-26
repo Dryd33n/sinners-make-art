@@ -47,7 +47,6 @@ const PortfolioPage = () => {
         };
 
         fetchPosts();
-        console.log("POSTS", posts);
     }, []);
 
     if (loading) {
