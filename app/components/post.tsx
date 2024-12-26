@@ -19,6 +19,17 @@ type PostProps = {
 };
 
 export default function Post(props: PostProps) {
+    const [screenWidth, setScreenWidth] = React.useState<number>(0);
+    const [screenHeight, setScreenHeight] = React.useState<number>(0);
+
+    const updateScreenSize = () => {
+        setScreenWidth(window.innerWidth);
+        setScreenHeight(window.innerHeight);
+        console.log(screenWidth, screenHeight);
+    };
+
+    onresize = updateScreenSize;
+
     const images = props.post.content.split(',').map((url: string) => ({
         original: url, // Use the full-size image
         thumbnail: url, // Generate thumbnails dynamically (adjust as needed)
@@ -26,31 +37,46 @@ export default function Post(props: PostProps) {
 
 
     return (<>
-        <div className="flex md:flex-row flex-col xl:mx-60 lg:mx-52 md:mx-40 sm: mx-10  object-fit my-5">
-            <div className="flex-col mr-5 md:min-w-[30%] md:max-w-[30%] sm:min-w-[95%] sm:max-w-[95%] ">
+        <div className="w-full flex flex-col md:flex-row justify-center align my-20 gap-6 ">
+            <div className="md:basis-1/3 w-full basis-1/5">
                 <h1 className='text-4xl font-extralight'>{props.post.title.toUpperCase()}</h1>
-                <p className='my-10'>{props.post.description}</p>
+                <div className='bg-white h-[0.1] w-full mt-5 relative '></div>
+                <p className='mt-3'>{props.post.description}</p>
             </div>
 
-            <div>
+            <div className='md:basis-2/3 basis-4/5 w-full '>
                 {props.post.type === 'image' ?
-                    (<div className="flex-col flex-auto place-content-center mx-52">
+                    (
+                    <div className="flex-col flex-auto place-content-center">
                         <ImageGallery
                             items={images}
                             showThumbnails={false}
                             showPlayButton={false}
                             showBullets={true}
                             showNav={false}
-                            showFullscreenButton={false}
+                            showFullscreenButton={true}
                             autoPlay={true}
                             slideInterval={7500}
+                            additionalClass="custom-image-gallery"
                         />
-                    </div>)
-                    : (<div className='h-64 pl-24'>
-                        <ReactPlayer url={props.post.content} controls={true} width='200%' height='120%' />
-                    </div>)}
+                    </div>
+                    ) : (
+                    <div className='grid place-content-center'>
+                        <div className='h-[180] w-[350] sm:h-[300] sm:w-[500] md:h-[300] md:w-[500] lg:h-[400] lg:w-[600]'>
+                            <div className='w-full h-full'>
+                                    <ReactPlayer url={props.post.content} controls={true} height='100%' width='100%' />
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
+
+        <style jsx global>{`
+        .custom-image-gallery .image-gallery-fullscreen-button {
+          opacity: 0.3; 
+        }
+      `}</style>
         
 
 

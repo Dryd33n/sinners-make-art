@@ -57,7 +57,7 @@ const PortfolioPage = () => {
         <>
             <Header mainText="PORTFOLIO" />
             <NavBar />
-            <div className='mt-20'>
+            <div className='mt-20 mx-5 md:mx-20 lg:mx-40 xl:mx-64 2xl:mx-80'>
                 {posts.map(post => (
                     <Post key={post.id} post={post} />
                 ))}
