@@ -26,7 +26,7 @@ type PostsByTag = {
 
 
 async function fetchValidCategories() {
-  const res = await fetch(`${process.env.BASE_URL}/api/admin/navtree`);
+  const res = await fetch(`https://sinners-make.art/api/admin/navtree`);
   const result = await res.json();
 
   if (!result.success) {
@@ -38,7 +38,7 @@ async function fetchValidCategories() {
 
 const fetchPosts = async () => {
   try {
-    const response = await fetch(`${process.env.BASE_URL}/api/posts`);
+    const response = await fetch(`https://sinners-make.art/api/posts`);
     const result = await response.json();
 
     if (result.success) {
