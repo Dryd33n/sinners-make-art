@@ -28,7 +28,7 @@ type PostsByTag = {
 const baseUrl = 'https://sinners-make.art';
 //const baseUrl = 'http://localhost:3000';
 
-export async function generateMetadata({ params }: { params: { category: string } }) {
+export async function generateMetadata({ params, }: { params: Promise<{ category: string }> }) {
   const { category } = params;
   return {
     title: `${capitalizeFirstLetter(category)} | Sinners Make Art`,
