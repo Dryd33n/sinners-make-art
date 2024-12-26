@@ -6,6 +6,8 @@ import NavButton, { MenuItem, MenuLink } from "./navButton";
 import { Node } from "../admin/components/nav_tree";
 import Image from 'next/image';
 import { HiMenu, HiX } from "react-icons/hi";
+import Link from "next/link";
+import { convertToDestinationLink } from "../utils/admin/navtree/utils";
 
 export default function MobileNavBar() {
     const [navTree, setNavTree] = useState<Node[]>([]);
@@ -119,12 +121,12 @@ const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, link, links }) 
                             // Simple MenuItem
                             return (
                                 <li key={index}>
-                                    <a
-                                        href={String(item.link)}
+                                    <Link
+                                        href={convertToDestinationLink(String(item.link))}
                                         className="block px-4 py-2 text-grey-200 hover:text-white hover:bg-grey-600"
                                     >
                                         {String(item.text).toUpperCase()}
-                                    </a>
+                                    </Link>
                                 </li>
                             );
                         } else {
@@ -135,18 +137,17 @@ const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, link, links }) 
 
                             return (
                                 <li key={index} className="mb-2">
-                                    <span className="block px-4 py-2 text-grey-200 font-light">
-                                        {categoryName.toUpperCase()}
-                                    </span>
+                                    <Link className="block px-4 py-2 text-grey-200 font-light"
+                                        href={convertToDestinationLink( categoryItem.link)}>{categoryName.toUpperCase()}</Link>
                                     <ul className="pl-4">
                                         {subItems.map((subItem, subIndex) => (
                                             <li key={subIndex}>
-                                                <a
-                                                    href={subItem.link}
+                                                <Link
+                                                    href={convertToDestinationLink(subItem.link)}
                                                     className="block px-4 py-2 text-grey-200 hover:text-white hover:bg-grey-600"
                                                 >
                                                     {subItem.text.toUpperCase()}
-                                                </a>
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>
