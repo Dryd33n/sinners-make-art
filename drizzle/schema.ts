@@ -34,3 +34,12 @@ export const socialLinks = pgTable("social_links", {
 	url: text().notNull(),
 	name: text().notNull(),
 });
+
+export const highlightsTable = pgTable("highlights_table", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "highlights_table_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	highlightTag: text("highlight_tag").notNull(),
+	highlightName: text("highlight_name").notNull(),
+	highlightDesc: text("highlight_desc").notNull(),
+	type: text().notNull(),
+	content: text().notNull(),
+});
