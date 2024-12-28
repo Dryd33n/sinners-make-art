@@ -13,6 +13,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
     "@octokit/rest": "^21.0.2",
+    "@vercel/analytics": "^1.4.1",
     "dotenv": "^16.4.7",
     "drizzle-cli": "^0.2.1",
     "drizzle-orm": "^0.37.0",
