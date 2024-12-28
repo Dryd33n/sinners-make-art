@@ -143,12 +143,10 @@ function MobilePost(props: PostProps) {
                             />
                         </div>
                     ) : (
-                        <div className='grid place-content-center'>
-                            <div className='h-[180] w-[350] sm:h-[300] sm:w-[500] md:h-[300] md:w-[500] lg:h-[400] lg:w-[600]'>
+                        <div className='grid place-content-center h-[180] w-[350] sm:h-[300] sm:w-[500] md:h-[300] md:w-[500] lg:h-[400] lg:w-[600]'>
                                 <div className='w-full h-full'>
                                     <ReactPlayer url={props.post.content} controls={true} height='100%' width='100%' />
                                 </div>
-                            </div>
                         </div>
                     )}
                 </div>
