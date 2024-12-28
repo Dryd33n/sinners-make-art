@@ -7,6 +7,7 @@ import { Node } from "../admin/components/nav_tree";
 import { HiMenu, HiX } from "react-icons/hi";
 import Link from "next/link";
 import { convertToDestinationLink } from "../utils/admin/navtree/utils";
+import Image from "next/image";
 
 export default function MobileNavBar() {
     const [navTree, setNavTree] = useState<Node[]>([]);
@@ -37,8 +38,8 @@ export default function MobileNavBar() {
     // Recursive function to convert tree nodes into MenuLinks
     const buildMenuLinks = (nodes: Node[], url_path: string): MenuLink[] => {
         return nodes.map((node) => {
-            const link = node.link_override === 'auto' 
-                ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}` 
+            const link = node.link_override === 'auto'
+                ? `/${url_path.toLowerCase()}/${node.name.toLowerCase().replace(/ /g, '-')}`
                 : node.link_override;
 
             if (node.children && node.children.length > 0) {
@@ -60,11 +61,11 @@ export default function MobileNavBar() {
         });
     };
 
-    return (
-        <nav className="w-full bg-grey-850 mb-2 text-white relative">
+    return (<>
+        <nav className={`w-full bg-grey-850  text-white relative `}>
             {/* Header with menu toggle */}
             <div className="flex items-center justify-between px-4 py-3"
-                 onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 <div className="text-xl font-extralight">MENU</div>
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -89,7 +90,23 @@ export default function MobileNavBar() {
                 })}
             </div>
         </nav>
-    );
+
+        {!isMenuOpen &&
+        <div className="relative max-h-52 min-h-52 overflow-hidden w-full">
+            {/* Background Image */}
+            <Image
+                src="/header-bg.webp"
+                alt="Header Background"
+                width="1920"
+                height="1080"
+                priority
+                className="absolute inset-0 w-full h-full object-cover -z-10 scale-x-[-1] blur-[2px]"
+            />
+
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0abf] from-10% via-[#0a0a0a] via-50% to-[#0a0a0a] to-100% z-10"></div>
+        </div>}
+    </>);
 }
 
 interface MobileNavButtonProps {
@@ -101,7 +118,7 @@ interface MobileNavButtonProps {
 const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, links }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    return (
+    return (<>
         <div className="mb-2">
             {/* Main Menu Item */}
             <button
@@ -137,7 +154,7 @@ const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, links }) => {
                             return (
                                 <li key={index} className="mb-2">
                                     <Link className="block px-4 py-2 text-grey-200 font-light"
-                                        href={convertToDestinationLink( categoryItem.link)}>{categoryName.toUpperCase()}</Link>
+                                        href={convertToDestinationLink(categoryItem.link)}>{categoryName.toUpperCase()}</Link>
                                     <ul className="pl-4">
                                         {subItems.map((subItem, subIndex) => (
                                             <li key={subIndex}>
@@ -157,6 +174,7 @@ const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, links }) => {
                 </ul>
             )}
         </div>
+    </>
     );
 };
 

@@ -28,7 +28,9 @@ export default function NavBar() {
     }, []);
 
     return (<>
-        {isMobile ? (<MobileNavBar />) : (<WebNavBar />)}
+        <div className="mb-10 sm:mb-0">
+            {isMobile ? (<MobileNavBar />) : (<WebNavBar />)}</div>
+        
     </>
     )
 }

@@ -37,7 +37,7 @@ export default function Post(props: PostProps) {
 
     return (
         <>
-            {screenWidth > 768 ? <WebPost post={props.post} /> : <MobilePost post={props.post} />}
+            <div className='mb-40 sm:mb-0'>{screenWidth > 768 ? <WebPost post={props.post} /> : <MobilePost post={props.post} />}</div>
         </>
     );
 }
