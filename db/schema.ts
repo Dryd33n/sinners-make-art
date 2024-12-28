@@ -52,6 +52,7 @@ export const highlightsTable = pgTable("highlights_table", {
 	highlightDesc: text("highlight_desc").notNull(),
 	type: text().notNull(),
 	content: text().notNull(),
+	order: integer().notNull(),
 });
 
 

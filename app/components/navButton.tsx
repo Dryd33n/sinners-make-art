@@ -49,7 +49,6 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
             const categoryName = Object.keys(item)[0];
             const categoryItem = item[categoryName].categoryItem;
             const subItems = item[categoryName].subItems;
-            console.log("SubItems:", subItems);
 
             return (
               <li key={index} className="bg-grey-800">
