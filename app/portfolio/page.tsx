@@ -6,6 +6,7 @@ import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
 import Loading from '../components/loading';
+import HomeButton from '../components/home_button';
 
 type Post = {
     id: number;
@@ -57,6 +58,7 @@ const PortfolioPage = () => {
 
     return (
         <>
+            <HomeButton />
             <Header mainText="PORTFOLIO" />
             <NavBar />
             <div className='mt-20'>

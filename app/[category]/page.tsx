@@ -4,6 +4,7 @@ import Header from '../components/header';
 import Post from '../components/post';
 import NavBar from '../components/navBar';
 import Footer from '../components/footer';
+import HomeButton from '../components/home_button';
 import { capitalizeFirstLetter } from '../utils/utils';
 
 interface FilterPostsByCategory {
@@ -124,6 +125,7 @@ const Page = async ({ params, }: { params: Promise<{ category: string }> }) => {
     <div className='grey-900'>
       <Header mainText={category.toUpperCase()} />
       <NavBar />
+      <HomeButton />
       <div>
         {Object.keys(groupedPosts).map(tag => (
           <div key={tag} id={tag.toLowerCase().replace(/[\s/]+/g, "-")}>
