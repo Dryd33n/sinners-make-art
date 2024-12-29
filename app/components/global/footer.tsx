@@ -2,12 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-
-interface SocialLink {
-    id?: number; // Include id for API identification
-    name: string;
-    url: string;
-}
+import { SocialLink } from '@/db/schema';
 
 const Footer = () => {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);

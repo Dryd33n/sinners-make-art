@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Key } from "react";
-import { convertToDestinationLink } from "../utils/admin/navtree/utils";
+import { convertToDestinationLink } from "../../utils/admin/navtree/utils";
 
 export interface MenuItem {
   text: string;

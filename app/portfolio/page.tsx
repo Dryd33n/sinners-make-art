@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Header from '../components/header';
+import Header from '../components/global/header';
 import Post from '../components/post';
-import NavBar from '../components/navBar';
-import Footer from '../components/footer';
-import Loading from '../components/loading';
-import HomeButton from '../components/home_button';
+import NavBar from '../components/global/navBar';
+import Footer from '../components/global/footer';
+import Loading from '../components/global/loading';
+import HomeButton from '../components/global/home_button';
 
 type Post = {
     id: number;

@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
-import Tooltip from "@/app/components/tooltip";
+import Tooltip from "@/app/components/global/tooltip";
 import ReactPlayer from "react-player";
+import { PostItem } from "@/db/schema";
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
@@ -13,16 +14,6 @@ interface PathItem {
     id: number;
     path: string;
     linkOverride: string;
-}
-
-interface PostItem {
-    title: string;
-    description: string;
-    type: string;        // photo or video
-    content: string;     // images urls csv or video link
-    tag: string;         // category
-    order: number;       // order in category
-    portfolio: boolean;  // show in portfolio
 }
 
 const NewPost = () => {

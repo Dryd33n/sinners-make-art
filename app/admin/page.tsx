@@ -1,13 +1,13 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Header from '../components/header';
+import Header from '../components/global/header';
 import AboutMeForm from './components/home_edit';
 import NavTree from './components/nav_tree';
 import LinkOverrideManager from './components/ovveride_links';
 import NewPost from './components/new_post';
 import ReorderEditPosts from './components/reorder_edit_posts';
 import ExpandableSection from '../components/expandable_section';
-import Tooltip from '../components/tooltip';
+import Tooltip from '../components/global/tooltip';
 import SocialLinks from './components/social_links';
 
 export const metadata = {
@@ -28,7 +28,9 @@ export default async function AdminPage() {
   return (
     <>
       <Header mainText="ADMIN PANEL" />
-      
+
+      <h1 className='text-3xl font-extralight mx-14 my-5'>MANAGE SITE CONTENT:</h1>
+
       <ExpandableSection title="Modify About Me Content">
         <Tooltip>
           <p>
@@ -37,25 +39,11 @@ export default async function AdminPage() {
         </Tooltip>
         <AboutMeForm />
       </ExpandableSection>
-      
-      <ExpandableSection title="Modify Navigation Schema">
-        <Tooltip>
-          <p>
-            This section is used to modify the links which appear in the navigation bar. 
-          </p>
-        </Tooltip>
-        <NavTree />
+      <ExpandableSection title="Social Media Links">
+        <SocialLinks />
       </ExpandableSection>
 
-      <ExpandableSection title="Modify Navigation Destinations">
-        <Tooltip>
-          <p>
-            This section is used to modify certain links in the navigation tree to redirect to premade pages 
-            instead of the default behavior of auto generating the pages based on the posts tagged with the category.
-          </p>
-        </Tooltip>
-        <LinkOverrideManager />
-      </ExpandableSection>
+      <h1 className='text-3xl font-extralight mx-14 my-5'>MANAGE POSTS:</h1>
 
       <ExpandableSection title="Create New Post">
         <Tooltip>
@@ -68,12 +56,30 @@ export default async function AdminPage() {
       </ExpandableSection>
 
       <ExpandableSection title="Reorder and Edit Posts">
-        <ReorderEditPosts/>
+        <ReorderEditPosts />
       </ExpandableSection>
 
-      <ExpandableSection title="Social Media Links">
-        <SocialLinks />
-      </ExpandableSection>  
+      <h1 className='text-3xl font-extralight mx-14 my-5'>MANAGE SITE STRUCTURE:</h1>
+
+      <ExpandableSection title="Modify Navigation Schema">
+        <Tooltip>
+          <p>
+            This section is used to modify the links which appear in the navigation bar.
+          </p>
+        </Tooltip>
+        <NavTree />
+      </ExpandableSection>
+
+      <ExpandableSection title="Modify Navigation Destinations">
+        <Tooltip>
+          <p>
+            This section is used to modify certain links in the navigation tree to redirect to premade pages
+            instead of the default behavior of auto generating the pages based on the posts tagged with the category.
+          </p>
+        </Tooltip>
+        <LinkOverrideManager />
+      </ExpandableSection>
+
     </>
   );
 }

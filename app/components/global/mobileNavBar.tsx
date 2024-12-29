@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { buildTree } from "../utils/admin/navtree/utils";
+import { buildTree } from "../../utils/admin/navtree/utils";
 import { MenuItem, MenuLink } from "./navButton";
-import { Node } from "../admin/components/nav_tree";
+import { Node } from "../../admin/components/nav_tree";
 import { HiMenu, HiX } from "react-icons/hi";
 import Link from "next/link";
-import { convertToDestinationLink } from "../utils/admin/navtree/utils";
+import { convertToDestinationLink } from "../../utils/admin/navtree/utils";
 import Image from "next/image";
 
 export default function MobileNavBar() {

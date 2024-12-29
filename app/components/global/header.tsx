@@ -4,6 +4,11 @@ interface HeaderProps {
   mainText: string;
 }
 
+/** Displays a header with text supplied by props
+ * 
+ * @param mainText: text to display on header
+ * @returns 
+ */
 export default function Header({ mainText }: HeaderProps) {
   return (
     <header className="relative w-full h-64">

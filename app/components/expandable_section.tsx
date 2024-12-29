@@ -13,7 +13,7 @@ export default function ExpandableSection({ title, children }: ExpandableSection
   const toggleSection = () => setIsOpen(!isOpen);
 
   return (
-    <div className="border rounded-lg shadow-md p-4 mb-4 bg-grey-800 m-5">
+    <div className="border rounded-lg shadow-md p-4 my-4 bg-grey-800 m-5">
       <div 
         className="flex justify-between items-center cursor-pointer"
         onClick={toggleSection}

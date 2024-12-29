@@ -1,8 +1,9 @@
 'use client';
-import Tooltip from "@/app/components/tooltip";
+import Tooltip from "@/app/components/global/tooltip";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
 import ReactPlayer from 'react-player';
+import { PostItem } from "@/db/schema";
 
 interface PathItem {
     id: number;
@@ -12,17 +13,6 @@ interface PathItem {
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
-}
-
-interface PostItem {
-    id: number;
-    title: string;
-    description: string;
-    type: string;        // photo or video
-    content: string;     // images urls csv or video link
-    tag: string;         // category
-    order: number;       // order in category
-    portfolio: boolean;  // show in portfolio
 }
 
 export default function ReorderEditPosts() {
@@ -123,6 +113,11 @@ export default function ReorderEditPosts() {
     }
 
     const handleDeletePost = (id: number) => {
+        if (id === -1){
+            console.log("Error specifying post to delete")
+            return;
+        }
+
         deletePost(id);
         fetchPosts();
         setFilteredPosts(filteredPosts.filter(post => post.id !== id));
@@ -372,7 +367,7 @@ export default function ReorderEditPosts() {
                                     {/* Action Buttons */}
                                     <div className="mt-2 flex gap-2">
                                         <button
-                                            onClick={() => handleDeletePost(post.id)}
+                                            onClick={() => handleDeletePost(post.id || -1)}
                                             className="px-4 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
                                         >
                                             Delete

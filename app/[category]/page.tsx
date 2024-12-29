@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation';
 import React from 'react';
-import Header from '../components/header';
+import Header from '../components/global/header';
 import Post from '../components/post';
-import NavBar from '../components/navBar';
-import Footer from '../components/footer';
-import HomeButton from '../components/home_button';
+import NavBar from '../components/global/navBar';
+import Footer from '../components/global/footer';
+import HomeButton from '../components/global/home_button';
 import { capitalizeFirstLetter } from '../utils/utils';
 
 interface FilterPostsByCategory {

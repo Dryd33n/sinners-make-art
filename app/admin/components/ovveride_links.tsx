@@ -1,6 +1,6 @@
 'use client';
 
-import Tooltip from '@/app/components/tooltip';
+import Tooltip from '@/app/components/global/tooltip';
 import React, { useEffect, useState } from 'react';
 
 interface OverrideItem {

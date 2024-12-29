@@ -1,12 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-
-interface SocialLink {
-    id?: number; // Include id for API identification
-    name: string;
-    url: string;
-}
+import { SocialLink } from '@/db/schema';
 
 
 const SocialLinks: React.FC = () => {
