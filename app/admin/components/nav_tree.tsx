@@ -1,6 +1,6 @@
 'use client';
 
-import { addNodeRecursively, buildTree, removeNodeRecursively, renameNodeRecursively } from '@/app/utils/admin/navtree/utils';
+import { addNodeRecursively, buildTree, flattenTree, removeNodeRecursively, renameNodeRecursively } from '@/app/utils/admin/navtree/utils';
 import React, { useState, useEffect } from 'react';
 
 export interface Node {
@@ -23,93 +23,12 @@ interface NavTreeProps {
   parentId?: number | null;                                // Id of the parent node
 }
 
-/**NAVIGATION ITEM
- * Navigation item component that displays the itself and its child nodes
- * 
- * @param param0 nav tree props
- * @returns element with navigation item and its children
- */
-const NavItem: React.FC<NavTreeProps> = ({
-  node,
-  onRename,
-  onAddChild,
-  onRemove,
-  onMoveUp,
-  onMoveDown,
-  parentId = null,
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [newName, setNewName] = useState(node.name);
-
-  const handleRename = () => setIsEditing(true);
-  const handleSaveRename = () => {
-    onRename(node.id, newName);
-    setIsEditing(false);
-  };
-
-  const handleAddChild = () => onAddChild(node.id);
-  const handleRemove = () => onRemove(node.id);
-  const handleMoveUp = () => parentId && onMoveUp(parentId, node.id);
-  const handleMoveDown = () => parentId && onMoveDown(parentId, node.id);
-
-  return (
-    <div className="flex flex-col mb-2 bg-grey-700 p-1 rounded">
-      <div className="flex">
-        <div className="flex items-center mb-1 bg-grey-600 rounded h-8">
-          <button onClick={handleAddChild} className="mr-1">➕</button>
-          <button onClick={handleMoveUp} className="mr-1">⬆️</button>
-          <button onClick={handleMoveDown} className="mr-1">⬇️</button>
-          <button onClick={handleRemove} className="text-red-500">✖️</button>
-        </div>
-        <div className="ml-2 bg-grey-700 rounded h-8 flex items-center justify-center">
-          {isEditing ? (
-            <>
-              <input
-                className="text-black align-text-middle"
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSaveRename();
-                }}
-                autoFocus
-              />
-              <button onClick={handleSaveRename}>Save</button>
-            </>
-          ) : (
-            <span onDoubleClick={handleRename} className="text-white">
-              {node.name}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="ml-5">
-        {node.children &&
-          node.children
-            .sort((a, b) => a.order - b.order)
-            .map((child) => (
-              <NavItem
-                key={child.id}
-                node={child}
-                onAddChild={onAddChild}
-                onRename={onRename}
-                onRemove={onRemove}
-                onMoveUp={onMoveUp}
-                onMoveDown={onMoveDown}
-                parentId={node.id}
-              />
-            ))}
-      </div>
-    </div>
-  );
-};
-
 /**NAVIGATION TREE
  * Navigation tree component that displays the navigation tree and allows for modifications
  * 
  * @returns react element with navigation tree
  */
-const NavTree = () => {
+export default function NavTree() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [treeData, setTreeData] = useState<Node[]>([ ]);
@@ -255,26 +174,6 @@ const NavTree = () => {
    */
   const postNavTree = async (nodes: Node[]) => {
     setSuccessMessage("Converting Nav Tree");
-
-    interface FlattenedNode {
-      id: number;
-      name: string;
-      path: string;
-      order: number;
-    }
-
-    const flattenTree = (nodes: Node[], parentPath: string = ''): FlattenedNode[] => {
-      return nodes.reduce((acc, node) => {
-        const currentPath = parentPath ? `${parentPath}/${node.name}` : node.name;
-        acc.push({ id: node.id, name: node.name, path: currentPath, order: node.order });
-  
-        if (node.children) {
-          acc = acc.concat(flattenTree(node.children, currentPath));
-        }
-  
-        return acc;
-      }, [] as FlattenedNode[]);
-    };
   
     const flattenedTree = flattenTree(nodes);
   
@@ -333,4 +232,84 @@ const NavTree = () => {
   );
 };
 
-export default NavTree;
+
+/**NAVIGATION ITEM
+ * Navigation item component that displays the itself and its child nodes
+ * 
+ * @param param0 nav tree props
+ * @returns element with navigation item and its children
+ */
+const NavItem: React.FC<NavTreeProps> = ({
+  node,
+  onRename,
+  onAddChild,
+  onRemove,
+  onMoveUp,
+  onMoveDown,
+  parentId = null,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState(node.name);
+
+  const handleRename = () => setIsEditing(true);
+  const handleSaveRename = () => {
+    onRename(node.id, newName);
+    setIsEditing(false);
+  };
+
+  const handleAddChild = () => onAddChild(node.id);
+  const handleRemove = () => onRemove(node.id);
+  const handleMoveUp = () => parentId && onMoveUp(parentId, node.id);
+  const handleMoveDown = () => parentId && onMoveDown(parentId, node.id);
+
+  return (
+    <div className="flex flex-col mb-2 bg-grey-700 p-1 rounded">
+      <div className="flex">
+        <div className="flex items-center mb-1 bg-grey-600 rounded h-8">
+          <button onClick={handleAddChild} className="mr-1">➕</button>
+          <button onClick={handleMoveUp} className="mr-1">⬆️</button>
+          <button onClick={handleMoveDown} className="mr-1">⬇️</button>
+          <button onClick={handleRemove} className="text-red-500">✖️</button>
+        </div>
+        <div className="ml-2 bg-grey-700 rounded h-8 flex items-center justify-center">
+          {isEditing ? (
+            <>
+              <input
+                className="text-black align-text-middle"
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSaveRename();
+                }}
+                autoFocus
+              />
+              <button onClick={handleSaveRename}>Save</button>
+            </>
+          ) : (
+            <span onDoubleClick={handleRename} className="text-white">
+              {node.name}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="ml-5">
+        {node.children &&
+          node.children
+            .sort((a, b) => a.order - b.order)
+            .map((child) => (
+              <NavItem
+                key={child.id}
+                node={child}
+                onAddChild={onAddChild}
+                onRename={onRename}
+                onRemove={onRemove}
+                onMoveUp={onMoveUp}
+                onMoveDown={onMoveDown}
+                parentId={node.id}
+              />
+            ))}
+      </div>
+    </div>
+  );
+};

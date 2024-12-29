@@ -1,29 +1,20 @@
 import { notFound } from 'next/navigation';
 import React from 'react';
 import Header from '../components/global/header';
-import Post from '../components/post';
+import Post from '../components/global/post';
 import NavBar from '../components/global/navBar';
 import Footer from '../components/global/footer';
 import HomeButton from '../components/global/home_button';
 import { capitalizeFirstLetter } from '../utils/utils';
+import { PostItem } from '@/db/schema';
 
 interface FilterPostsByCategory {
-  (posts: PostType[], category: string): PostType[];
+  (posts: PostItem[], category: string): PostItem[];
 }
 
-type PostType = {
-  id: number;
-  title: string;
-  description: string;
-  type: string;
-  content: string;
-  tag: string;
-  order: number;
-  portfolio: boolean;
-};
 
 type PostsByTag = {
-  [tag: string]: PostType[];
+  [tag: string]: PostItem[];
 };
 
 const baseUrl = 'https://sinners-make.art';
@@ -71,8 +62,8 @@ const filterPostsByCategory: FilterPostsByCategory = (posts, category) => {
   return posts.filter(post => post.tag.startsWith(`${category.toUpperCase()}/`));
 };
 
-const groupPosts = (posts: PostType[]) => {
-  const groupedPosts = posts.reduce((acc: PostsByTag, post: PostType) => {
+const groupPosts = (posts: PostItem[]) => {
+  const groupedPosts = posts.reduce((acc: PostsByTag, post: PostItem) => {
     const tags = post.tag.split('/');
 
     // Add the post to the highest level of the tag hierarchy

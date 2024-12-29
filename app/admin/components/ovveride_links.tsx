@@ -2,6 +2,7 @@
 
 import Tooltip from '@/app/components/global/tooltip';
 import React, { useEffect, useState } from 'react';
+import PathSelector from './shared/path_selector';
 
 interface OverrideItem {
   id: number;
@@ -90,20 +91,7 @@ const LinkOverrideManager: React.FC = () => {
 
       <div className="flex space-x-6">
         {/* Scrollable dropdown for available paths */}
-        <div className="w-1/2 bg-grey-800 p-3 rounded-md">
-          <h2 className="font-semibold mb-2">Available Paths</h2>
-          <div className="h-64 overflow-y-auto bg-grey-700 rounded-md p-2">
-            {allPaths.map((path) => (
-              <div
-                key={path.id}
-                className="flex justify-between items-center p-2 hover:bg-grey-600 cursor-pointer"
-                onClick={() => addOverride(path.id)}
-              >
-                <span className="text-white">{path.path}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PathSelector excludeOverriden={false} selectedPathMsg='Setting Destination Override on:' onSelect={(path) => addOverride(path.id)}/>
 
         {/* List of overrides */}
         <div className="w-1/2 bg-grey-800 p-3 rounded-md">

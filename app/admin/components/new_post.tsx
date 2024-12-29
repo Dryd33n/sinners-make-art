@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
-import Tooltip from "@/app/components/global/tooltip";
-import ReactPlayer from "react-player";
 import { PostItem } from "@/db/schema";
+import PathSelector from "./shared/path_selector";
+import VideoSelector from "./shared/video_selector";
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
@@ -16,7 +16,7 @@ interface PathItem {
     linkOverride: string;
 }
 
-const NewPost = () => {
+export default function NewPost() {
     /* FORM VARS */
     const [title, setTitle] = useState("");
     const [paragraph, setParagraph] = useState("");
@@ -28,31 +28,11 @@ const NewPost = () => {
     const [videoString, setVideoString] = useState("");
     /* POSTS AND TAGS */
     const [allPosts, setAllPosts] = useState<PostItem[]>([]); // All available posts
-    const [allPaths, setAllPaths] = useState<PathItem[]>([]); // All available paths
     const [tag, setTag] = useState<PathItem>();
     /* ERROR AND SUCCESS MESSAGES */
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const fetchPaths = async () => {
-        try {
-            const response = await fetch('/api/admin/navtree/overrides');
-            const result = await response.json();
-
-            if (result.success) {
-                setAllPaths(result.data.filter((item: PathItem) => item.linkOverride == 'auto'));
-                setErrorMessage('');
-                setSuccessMessage('Tags successfully loaded');
-            } else {
-                console.error('Failed to fetch tags');
-                setErrorMessage('Failed to fetch tags');
-            }
-        } catch (error) {
-            console.error('Error fetching tags:', error);
-            setErrorMessage('Error fetching tags');
-        }
-    };
    
     const fetchPosts = async () => {
         console.log("Fetching posts");
@@ -76,7 +56,6 @@ const NewPost = () => {
     }
 
     useEffect(() => {
-        fetchPaths();
         fetchPosts();
     }, []);
 
@@ -94,17 +73,6 @@ const NewPost = () => {
 
         return hasValidTitle && hasValidParagraph && validContent && hasTag;
     };
-
-    // Handle title change
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
-    };
-
-    // Handle paragraph change
-    const handleParagraphChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setParagraph(e.target.value);
-    };
-
 
     // Handle change for image links
     const handleImageLinkChange = (index: number, value: string) => {
@@ -145,11 +113,6 @@ const NewPost = () => {
             updatedStatuses[index] = { status };
             return updatedStatuses;
         });
-    };
-
-    const handleEmbedChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setVideoString(e.target.value);
-        console.log("Embed String:", videoString);
     };
 
     const handleCateogryChange = (path: PathItem) => {
@@ -233,32 +196,7 @@ const NewPost = () => {
                 <form onSubmit={handleSubmit} className="flex flex-row gap-6">
                     {/* Left Side */}
                     <div className=" flex-1 basis-1/3">
-                        <div className="mb-4">
-                            <label htmlFor="title" className="block text-lg font-medium mb-4">
-                                Post Category:
-                            </label>
-                            <div className="flex content-center">
-                                <Tooltip>
-                                    <p>Tags / Categories with a link overide set cannot be selected</p>
-                                </Tooltip>
-                                <h2 className="font-semibold mb-2 mt-[2]">Available Paths</h2>
-                            </div>
-                            <div className="h-64 overflow-y-auto bg-grey-700 rounded-md p-2">
-                                {allPaths.map((path) => (
-                                    <div
-                                        key={path.id}
-                                        className="flex justify-between items-center p-2 hover:bg-grey-600 cursor-pointer"
-                                        onClick={() => handleCateogryChange(path)}
-                                    >
-                                        <span className="text-white">{path.path}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <h2 className="font-semibold mt-3 mb-2">Post Classified Under:</h2>
-                            <p className="bg-grey-700 rounded-md p-2">
-                                {tag?.path}
-                            </p>
-                        </div>
+                        <PathSelector onSelect={handleCateogryChange} excludeOverriden={true} selectedPathMsg="Post Classified Under:"/>
 
                         {/* Include in Portfolio Checkbox */}
                         <div className="mb-4">
@@ -286,7 +224,7 @@ const NewPost = () => {
                                 type="text"
                                 id="title"
                                 value={title}
-                                onChange={handleTitleChange}
+                                onChange={(e) => setTitle(e.target.value)}
                                 className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="Enter post title"
                             />
@@ -300,7 +238,7 @@ const NewPost = () => {
                             <textarea
                                 id="aboutMe"
                                 value={paragraph}
-                                onChange={handleParagraphChange}
+                                onChange={(e) => setParagraph(e.target.value)}
                                 rows={10}
                                 className="w-full p-2 border border-gray-300 rounded text-black"
                                 placeholder="Write about post description"
@@ -377,46 +315,10 @@ const NewPost = () => {
                             </div>)
                             :
                             /* VIDEO LINK */
-                            (<div className="bg-grey-700 p-2">
-                                <div className="flex">
-                                    <Tooltip>
-                                        <p>Video links from the following sites are supported:</p>
-                                        <ol className="list-disc pl-4">
-                                           <li>Youtube</li>
-                                           <li>Vimeo</li>
-                                           <li>DailyMotion</li>
-                                           <li>Facebook</li> 
-                                           <li>Streamable</li>
-                                           <li>Twitch</li>
-                                        </ol>
-                                        <p>And more... Refer to guide for all supported formats</p>
-                                    </Tooltip>
-                                    <h3 className="text-lg font-medium mb-4">Video Embed</h3>
-                                </div>
-                                <label>
-                                    Enter Video Embed Code:
-                                    <textarea
-                                        value={videoString}
-                                        onChange={handleEmbedChange}
-                                        rows={2}
-                                        cols={41}
-                                        placeholder="Paste your video link here:"
-                                        className=" p-2 border border-gray-300 rounded text-black m-2"
-                                    />
-                                </label>
-                                <h3 className="text-lg font-medium mb-4">Video Preview</h3>
-                                {videoString ? (
-                                        <ReactPlayer url={videoString} 
-                                                    controls={true}
-                                                    width={400}
-                                                    height={230}/>                     
-                                ) : (
-                                    <p>No preview available. Paste an video link to see the result.</p>
-                                )}
-                            </div>)
+                            (<VideoSelector onChange={(videoLink) => setVideoString(videoLink)}/>)
                         }
 
-                        <button
+                        <button 
                             type="submit"
                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-20 mt-5 w-full"
                             disabled={isSubmitting || !canSubmit()}
@@ -433,5 +335,3 @@ const NewPost = () => {
         </div>
     );
 };
-
-export default NewPost;

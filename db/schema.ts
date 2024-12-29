@@ -9,16 +9,17 @@ import { boolean, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 LIST OF TABLES:
     - Home Page Content Table:
         This table holds the information that is displayed on the about me section of the home page
+    
     - Navigation Schema Table:
         This table holds the relevant information to construct a navigation tree
+    
     - Posts Table:
         This table holds the information for all posts to the site, including their title, description
         content and category classification
+    
     - Social Link Table:
         This table holds information to load proper social links
  */
-
-
 
 
 

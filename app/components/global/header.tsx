@@ -7,7 +7,7 @@ interface HeaderProps {
 /** Displays a header with text supplied by props
  * 
  * @param mainText: text to display on header
- * @returns 
+ * @returns React Component
  */
 export default function Header({ mainText }: HeaderProps) {
   return (

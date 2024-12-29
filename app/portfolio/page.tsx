@@ -2,25 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Header from '../components/global/header';
-import Post from '../components/post';
+import Post from '../components/global/post';
 import NavBar from '../components/global/navBar';
 import Footer from '../components/global/footer';
 import Loading from '../components/global/loading';
 import HomeButton from '../components/global/home_button';
-
-type Post = {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    content: string;
-    tag: string;
-    order: number;
-    portfolio: boolean;
-};
+import { PostItem } from '@/db/schema';
 
 const PortfolioPage = () => {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<PostItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

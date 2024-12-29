@@ -1,10 +1,14 @@
 'use client';
 
 import React, { useState } from "react";
-
 import { ReactNode } from "react";
 
-const Tooltip = ({ children }: { children: ReactNode }) => {
+/**A small question mark which when hovered expands child elements beneath it.
+ * 
+ * @param children children element that are rendered when tooltip is expanded 
+ * @returns React Component
+ */
+export default function Tooltip({ children }: { children: ReactNode }){
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -27,5 +31,3 @@ const Tooltip = ({ children }: { children: ReactNode }) => {
     </div>
   );
 };
-
-export default Tooltip;
