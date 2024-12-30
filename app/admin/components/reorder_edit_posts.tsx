@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from "react";
 import ReactPlayer from 'react-player';
 import { PostItem } from "@/db/schema";
+import PathSelector from "./shared/path_selector";
 
 interface PathItem {
     id: number;
@@ -17,8 +18,6 @@ interface ImageStatus {
 
 export default function ReorderEditPosts() {
     {/* STATUS MESSAGES */ }
-    const [categorySuccessMessage, setCategorySuccessMessage] = useState("");
-    const [categoryErrorMessage, setCategoryErrorMessage] = useState("");
     const [reorderPostSuccessMessage, setReorderPostSuccessMessage] = useState("");
     const [reorderPostErrorMessage, setReorderPostErrorMessage] = useState("");
     const [updatePostSuccessMessage, setUpdateSuccessMessage] = useState("");
@@ -75,17 +74,11 @@ export default function ReorderEditPosts() {
 
                 if (result.success) {
                     setAllPaths(result.data.filter((item: PathItem) => item.linkOverride == 'auto'));
-                    setCategoryErrorMessage('');
-                    setCategorySuccessMessage('Tags successfully loaded');
                 } else {
                     console.error('Failed to fetch tags');
-                    setCategorySuccessMessage('');
-                    setCategoryErrorMessage('Failed to fetch tags');
                 }
             } catch (error) {
                 console.error('Error fetching tags:', error);
-                setCategorySuccessMessage('');
-                setCategoryErrorMessage('Error fetching tags');
             }
         };
 
@@ -99,6 +92,8 @@ export default function ReorderEditPosts() {
     const handleTagChange = async (path: PathItem) => {
         setTag(path);
         const filteredPosts = allPosts.filter((post) => post.tag === path.path);
+        //sort posts by order property:
+        filteredPosts.sort((a, b) => a.order - b.order);
         setFilteredPosts(filteredPosts);
         setSelectedPost(null);
 
@@ -321,26 +316,8 @@ export default function ReorderEditPosts() {
                     <label htmlFor="title" className="block text-lg font-medium mb-4">
                         Manage Posts Under Category:
                     </label>
-                    <div className="flex content-center">
-                        <Tooltip>
-                            <p>Tags / Categories with a link overide set cannot be selected</p>
-                        </Tooltip>
-                        <h2 className="font-semibold mb-2 mt-[2]">Available Paths</h2>
-                    </div>
-                    <div className="h-[500] overflow-y-auto bg-grey-700 rounded-md p-2">
-                        {allPaths.map((path) => (
-                            <div
-                                key={path.id}
-                                className="flex justify-between items-center p-2 hover:bg-grey-600 cursor-pointer"
-                                onClick={() => handleTagChange(path)}
-                            >
-                                <span className="text-white">{path.path}</span>
-                            </div>
-                        ))}
-                    </div>
+                    <PathSelector selectedPathMsg="Viewing Posts Tagged:" excludeOverriden={true} onSelect={(path) => handleTagChange(path)}/>
                 </div>
-                {categorySuccessMessage && <p className="text-green-500">{categorySuccessMessage}</p>}
-                {categoryErrorMessage && <p className="text-red-500">{categoryErrorMessage}</p>}
             </div>
 
             {/* SELECT AND REORDER POSTS */}
