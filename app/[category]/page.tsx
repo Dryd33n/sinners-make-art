@@ -70,7 +70,7 @@ function sortHierarchical(data: Tag[]){
   });
 
   // Sort items within each hierarchy level by `order`
-  hierarchy.forEach((items, level) => {
+  hierarchy.forEach((items) => {
       items.sort((a, b) => a.order - b.order);
   });
 
@@ -106,7 +106,7 @@ function generatePostDictTemplate(tags: Tag[]){
 }
 
 function getPostDictArr(tags: Tag[], posts: PostItem[]){
-  let postsArray: PostsByTag[] = generatePostDictTemplate(sortHierarchical(tags))
+  const postsArray: PostsByTag[] = generatePostDictTemplate(sortHierarchical(tags))
   
   postsArray.forEach(postDict => {
     const tag = postDict.tag;
