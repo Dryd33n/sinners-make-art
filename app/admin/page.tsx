@@ -7,7 +7,7 @@ import LinkOverrideManager from './components/ovveride_links';
 import NewPost from './components/new_post';
 import ReorderEditPosts from './components/reorder_edit_posts';
 import ExpandableSection from './components/shared/expandable_section';
-import Tooltip from '../components/global/tooltip';
+import Tooltip from './components/shared/tooltip';
 import SocialLinks from './components/social_links';
 
 export const metadata = {
@@ -29,7 +29,7 @@ export default async function AdminPage() {
     <>
       <Header mainText="ADMIN PANEL" />
 
-      <h1 className='text-3xl font-extralight mx-14 my-5'>MANAGE SITE CONTENT:</h1>
+      <h1 className='text-3xl font-extralight mx-14 mb-5 mt-10'>MANAGE SITE CONTENT:</h1>
 
       <ExpandableSection title="Modify About Me Content">
         <Tooltip>
@@ -43,7 +43,7 @@ export default async function AdminPage() {
         <SocialLinks />
       </ExpandableSection>
 
-      <h1 className='text-3xl font-extralight mx-14 my-5'>MANAGE POSTS:</h1>
+      <h1 className='text-3xl font-extralight mx-14 mb-5 mt-10'>MANAGE POSTS:</h1>
 
       <ExpandableSection title="Create New Post">
         <Tooltip>
@@ -59,7 +59,7 @@ export default async function AdminPage() {
         <ReorderEditPosts />
       </ExpandableSection>
 
-      <h1 className='text-3xl font-extralight mx-14 my-5'>MANAGE SITE STRUCTURE:</h1>
+      <h1 className='text-3xl font-extralight mx-14 mb-5 mt-10'>MANAGE SITE STRUCTURE:</h1>
 
       <ExpandableSection title="Modify Navigation Schema">
         <Tooltip>

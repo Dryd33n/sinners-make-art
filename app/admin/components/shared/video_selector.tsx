@@ -1,4 +1,4 @@
-import Tooltip from "@/app/components/global/tooltip";
+import Tooltip from "@/app/admin/components/shared/tooltip";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 

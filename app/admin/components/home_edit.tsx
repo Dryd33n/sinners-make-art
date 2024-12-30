@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from 'next/image';
-import Tooltip from "@/app/components/global/tooltip";
+import Tooltip from "@/app/admin/components/shared/tooltip";
 
 interface ImageStatus {
   status: "loading" | "success" | "error";

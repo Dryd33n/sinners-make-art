@@ -13,15 +13,24 @@ const SocialLinks: React.FC = () => {
 
     useEffect(() => {
         const fetchLinks = async () => {
+            setSuccessMessage('');
+            setErrorMessage('');
+
             try {
                 const response = await fetch('/api/social_links');
                 const data = await response.json();
                 if (data.success) {
+                    setSuccessMessage("Links fetched successfully");
+                    setErrorMessage('');
                     setLinks(data.data); // Set the fetched links
                 } else {
+                    setSuccessMessage('');
+                    setErrorMessage('Error fetching links');
                     console.error('Error fetching links:', data.error);
                 }
             } catch (error) {
+                setSuccessMessage('');
+                setErrorMessage('Error fetching links');
                 console.error('Error fetching links:', error);
             }
         };
@@ -113,9 +122,10 @@ const SocialLinks: React.FC = () => {
                     </li>
                 ))}
             </ul>
-            <button onClick={saveLinks} className='mb-4 mr-4 mt-5 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'>Save</button>
             {successMessage && <p className='text-green-500'>{successMessage}</p>}
             {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
+            <button onClick={saveLinks} className='mb-4 mr-4 mt-5 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'>Save</button>
+            
         </div>
     );
 };

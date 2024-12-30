@@ -1,5 +1,5 @@
 'use client';
-import Tooltip from "@/app/components/global/tooltip";
+import Tooltip from "@/app/admin/components/shared/tooltip";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
 import ReactPlayer from 'react-player';

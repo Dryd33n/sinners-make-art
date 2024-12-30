@@ -24,7 +24,7 @@ export default function Tooltip({ children }: { children: ReactNode }){
 
       {/* Tooltip Content */}
       {isHovered && (
-        <div className="absolute left-0 mt-2 w-[450] bg-grey-800 text-white rounded-lg shadow-lg p-3 border">
+        <div className="absolute left-0 mt-2 w-96 bg-grey-800 text-white rounded-lg shadow-lg p-3 border">
           {children}
         </div>
       )}

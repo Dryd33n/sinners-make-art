@@ -1,6 +1,6 @@
 'use client';
 
-import Tooltip from '@/app/components/global/tooltip';
+import Tooltip from '@/app/admin/components/shared/tooltip';
 import React, { useEffect, useState } from 'react';
 import PathSelector from './shared/path_selector';
 
