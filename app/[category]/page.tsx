@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import React from 'react';
 import Header from '../components/global/header';
 import Post from '../components/global/post';
 import NavBar from '../components/global/navBar';
@@ -8,14 +7,17 @@ import HomeButton from '../components/global/home_button';
 import { capitalizeFirstLetter } from '../utils/utils';
 import { PostItem } from '@/db/schema';
 
-interface FilterPostsByCategory {
-  (posts: PostItem[], category: string): PostItem[];
+interface Tag{
+  path: string,
+  order: number,
+}
+
+interface PostsByTag{
+  tag: string,
+  posts: PostItem[]
 }
 
 
-type PostsByTag = {
-  [tag: string]: PostItem[];
-};
 
 const baseUrl = 'https://sinners-make.art';
 //const baseUrl = 'http://localhost:3000';
@@ -26,19 +28,6 @@ export async function generateMetadata({ params, }: { params: Promise<{ category
     title: `${capitalizeFirstLetter(category)} | Sinners Make Art`,
     description: `Explore posts in the ${category} category`,
   };
-}
-
-
-async function fetchValidCategories() {
-  console.log(`Fetching valid categories from (${baseUrl}/api/admin/navtree)`);
-  const res = await fetch(`${baseUrl}/api/admin/navtree`);
-  const result = await res.json();
-
-  if (!result.success) {
-    throw new Error('Failed to fetch navigation tree');
-  }
-
-  return result.data.map((item: { path: string; }) => item.path.toLowerCase());
 }
 
 const fetchPosts = async () => {
@@ -58,54 +47,115 @@ const fetchPosts = async () => {
   }
 };
 
-const filterPostsByCategory: FilterPostsByCategory = (posts, category) => {
-  return posts.filter(post => post.tag.startsWith(`${category.toUpperCase()}/`));
-};
+function sortHierarchical(data: Tag[]){
+  /**
+   * Sorts hierarchical data based on the `order` properties at each hierarchy level.
+   *
+   * Args:
+   *     data: List of objects with `path` and `order` keys.
+   *
+   * Returns:
+   *     Sorted list of objects.
+   */
 
-const groupPosts = (posts: PostItem[]) => {
-  const groupedPosts = posts.reduce((acc: PostsByTag, post: PostItem) => {
-    const tags = post.tag.split('/');
+  const hierarchy: Map<number, Array<typeof data[0]>> = new Map();
 
-    // Add the post to the highest level of the tag hierarchy
-    for (let i = 1; i <= tags.length; i++) {
-      const tag = tags.slice(0, i).join('/');
-      if (!acc[tag]) {
-        acc[tag] = [];
+  // Group items by their hierarchy level
+  data.forEach(item => {
+      const levels = item.path.split("/").length;
+      if (!hierarchy.has(levels)) {
+          hierarchy.set(levels, []);
       }
-    }
-
-    acc[post.tag].push(post);
-    return acc;
-  }, {} as PostsByTag);
-
-  // Sort the posts by order within each tag
-  Object.keys(groupedPosts).forEach(tag => {
-    groupedPosts[tag].sort((a, b) => a.order - b.order);
+      hierarchy.get(levels)!.push(item);
   });
 
-  // Ensure tags are ordered hierarchically by sorting the keys
-  const orderedGroupedPosts = Object.keys(groupedPosts)
-    .sort((a, b) => a.split('/').length - b.split('/').length)
-    .reduce((acc: PostsByTag, tag: string) => {
-      acc[tag] = groupedPosts[tag];
-      return acc;
-    }, {} as PostsByTag);
+  // Sort items within each hierarchy level by `order`
+  hierarchy.forEach((items, level) => {
+      items.sort((a, b) => a.order - b.order);
+  });
 
-  return orderedGroupedPosts;
-};
+  // Rebuild the sorted list
+  const sortedData: Array<typeof data[0]> = [];
+
+  function addItems(level: number, parentPath: string | null): void {
+      const items = hierarchy.get(level);
+      if (!items) return;
+
+      items.forEach(item => {
+          if (!parentPath || item.path.startsWith(parentPath + "/") || item.path === parentPath) {
+              sortedData.push(item);
+              addItems(level + 1, item.path);
+          }
+      });
+  }
+
+  // Start with top-level items (level 1)
+  addItems(1, null);
+
+  return sortedData;
+}
+
+function generatePostDictTemplate(tags: Tag[]){
+  const postDictArr: PostsByTag[] = [];
+
+  tags.forEach(tag => {
+    postDictArr.push({tag: tag.path, posts: []});
+  });
+
+  return postDictArr;
+}
+
+function getPostDictArr(tags: Tag[], posts: PostItem[]){
+  let postsArray: PostsByTag[] = generatePostDictTemplate(sortHierarchical(tags))
+  
+  postsArray.forEach(postDict => {
+    const tag = postDict.tag;
+    const filteredPosts = posts.filter(post => post.tag === tag);
+    filteredPosts.sort((a, b) => a.order - b.order);
+    postDict.posts = filteredPosts;
+    console.log(tag, filteredPosts);
+  });
+
+  return postsArray;
+}
+
 
 const Page = async ({ params, }: { params: Promise<{ category: string }> }) => {
+
   // Use `await` if you need to fetch data related to `category`
   const { category } = await Promise.resolve(params);
 
+  const allTags = await fetchTags();
   const validCategories = await fetchValidCategories();
   const posts = await fetchPosts();
-  const filteredPosts = filterPostsByCategory(posts, category);
-  const groupedPosts: PostsByTag = groupPosts(filteredPosts);
+  const postArr = getPostDictArr(allTags, posts);
 
-  Object.keys(groupedPosts).forEach(tag => {
-  console.log(`Tag: ${tag}`);
-  });
+  async function fetchValidCategories() {
+    console.log(`Fetching valid categories from (${baseUrl}/api/admin/navtree)`);
+    const res = await fetch(`${baseUrl}/api/admin/navtree`);
+    const result = await res.json();
+  
+    if (!result.success) {
+      throw new Error('Failed to fetch navigation tree');
+    }
+  
+    return result.data.map((item: { path: string; }) => item.path.toLowerCase());
+  }
+
+  async function fetchTags() {
+    console.log(`Fetching valid categories from (${baseUrl}/api/admin/navtree)`);
+    const res = await fetch(`${baseUrl}/api/admin/navtree`);
+    const result = await res.json();
+  
+    if (!result.success) {
+      throw new Error('Failed to fetch navigation tree');
+    }
+  
+    const allTags: Tag[] = result.data;
+
+    return allTags.filter((tag: Tag) => tag.path.startsWith(`${category.toUpperCase()}/`) || tag.path === category.toUpperCase());
+  }
+  
   
 
   if (!validCategories.includes(category)) {
@@ -118,11 +168,11 @@ const Page = async ({ params, }: { params: Promise<{ category: string }> }) => {
       <NavBar />
       <HomeButton />
       <div>
-        {Object.keys(groupedPosts).map(tag => (
-          <div key={tag} id={tag.toLowerCase().replace(/[\s/]+/g, "-")}>
-            {groupedPosts[tag].length > 0 && (
-              <><h2 className="text-3xl font-extralight mb-2 ml-10 tracking-wider">{tag.replace(/\//g, ' - ')}</h2><div className='bg-white opacity-25 h-[0.1] mx-10'></div><div className="posts">
-                {groupedPosts[tag].map(post => (
+        {postArr.map(postsByTag => (
+          <div key={postsByTag.tag} id={postsByTag.tag.toLowerCase().replace(/[\s/]+/g, "-")}>
+            {postsByTag.posts.length > 0 && (
+              <><h2 className="text-3xl font-extralight mb-2 ml-10 tracking-wider">{postsByTag.tag.replace(/\//g, ' - ')}</h2><div className='bg-white opacity-25 h-[0.1] mx-10'></div><div className="posts">
+                {postsByTag.posts.map(post => (
                   <Post key={post.id} post={post} />
                 ))}
               </div></>)}
