@@ -5,6 +5,7 @@ interface FlattenedNode {
   name: string;
   path: string;
   order: number;
+  link_ovveride: string;
 }
 
 export const buildTree = (data: { id: number; name: string; path: string; order: number; link_ovveride: string; }[]): Node[] => {
@@ -178,7 +179,7 @@ export const flattenTree = (nodes: Node[], parentPath: string = ''): FlattenedNo
 
   return nodes.reduce((acc, node) => {
     const currentPath = parentPath ? `${parentPath}/${node.name}` : node.name;
-    acc.push({ id: node.id, name: node.name, path: currentPath, order: node.order });
+    acc.push({ id: node.id, name: node.name, path: currentPath, order: node.order, link_ovveride: node.link_override });
 
     if (node.children) {
       acc = acc.concat(flattenTree(node.children, currentPath));

@@ -18,9 +18,10 @@ export async function POST(req: NextRequest) {
         name: string;
         path: string;
         order: number;
+        link_ovveride: string;
     }
 
-    console.log("Beginning POST request to update nav tree...");
+    console.log("Beginning POST request to update nav tree..." );
 
     /* PARSE REQUEST BODY */
     const { treeData } = await req.json();
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
               name: node.name,
               path: node.path,
               order: node.order,
+              link_ovveride: node.link_ovveride
             })
           );
     

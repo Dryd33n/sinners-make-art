@@ -27,7 +27,10 @@ export default function PathSelector({ onSelect, excludeOverriden, selectedPathM
                 const result = await response.json();
     
                 if (result.success) {
-                    setAllPaths(excludeOverriden ? result.data.filter((item: PathItem) => item.linkOverride == 'auto') : result.data);
+                    const paths = (excludeOverriden ? result.data.filter((item: PathItem) => item.linkOverride == 'auto') : result.data);
+                    //sort paths lexigraphically by path property
+                    const sortedPaths = paths.sort((a: PathItem, b: PathItem) => a.path.localeCompare(b.path));
+                    setAllPaths(sortedPaths);   
                     setErrorMessage('');
                     setSuccessMessage('Tags successfully loaded');
                 } else {
