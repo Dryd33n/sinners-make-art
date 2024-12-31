@@ -13,6 +13,20 @@ interface PathItem {
     linkOverride: string;
 };
 
+/**
+ * PathSelector component allows users to select a path from a list of available paths.
+ * It fetches paths from the server and displays them in a scrollable list.
+ * Users can select a path, which triggers the onSelect callback with the selected path.
+ * 
+ * @component
+ * @param {Object} props - The component props
+ * @param {function(PathItem): void} props.onSelect - Callback function to handle path selection
+ * @param {boolean} props.excludeOverriden - Flag to exclude paths with link overrides
+ * @param {string} props.selectedPathMsg - Message to display for the selected path
+ * 
+ * @example
+ * return <PathSelector onSelect={handlePathSelect} excludeOverriden={true} selectedPathMsg="Selected Path" />
+ */
 export default function PathSelector({ onSelect, excludeOverriden, selectedPathMsg }: PathSelectorProps) {
     const [allPaths, setAllPaths] = useState<PathItem[]>([]); // All available paths
     const [selectedTag, setSelectedTag] = useState<PathItem>();

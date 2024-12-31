@@ -17,9 +17,19 @@ interface PathItem {
     linkOverride: string;
 }
 
-/**Renders a form to create a new post
+
+/**
+ * Component for creating a new post.
  * 
- * @returns React Component
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ * 
+ * @example
+ * <NewPost />
+ * 
+ * @remarks
+ * This component allows users to create a new post by filling out a form with the post's title, description, and content.
+ * Users can choose between an image post or a video post, and can optionally include the post in their portfolio.
  */
 export default function NewPost() {
     /* FORM VARS */
@@ -63,7 +73,7 @@ export default function NewPost() {
             console.error('Error fetching posts:', error);
             setErrorMessage('Error fetching posts');
         }
-    }
+    };
 
     
 

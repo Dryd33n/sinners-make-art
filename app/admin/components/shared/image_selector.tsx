@@ -12,6 +12,22 @@ type ImageSelectorProps = {
 };
 
 
+
+/**
+ * ImageSelector component allows users to manage a list of image URLs.
+ * It provides functionalities to add, remove, and validate image links.
+ * 
+ * @component
+ * @param {Object} props - The properties object.
+ * @param {string[]} props.imageLinks - The array of image URLs.
+ * @param {Function} props.setImageLinks - The function to update the image URLs.
+ * @param {Function} props.setImagesValid - The function to set the validity of the image URLs.
+ * 
+ * @example
+ * return <ImageSelector imageLinks={imageLinks} setImageLinks={setImageLinks} setImagesValid={setImagesValid} />
+ * 
+ * @returns {JSX.Element} The rendered ImageSelector component.
+ */
 export default function ImageSelector({ imageLinks, setImageLinks, setImagesValid }: ImageSelectorProps) {
     const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
 
@@ -81,12 +97,18 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
         });
     };
 
+    /** Updates the statuses of all image links
+     * 
+     */
     const updateImageStatuses = (): void => {
         const statuses: ImageStatus[] = imageLinks.map(() => ({ status: "loading" }));
         setImageStatuses(statuses);
         imageLinks.forEach((link: string, index: number) => checkImageStatus(index, link));
     }
 
+    /** Verifies the statuses of all image links
+     * 
+     */
     const verifyImageLinks = (): void => {
         const isValid = imageStatuses.every((status) => status.status === "success");
         setImagesValid(isValid);

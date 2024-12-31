@@ -6,6 +6,18 @@ interface VideoSelectorProps{
     onChange: (videoLink: string) => void;
 }
 
+/**
+ * VideoSelector component allows users to input a video link and preview the video.
+ * 
+ * @param {VideoSelectorProps} props - The properties for the VideoSelector component.
+ * @param {function} props.onChange - Callback function to handle changes in the video link input.
+ * 
+ * @returns {JSX.Element} The rendered VideoSelector component.
+ * 
+ * @component
+ * @example
+ * <VideoSelector onChange={handleVideoChange} />
+ */
 export default function VideoSelector({ onChange }: VideoSelectorProps){
     const [videoString, setVideoString] = useState("");
 

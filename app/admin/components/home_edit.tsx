@@ -9,9 +9,25 @@ interface ImageStatus {
   status: "loading" | "success" | "error";
 }
 
-/**The about me form allows for editing which content appears on the home page about me section
+
+/**
+ * AboutMeForm Component
  * 
- * @returns react component
+ * This component renders a form for editing the "About Me" section. It allows users to load current data from the database,
+ * edit the title, paragraph, and image links, and submit the updated data back to the database.
+ * 
+ * @component
+ * 
+ * @returns {JSX.Element} The rendered AboutMeForm component.
+ * 
+ * @example
+ * <AboutMeForm />
+ * 
+ * @remarks
+ * - The form includes input fields for the title, paragraph, and image links.
+ * - The form validates the input fields before allowing submission.
+ * - The form displays success and error messages based on the result of the data fetch and submission.
+
  */
 const AboutMeForm = () => {
   // Form Content
