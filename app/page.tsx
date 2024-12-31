@@ -14,7 +14,6 @@ export const metadata = {
 const Home = () => {
   return (
     <>
-      <Signature/>
       <Header mainText="MARY-JANE LARONDE" />
       <NavBar />
 
