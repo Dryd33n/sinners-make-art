@@ -16,8 +16,8 @@ const Home = () => {
       <Header mainText="MARY-JANE LARONDE" />
       <NavBar />
 
-
       <AboutSection />
+  
       <Footer/>
     </>
   );

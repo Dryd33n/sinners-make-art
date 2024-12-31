@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image';
 import Tooltip from "@/app/admin/components/shared/tooltip";
+import ImageSelector from "./shared/image_selector";
 
 interface ImageStatus {
   status: "loading" | "success" | "error";
@@ -17,9 +18,8 @@ const AboutMeForm = () => {
   const [title, setTitle] = useState("");
   const [paragraph, setParagraph] = useState("");
   const [imageLinks, setImageLinks] = useState<string[]>([""]);
+  const [imagesValid, setImagesValid] = useState<boolean>(false);
 
-  // Form States
-  const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Error & Success Messages
@@ -37,80 +37,11 @@ const AboutMeForm = () => {
     const hasValidTitle = title.trim() !== "";
     const hasValidParagraph = paragraph.trim() !== "";
     const hasAtLeastOneImage = imageLinks.length > 0 && imageLinks.some((link) => link.trim() !== "");
-    const allImagesValid = imageStatuses.every((status) => status.status === "success");
-    return hasValidTitle && hasValidParagraph && hasAtLeastOneImage && allImagesValid;
+    return hasValidTitle && hasValidParagraph && hasAtLeastOneImage && imagesValid;
   };
 
 
 
-  /** CHANGE IMAGE LINK
-   * modifies the list of current image links with changed value then checks image status to load preview
-   * 
-   * @param index index of image link to modify
-   * @param value new link to image
-   */
-  const handleImageLinkChange = (index: number, value: string) => {
-    const updatedLinks = [...imageLinks];
-    updatedLinks[index] = value;
-    setImageLinks(updatedLinks);
-    checkImageStatus(index, value);
-  };
-
-
-
-  /** ADD IMAGE LINK
-   * Adds an empty string to current list of images and set loading status for no image
-   * 
-   */
-  const handleAddImageLink = () => {
-    setImageLinks((prevLinks) => [...prevLinks, ""]);
-    setImageStatuses((prevStatuses) => [...prevStatuses, { status: "loading" }]);
-  };
-
-
-
-  /** REMOVE IMAGE LINK
-   * Updates image link array by removing a specific link and update status array to remove status for removed image
-   * 
-   * @param index index of image to be removed
-   */
-  const handleRemoveImageLink = (index: number) => {
-    const updatedLinks = imageLinks.filter((_, i) => i !== index);
-    const updatedStatuses = imageStatuses.filter((_, i) => i !== index);
-    setImageLinks(updatedLinks);
-    setImageStatuses(updatedStatuses);
-  };
-
-
-
-  /**CHECK IMAGE STATUS
-   * Check status of image link by attempting to load it and see if it returns a valid images
-   * 
-   * @param index index of image to check
-   * @param url url of image to check
-   * @returns returns nothing
-   */
-  const checkImageStatus = (index: number, url: string) => {
-    if (!url) return;
-
-    const image = new window.Image();
-    image.src = url;
-    image.onload = () => updateImageStatus(index, "success");
-    image.onerror = () => updateImageStatus(index, "error");
-  };
-
-  
-
-  /**UPDATE IMAGE STATUS
-   * Updates one entry in the image status array
-   */
-  const updateImageStatus = (index: number, status: "loading" | "success" | "error") => {
-    setImageStatuses((prevStatuses) => {
-      const updatedStatuses = [...prevStatuses];
-      updatedStatuses[index] = { status };
-      return updatedStatuses;
-    });
-  };
 
 
 
@@ -146,12 +77,6 @@ const AboutMeForm = () => {
         const links = data.about_images ? data.about_images.split(",").map((url: string) => url.trim()) : [""];
         setImageLinks(links);
 
-        // Update image statuses
-        const statuses = links.map(() => ({ status: "loading" }));
-        setImageStatuses(statuses);
-
-        // Validate image links
-        links.forEach((link: string, index: number) => checkImageStatus(index, link));
         setSuccessMessage("Data loaded successfully");
       } else {
         setErrorMessage("No data available to load");
@@ -276,51 +201,7 @@ const AboutMeForm = () => {
               <h3 className="text-lg font-medium mb-4">Image Links</h3>
             </div>
 
-            {/* Images Display */}
-            {imageLinks.map((link, index) => (
-              <div key={index} className="mb-4 flex items-center">
-                <input
-                  type="url"
-                  value={link}
-                  onChange={(e) => handleImageLinkChange(index, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 rounded mr-2 text-black"
-                  placeholder="Enter image URL"
-                />
-                {/* Remove Image Button */}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImageLink(index)}
-                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  Remove
-                </button>
-
-                {imageStatuses[index]?.status === "loading" && <p className="text-gray-500 ml-2">Loading...</p>}
-                {imageStatuses[index]?.status === "success" && (
-                  <Image
-                    src={link}
-                    alt={`Preview ${index}`}
-                    width={150}
-                    height={150}
-                    className="ml-2 w-16 h-16 object-cover border border-gray-300 rounded"
-                  />
-                )}
-                {imageStatuses[index]?.status === "error" && (
-                  <p className="text-red-500 ml-2">Invalid image URL</p>
-                )}
-              </div>
-            ))}
-
-            {/* Add Image Button */}
-            <div className="mb-4">
-              <button
-                type="button"
-                onClick={handleAddImageLink}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Add Image Link
-              </button>
-            </div>
+            <ImageSelector imageLinks={imageLinks} setImageLinks={setImageLinks} setImagesValid={setImagesValid}/>
           </div>
         </form>
 

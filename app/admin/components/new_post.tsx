@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { PostItem } from "@/db/schema";
 import PathSelector from "./shared/path_selector";
 import VideoSelector from "./shared/video_selector";
+import ImageSelector from "./shared/image_selector";
 
 interface ImageStatus {
     status: "loading" | "success" | "error";
@@ -16,6 +17,10 @@ interface PathItem {
     linkOverride: string;
 }
 
+/**Renders a form to create a new post
+ * 
+ * @returns React Component
+ */
 export default function NewPost() {
     /* FORM VARS */
     const [title, setTitle] = useState("");
@@ -24,7 +29,7 @@ export default function NewPost() {
     const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
     /* CONTENT VARS */
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
-    const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
+    const [allImagesValid, setAllImagesValid] = useState<boolean>(false);
     const [videoString, setVideoString] = useState("");
     /* POSTS AND TAGS */
     const [allPosts, setAllPosts] = useState<PostItem[]>([]); // All available posts
@@ -33,7 +38,14 @@ export default function NewPost() {
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-   
+
+    useEffect(() => {fetchPosts();}, []);
+    
+
+
+    /**Fetches all posts from the server to check for the max order of the current tag
+     * 
+     */
     const fetchPosts = async () => {
         try {
             const response = await fetch('/api/posts');
@@ -53,73 +65,31 @@ export default function NewPost() {
         }
     }
 
-    useEffect(() => {
-        fetchPosts();
-    }, []);
+    
 
-
-    // Calculate whether the form can be submitted
+    /**Checks if the form is ready to be submitted by verifying that all fields are filled out
+     * with valid data
+     * 
+     * @returns boolean - true if the form is ready to be submitted
+     */
     const canSubmit = () => {
         const hasValidTitle = title.trim() !== "";
         const hasValidParagraph = paragraph.trim() !== "";
         const hasTag = tag !== undefined;
 
         const hasAtLeastOneImage = imageLinks.length > 0 && imageLinks.some((link) => link.trim() !== "");
-        const allImagesValid = imageStatuses.every((status) => status.status === "success");
 
         const validContent = imagePost ? (allImagesValid && hasAtLeastOneImage) : true;
 
         return hasValidTitle && hasValidParagraph && validContent && hasTag;
     };
 
-    // Handle change for image links
-    const handleImageLinkChange = (index: number, value: string) => {
-        const updatedLinks = [...imageLinks];
-        updatedLinks[index] = value;
-        setImageLinks(updatedLinks);
-        checkImageStatus(index, value);
-    };
-
-    // Add a new image link input
-    const handleAddImageLink = () => {
-        setImageLinks((prevLinks) => [...prevLinks, ""]);
-        setImageStatuses((prevStatuses) => [...prevStatuses, { status: "loading" }]);
-    };
-
-    // Remove an image link input
-    const handleRemoveImageLink = (index: number) => {
-        const updatedLinks = imageLinks.filter((_, i) => i !== index);
-        const updatedStatuses = imageStatuses.filter((_, i) => i !== index);
-        setImageLinks(updatedLinks);
-        setImageStatuses(updatedStatuses);
-    };
-
-    // Check if an image URL is valid by attempting to load it
-    const checkImageStatus = (index: number, url: string) => {
-        if (!url) return;
-
-        const image = new window.Image();
-        image.src = url;
-        image.onload = () => updateImageStatus(index, "success");
-        image.onerror = () => updateImageStatus(index, "error");
-    };
-
-    // Update the status of the image (loading, success, error)
-    const updateImageStatus = (index: number, status: "loading" | "success" | "error") => {
-        setImageStatuses((prevStatuses) => {
-            const updatedStatuses = [...prevStatuses];
-            updatedStatuses[index] = { status };
-            return updatedStatuses;
-        });
-    };
-
-    const handleCateogryChange = (path: PathItem) => {
-        setTag(path); // Updates the current tag
-    };
-    
 
 
-    // Handle form submission
+    /** Handles the form submission
+     * 
+     * @param e react form event
+     */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
     
@@ -163,7 +133,6 @@ export default function NewPost() {
                 setTitle("");
                 setParagraph("");
                 setImageLinks([""]);
-                setImageStatuses([{ status: "loading" }]);
                 setVideoString("");
             } else {
                 setErrorMessage("An error occurred. Please try again later.");
@@ -183,7 +152,7 @@ export default function NewPost() {
                 <form onSubmit={handleSubmit} className="flex flex-row gap-6">
                     {/* Left Side */}
                     <div className=" flex-1 basis-1/3">
-                        <PathSelector onSelect={handleCateogryChange} excludeOverriden={true} selectedPathMsg="Post Classified Under:"/>
+                        <PathSelector onSelect={(path) => setTag(path)} excludeOverriden={true} selectedPathMsg="Post Classified Under:"/>
 
                         {/* Include in Portfolio Checkbox */}
                         <div className="mb-4">
@@ -256,50 +225,7 @@ export default function NewPost() {
 
                         {imagePost ?
                             /* IMAGE LINKS */
-                            (<div className="bg-grey-700 p-2">
-                                <h3 className="text-lg font-medium mb-4">Image Links</h3>
-
-                                {imageLinks.map((link, index) => (
-                                    <div key={index} className="mb-4 flex items-center">
-                                        <input
-                                            type="url"
-                                            value={link}
-                                            onChange={(e) => handleImageLinkChange(index, e.target.value)}
-                                            className="flex-1 p-2 border border-gray-300 rounded mr-2 text-black"
-                                            placeholder="Enter image URL"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => handleRemoveImageLink(index)}
-                                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                                        >
-                                            Remove
-                                        </button>
-                                        {imageStatuses[index]?.status === "loading" && <p className="text-gray-500 ml-2">Loading...</p>}
-                                        {imageStatuses[index]?.status === "success" && (
-                                            <Image
-                                                src={link}
-                                                alt={`Preview ${index}`}
-                                                width={150}
-                                                height={150}
-                                                className="ml-2 w-16 h-16 object-cover border border-gray-300 rounded"
-                                            />
-                                        )}
-                                        {imageStatuses[index]?.status === "error" && (
-                                            <p className="text-red-500 ml-2">Invalid image URL</p>
-                                        )}
-                                    </div>
-                                ))}
-                                <div className="mb-4">
-                                    <button
-                                        type="button"
-                                        onClick={handleAddImageLink}
-                                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                                    >
-                                        Add Image Link
-                                    </button>
-                                </div>
-                            </div>)
+                            (<ImageSelector imageLinks={imageLinks} setImageLinks={setImageLinks} setImagesValid={setAllImagesValid}/>)
                             :
                             /* VIDEO LINK */
                             (<VideoSelector onChange={(videoLink) => setVideoString(videoLink)}/>)
