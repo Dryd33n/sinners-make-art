@@ -74,7 +74,7 @@ function WebPost(props: PostProps) {
                     <div className="bg-white h-0.5 w-full mt-5"></div>
                     <p className="mt-3">{props.post.description}</p>
                 </div>
-                <div className="md:basis-2/3 basis-4/5 w-full">
+                <div className="md:basis-2/3 basis-4/5 w-full grid place-content-center">
                     {props.post.type === 'image' ? (
                         <div className="flex-col flex-auto place-content-center">
                             <ImageGallery
