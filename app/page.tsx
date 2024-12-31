@@ -8,7 +8,22 @@ export const metadata = {
   description: "Mary-Jane Laronde's personal website",
 };
 
+
+
 const Home = () => {
+  console.log(`%c
+    WEBSITE DESIGNED BY: 
+
+    ██████  ██████  ██    ██ ██████  ███████ ███    ██     ██████     
+    ██   ██ ██   ██  ██  ██  ██   ██ ██      ████   ██     ██   ██    
+    ██   ██ ██████    ████   ██   ██ █████   ██ ██  ██     ██████     
+    ██   ██ ██   ██    ██    ██   ██ ██      ██  ██ ██     ██   ██    
+    ██████  ██   ██    ██    ██████  ███████ ██   ████     ██████  ██ 
+    
+    LinkedIn: https://www.linkedin.com/in/drydenbryson/
+    GitHub:   https://github.com/Dryd33n
+    `,'color: rebeccapurple; font-size: 13px;')
+
   return (
     <>
       <Header mainText="MARY-JANE LARONDE" />

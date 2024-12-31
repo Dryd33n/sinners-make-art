@@ -31,20 +31,6 @@ export default function RootLayout({
 }>) 
 
   {
-
-  console.log(`
-    WEBSITE DESIGNED BY: 
-
-    ██████  ██████  ██    ██ ██████  ███████ ███    ██     ██████     
-    ██   ██ ██   ██  ██  ██  ██   ██ ██      ████   ██     ██   ██    
-    ██   ██ ██████    ████   ██   ██ █████   ██ ██  ██     ██████     
-    ██   ██ ██   ██    ██    ██   ██ ██      ██  ██ ██     ██   ██    
-    ██████  ██   ██    ██    ██████  ███████ ██   ████     ██████  ██ 
-    
-    LinkedIn: https://www.linkedin.com/in/drydenbryson/
-    GitHub:   https://github.com/Dryd33n
-    `)
-
   return (
     <html lang="en">
       <body
