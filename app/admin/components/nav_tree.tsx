@@ -186,8 +186,6 @@ export default function NavTree() {
       });
   
       if (response.ok) {
-        const result = await response.json();
-        console.log('Navigation tree successfully saved:', result);
         setSuccessMessage('Navigation tree successfully saved');
       } else {
         console.error('Failed to save navigation tree:', response.statusText);

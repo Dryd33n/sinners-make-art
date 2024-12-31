@@ -113,7 +113,6 @@ function getPostDictArr(tags: Tag[], posts: PostItem[]){
     const filteredPosts = posts.filter(post => post.tag === tag);
     filteredPosts.sort((a, b) => a.order - b.order);
     postDict.posts = filteredPosts;
-    console.log(tag, filteredPosts);
   });
 
   return postsArray;
@@ -131,7 +130,6 @@ const Page = async ({ params, }: { params: Promise<{ category: string }> }) => {
   const postArr = getPostDictArr(allTags, posts);
 
   async function fetchValidCategories() {
-    console.log(`Fetching valid categories from (${baseUrl}/api/admin/navtree)`);
     const res = await fetch(`${baseUrl}/api/admin/navtree`);
     const result = await res.json();
   
@@ -143,7 +141,6 @@ const Page = async ({ params, }: { params: Promise<{ category: string }> }) => {
   }
 
   async function fetchTags() {
-    console.log(`Fetching valid categories from (${baseUrl}/api/admin/navtree)`);
     const res = await fetch(`${baseUrl}/api/admin/navtree`);
     const result = await res.json();
   

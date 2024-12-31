@@ -35,8 +35,6 @@ export default function NewPost() {
     const [isSubmitting, setIsSubmitting] = useState(false);
    
     const fetchPosts = async () => {
-        console.log("Fetching posts");
-
         try {
             const response = await fetch('/api/posts');
             const result = await response.json();
@@ -116,17 +114,6 @@ export default function NewPost() {
     };
 
     const handleCateogryChange = (path: PathItem) => {
-        const filtered = allPosts.filter(
-            (post) => post.tag.trim().toUpperCase() === path.path.trim().toUpperCase()
-        );
-    
-        console.log(
-            "Filtering ", allPosts.length, 
-            " posts by tag", path.path, 
-            "\n Found ", filtered.length, 
-            " matching posts: ", filtered
-        );
-    
         setTag(path); // Updates the current tag
     };
     

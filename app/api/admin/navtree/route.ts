@@ -20,24 +20,16 @@ export async function POST(req: NextRequest) {
         order: number;
         link_ovveride: string;
     }
-
-    console.log("Beginning POST request to update nav tree..." );
-
     /* PARSE REQUEST BODY */
     const { treeData } = await req.json();
-
-    console.log("Attempting to update nav tree with data:", treeData);
 
     /* CLEAR TABLE */
     try {
         await db.delete(navTreeTable).execute();
-        console.log('Nav Table cleared successfully');
     } catch (error) {
         console.error('Error clearing nav table:', error);
         return NextResponse.json({ error: 'Error clearing table' }, { status: 500 });
     }
-
-    console.log("Nav Table cleared successfully, inserting data...");
 
     /* INSERT DATA */
     try {

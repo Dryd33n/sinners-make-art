@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
     try {
         // Insert new social link into the database
         const response = await db.insert(socialLinks).values({ name, url }).execute();
-        console.log('Social link added successfully:', response);
         return NextResponse.json({ success: true, response }, { status: 200 });
     } catch (error) {
         console.error('Error adding social link:', error);
@@ -61,7 +60,6 @@ export async function DELETE(req: NextRequest) {
 
     try {
         await db.delete(socialLinks).where(eq(socialLinks.id, Number(id))).execute();
-        console.log('Social link deleted successfully:', id);
         return NextResponse.json({ success: true, message: 'Social link deleted successfully' }, { status: 200 });
     } catch (error) {
         console.error('Error deleting social link:', error);

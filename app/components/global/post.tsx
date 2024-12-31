@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import ReactPlayer from 'react-player';
 import 'react-image-gallery/styles/css/image-gallery.css';
 
 // Dynamically import ImageGallery to avoid SSR issues
 const ImageGallery = dynamic(() => import('react-image-gallery'), { ssr: false });
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
+
 
 interface PostProps {
     post: {
@@ -88,12 +89,14 @@ function WebPost(props: PostProps) {
                             />
                         </div>
                     ) : (
-                        <div className='grid place-content-center'>
-                            <div className='h-[180] w-[350] sm:h-[300] sm:w-[500] md:h-[300] md:w-[500] lg:h-[400]'>
-                                <div className='w-full h-full'>
-                                    <ReactPlayer url={props.post.content} controls={true} height='100%' width='100%' />
+                        <div className='grid place-content-center my-auto'>
+
+                                <div className='my-auto' style={{ width: `${screenWidth / 2.5}px`, height: `${(screenWidth / 2.5) * (9 / 18)}px` }} >
+                                    <div className='w-full h-full'>
+                                        <ReactPlayer url={`${props.post.content}?origin=http://localhost:3000`} controls={true} height='100%' width='100%' />
+                                    </div>
                                 </div>
-                            </div>
+             
                         </div>
                     )}
                 </div>
@@ -143,11 +146,11 @@ function MobilePost(props: PostProps) {
                             />
                         </div>
                     ) : (
-                        <div className='grid place-content-center h-[180] w-[350] sm:h-[300] sm:w-[500] md:h-[300] md:w-[500] lg:h-[400] lg:w-[600]'>
-                                <div className='w-full h-full'>
-                                    <ReactPlayer url={props.post.content} controls={true} height='100%' width='100%' />
-                                </div>
+                        <div className='mx-auto' style={{ width: `${screenWidth *0.8}px`, height: `${(screenWidth * 0.8) * (9 / 18)}px` }} >
+                        <div className='w-full h-full'>
+                            <ReactPlayer url={`${props.post.content}?origin=http://localhost:3000`} controls={true} height='100%' width='100%' />
                         </div>
+                    </div>
                     )}
                 </div>
                 <div className={`md:basis-1/3 w-full basis-1/5 ${screenWidth < 768 ? 'mb-10' : 'mr-10'}`}>
