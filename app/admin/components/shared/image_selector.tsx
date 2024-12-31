@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
 interface ImageStatus {
@@ -74,15 +74,14 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
      * @param url url of the image to check
      * @returns boolean - true if the image is successfully loaded
      */
-    const checkImageStatus = (index: number, url: string) => {
+    const checkImageStatus = useCallback((index: number, url: string) => {
         if (!url) return;
 
         const image = new window.Image();
         image.src = url;
         image.onload = () => updateImageStatus(index, "success");
         image.onerror = () => updateImageStatus(index, "error");
-        verifyImageLinks();
-    };
+    }, []);
 
     /** Updates the status of an image link
      * 
@@ -97,30 +96,34 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
         });
     };
 
-    /** Updates the statuses of all image links
-     * 
+    /**
+     * Updates the statuses of images by setting them to "loading" initially
+     * and then checking the status of each image link.
+     *
+     * @returns {void}
      */
-    const updateImageStatuses = (): void => {
+    const updateImageStatuses = useCallback((): void => {
         const statuses: ImageStatus[] = imageLinks.map(() => ({ status: "loading" }));
         setImageStatuses(statuses);
         imageLinks.forEach((link: string, index: number) => checkImageStatus(index, link));
-    }
+    }, [imageLinks, checkImageStatus]);
 
-    /** Verifies the statuses of all image links
+    /**
+     * Verifies the status of all image links and sets the validity state.
      * 
      */
-    const verifyImageLinks = (): void => {
+    const verifyImageLinks = useCallback((): void => {
         const isValid = imageStatuses.every((status) => status.status === "success");
         setImagesValid(isValid);
-    }
+    }, [imageStatuses, setImagesValid]);
 
     useEffect(() => {
         updateImageStatuses();
-    }, [imageLinks]);
+    }, [imageLinks, updateImageStatuses]);
 
     useEffect(() => {
         verifyImageLinks();
-    }, [imageStatuses]);
+    }, [imageStatuses, verifyImageLinks]);
 
     return (<>
         <div className="bg-grey-700 p-2 rounded-md">

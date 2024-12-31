@@ -1,13 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from 'next/image';
+import React, { useState } from "react";
 import Tooltip from "@/app/admin/components/shared/tooltip";
 import ImageSelector from "./shared/image_selector";
-
-interface ImageStatus {
-  status: "loading" | "success" | "error";
-}
 
 
 /**

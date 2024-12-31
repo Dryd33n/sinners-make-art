@@ -1,15 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from 'next/image';
 import { PostItem } from "@/db/schema";
 import PathSelector from "./shared/path_selector";
 import VideoSelector from "./shared/video_selector";
 import ImageSelector from "./shared/image_selector";
-
-interface ImageStatus {
-    status: "loading" | "success" | "error";
-}
 
 interface PathItem {
     id: number;
