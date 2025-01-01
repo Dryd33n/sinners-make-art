@@ -1,9 +1,10 @@
 import Tooltip from "@/app/admin/components/shared/tooltip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 
 interface VideoSelectorProps{
     onChange: (videoLink: string) => void;
+    videoLink: string;
 }
 
 /**
@@ -18,13 +19,17 @@ interface VideoSelectorProps{
  * @example
  * <VideoSelector onChange={handleVideoChange} />
  */
-export default function VideoSelector({ onChange }: VideoSelectorProps){
+export default function VideoSelector({ onChange, videoLink }: VideoSelectorProps){
     const [videoString, setVideoString] = useState("");
 
     const handleChangeVideoString = (videoLink: string) => {
         setVideoString(videoLink);
         onChange(videoLink)
     }
+
+    useEffect(() => {
+        setVideoString(videoLink)
+    }, [videoLink]);
 
     return(<>
         <div className="bg-grey-700 p-2">

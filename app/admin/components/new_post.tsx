@@ -84,7 +84,7 @@ export default function NewPost() {
 
         const hasAtLeastOneImage = imageLinks.length > 0 && imageLinks.some((link) => link.trim() !== "");
 
-        const validContent = imagePost ? (allImagesValid && hasAtLeastOneImage) : true;
+        const validContent = imagePost ? (allImagesValid && hasAtLeastOneImage) : videoString.trim() !== "";
 
         return hasValidTitle && hasValidParagraph && validContent && hasTag;
     };
@@ -157,7 +157,10 @@ export default function NewPost() {
                 <form onSubmit={handleSubmit} className="flex flex-row gap-6">
                     {/* Left Side */}
                     <div className=" flex-1 basis-1/3">
-                        <PathSelector onSelect={(path) => setTag(path)} excludeOverriden={true} selectedPathMsg="Post Classified Under:"/>
+                        <PathSelector onSelect={(path) => setTag(path)} 
+                                      excludeOverriden={true} 
+                                      selectedPathMsg="Post Classified Under:"
+                                      selectedPath={tag ?? { id: -1, path: "", linkOverride: "" }}/>
 
                         {/* Include in Portfolio Checkbox */}
                         <div className="mb-4">
@@ -233,7 +236,7 @@ export default function NewPost() {
                             (<ImageSelector imageLinks={imageLinks} setImageLinks={setImageLinks} setImagesValid={setAllImagesValid}/>)
                             :
                             /* VIDEO LINK */
-                            (<VideoSelector onChange={(videoLink) => setVideoString(videoLink)}/>)
+                            (<VideoSelector onChange={(videoLink) => setVideoString(videoLink)} videoLink={videoString}/>)
                         }
 
                         <button 

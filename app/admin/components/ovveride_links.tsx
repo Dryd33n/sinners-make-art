@@ -91,7 +91,7 @@ const LinkOverrideManager: React.FC = () => {
 
       <div className="flex space-x-6">
         {/* Scrollable dropdown for available paths */}
-        <PathSelector excludeOverriden={false} selectedPathMsg='Setting Destination Override on:' onSelect={(path) => addOverride(path.id)}/>
+        <PathSelector excludeOverriden={false} selectedPathMsg='Setting Destination Override on:' selectedPath={{id: -1, path: "", linkOverride: ""}} onSelect={(path) => addOverride(path.id)}/>
 
         {/* List of overrides */}
         <div className="w-1/2 bg-grey-800 p-3 rounded-md">

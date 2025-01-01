@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
 interface ImageStatus {
-    status: "loading" | "success" | "error";
+    status: "loading" | "success" | "error" | "none";
 }
 
 type ImageSelectorProps = {
@@ -75,7 +75,10 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
      * @returns boolean - true if the image is successfully loaded
      */
     const checkImageStatus = useCallback((index: number, url: string) => {
-        if (!url) return;
+        if (!url)
+        {updateImageStatus(index, "none");
+            
+            return;}
 
         const image = new window.Image();
         image.src = url;
@@ -88,7 +91,7 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
      * @param index index of the image link to update
      * @param status status to update the image link with
      */
-    const updateImageStatus = (index: number, status: "loading" | "success" | "error") => {
+    const updateImageStatus = (index: number, status: "loading" | "success" | "error" | "none") => {
         setImageStatuses((prevStatuses) => {
             const updatedStatuses = [...prevStatuses];
             updatedStatuses[index] = { status };
@@ -145,7 +148,12 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
                     >
                         Remove
                     </button>
-                    {imageStatuses[index]?.status === "loading" && <p className="text-gray-500 ml-2">Loading...</p>}
+                    {imageStatuses[index]?.status === "loading" &&
+                        <div className="w-16 h-16 ml-2 rounded grid place-content-center place-items-center border">
+                            <div className="w-8 h-8 border-4 border-gray-300 border-t-4 border-t-gray-800 rounded-full animate-spin"></div>
+                        </div>
+
+                    }
                     {imageStatuses[index]?.status === "success" && (
                         <Image
                             src={link}
@@ -156,7 +164,14 @@ export default function ImageSelector({ imageLinks, setImageLinks, setImagesVali
                         />
                     )}
                     {imageStatuses[index]?.status === "error" && (
-                        <p className="text-red-500 ml-2">Invalid image URL</p>
+                        <div className="w-16 h-16 ml-2 rounded border flex items-center justify-center border-red-500">
+                            <p className="text-red-500 font-bold text-center">Bad Link</p>
+                        </div>
+                    )}
+                    {imageStatuses[index]?.status === "none" && (
+                        <div className="w-16 h-16 ml-2 rounded border flex items-center justify-center border-red-500">
+                            <p className="text-white font-bold text-center">Enter Link</p>
+                        </div>
                     )}
                 </div>
             ))}

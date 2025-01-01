@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 interface PathSelectorProps {
     onSelect: (selectedPath: PathItem) => void;
+    selectedPath: PathItem;
     excludeOverriden: boolean;
     selectedPathMsg: string;
 };
@@ -27,7 +28,7 @@ interface PathItem {
  * @example
  * return <PathSelector onSelect={handlePathSelect} excludeOverriden={true} selectedPathMsg="Selected Path" />
  */
-export default function PathSelector({ onSelect, excludeOverriden, selectedPathMsg }: PathSelectorProps) {
+export default function PathSelector({ onSelect, excludeOverriden, selectedPathMsg, selectedPath }: PathSelectorProps) {
     const [allPaths, setAllPaths] = useState<PathItem[]>([]); // All available paths
     const [selectedTag, setSelectedTag] = useState<PathItem>();
     const [successMessage, setSuccessMessage] = useState("");
@@ -60,6 +61,15 @@ export default function PathSelector({ onSelect, excludeOverriden, selectedPathM
 
         fetchPaths();
     }, [excludeOverriden]);
+
+    useEffect(() => {
+        if(selectedPath.id === -10){
+            const path = allPaths.find((path) => path.path === selectedPath.path);
+            setSelectedTag(path);
+        }else if (selectedPath.id !== -1) {
+            setSelectedTag(selectedPath);
+        }
+    }, [selectedPath, allPaths]);
 
     /** Change local selected tag for styling and execute call back method onSelect
      * 
