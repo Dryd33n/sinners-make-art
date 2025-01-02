@@ -122,6 +122,17 @@ export default function NavTree() {
    * @param direction up or down
    */
   const moveNode = (parentId: number | null, nodeId: number, direction: 'up' | 'down') => {
+    /**
+     * Updates the order of nodes within a tree structure based on the specified direction.
+     * 
+     * @param nodes - An array of nodes representing the tree structure.
+     * @returns A new array of nodes with the updated order.
+     * 
+     * The function searches for a node with the specified `parentId` and reorders its children
+     * based on the `nodeId` and `direction` ('up' or 'down'). If the node is found and the
+     * direction is valid, it moves the child node to the new position and updates the order
+     * property of each child node accordingly.
+     */
     const updateOrder = (nodes: Node[]): Node[] =>
       nodes.map((node) => {
         if (node.id === parentId && node.children) {

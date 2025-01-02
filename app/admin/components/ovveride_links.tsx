@@ -10,6 +10,19 @@ interface OverrideItem {
   linkOverride: string;
 }
 
+/**
+ * LinkOverrideManager component manages the overrides for navigation links.
+ * It fetches available paths and allows the user to add, remove, and update overrides.
+ * The overrides can be saved to the server.
+ *
+ * @component
+ * @example
+ * return (
+ *   <LinkOverrideManager />
+ * )
+ *
+ * @returns {React.FC} The LinkOverrideManager component.
+ */
 const LinkOverrideManager: React.FC = () => {
   const [allPaths, setAllPaths] = useState<OverrideItem[]>([]); // All available paths
   const [overrides, setOverrides] = useState<OverrideItem[]>([]); // Current overrides
@@ -17,6 +30,21 @@ const LinkOverrideManager: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
+    /**
+     * Fetches the navigation tree overrides from the server.
+     * 
+     * This function sends a request to the `/api/admin/navtree/overrides` endpoint
+     * to retrieve the navigation tree overrides. If the request is successful and
+     * the response indicates success, it sets the retrieved paths and overrides
+     * in the state. Overrides with `linkOverride` not set to "auto" are
+     * automatically added to the overrides state. It also sets appropriate success
+     * and error messages based on the result.
+     * 
+     * @async
+     * @function fetchPaths
+     * @returns {Promise<void>} A promise that resolves when the fetch operation is complete.
+     * @throws Will throw an error if the fetch operation fails.
+     */
     const fetchPaths = async () => {
       try {
         const response = await fetch('/api/admin/navtree/overrides');
@@ -46,6 +74,13 @@ const LinkOverrideManager: React.FC = () => {
     fetchPaths();
   }, []);
 
+
+
+  /**
+   * Adds a selected path to the overrides list if it is not already present.
+   *
+   * @param {number} id - The ID of the path to be added to the overrides list.
+   */
   const addOverride = (id: number) => {
     const selectedPath = allPaths.find((path) => path.id === id);
     if (selectedPath && !overrides.some((item) => item.id === id)) {
@@ -53,10 +88,25 @@ const LinkOverrideManager: React.FC = () => {
     }
   };
 
+
+
+  /**
+   * Removes an override from the list of overrides based on the provided ID.
+   *
+   * @param {number} id - The ID of the override to be removed.
+   */
   const removeOverride = (id: number) => {
     setOverrides(overrides.filter((item) => item.id !== id));
   };
 
+
+
+  /**
+   * Updates the override link for a specific item in the overrides list.
+   *
+   * @param {number} id - The ID of the item to update.
+   * @param {string} newLink - The new link to override the existing one.
+   */
   const updateOverride = (id: number, newLink: string) => {
     setOverrides(
       overrides.map((item) =>
@@ -65,6 +115,20 @@ const LinkOverrideManager: React.FC = () => {
     );
   };
 
+
+
+  /**
+   * Saves the current overrides by sending a POST request to the server.
+   * This function sends a POST request to the `/api/admin/navtree/overrides` endpoint with the current overrides
+   * in the request body. If the request is successful, it sets a success message. If the request fails, it sets
+   * an error message and logs the error to the console.
+   * 
+   * @async
+   * @function saveOverrides
+   * @returns {Promise<void>} A promise that resolves when the overrides are successfully saved.
+   * 
+   * @throws Will throw an error if the request fails.
+   */
   const saveOverrides = async () => {
     try {
       const response = await fetch('/api/admin/navtree/overrides', {

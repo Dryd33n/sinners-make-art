@@ -11,7 +11,29 @@ interface PathItem {
     linkOverride: string;
 }
 
-export default function ReorderEditPosts() {
+/**
+ * Component for reordering and editing posts in the admin panel.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @description
+ * This component allows the admin to manage posts by category, reorder posts, and edit post details.
+ * It includes functionalities to fetch posts, filter posts by tag, delete posts, move posts up or down in order,
+ * and update post details including title, description, type (image or video), content, and category.
+ *
+ * @example
+ * <ReorderEditPosts />
+ *
+ * @remarks
+ * The component uses several state variables to manage the posts and their properties:
+ * - `reorderPostSuccessMessage`, `reorderPostErrorMessage`, `updatePostSuccessMessage`, `updatePostErrorMessage`: Status messages for various operations.
+ * - `isSubmitting`: Indicates if a form submission is in progress.
+ * - `tag`, `newTag`: The current and new tags for filtering and updating posts.
+ * - `allPosts`, `filteredPosts`, `selectedPost`: Arrays and objects to manage all posts, filtered posts, and the currently selected post.
+ * - `title`, `paragraph`, `imagePost`, `allImagesValid`, `includeInPortfolio`, `imageLinks`, `videoString`: Variables for managing post details.
+ */
+export default function ReorderEditPosts(): JSX.Element {
     {/* STATUS MESSAGES */ }
     const [reorderPostSuccessMessage, setReorderPostSuccessMessage] = useState("");
     const [reorderPostErrorMessage, setReorderPostErrorMessage] = useState("");
@@ -39,7 +61,20 @@ export default function ReorderEditPosts() {
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
     const [videoString, setVideoString] = useState("");
 
-    const fetchPosts = async () => {
+
+
+    /**
+     * Fetches all posts from the server.
+     * 
+     * This function sends a GET request to the '/api/posts' endpoint to retrieve all posts.
+     * If the request is successful and the response contains a success flag, it updates the state
+     * with the retrieved posts and sets a success message. If the request fails or the response
+     * does not contain a success flag, it sets an error message.
+     * 
+     * @async
+     * @returns {Promise<void>} A promise that resolves when the posts have been fetched and the state has been updated.
+     */
+    const fetchPosts = async (): Promise<void> => {
         try {
             const response = await fetch('/api/posts');
             const result = await response.json();
@@ -60,9 +95,25 @@ export default function ReorderEditPosts() {
         }
     }
 
+    // Fetch posts on component mount
     useEffect(() => {fetchPosts();}, []);
 
-    const handleTagChange = async (path: PathItem) => {
+
+
+    /**
+     * Handles the change of the selected tag and updates the filtered posts accordingly.
+     * 
+     * @param {PathItem} path - The selected tag path item.
+     * @returns {Promise<void>} - A promise that resolves when the tag change handling is complete.
+     * 
+     * This function performs the following actions:
+     * 1. Sets the selected tag.
+     * 2. Filters the posts based on the selected tag.
+     * 3. Sorts the filtered posts by their order property.
+     * 4. Updates the state with the filtered posts and resets the selected post.
+     * 5. Sets success or error messages based on the availability of posts for the selected tag.
+     */
+    const handleTagChange = async (path: PathItem): Promise<void> => {
         setTag(path);
         const filteredPosts = allPosts.filter((post) => post.tag === path.path);
         //sort posts by order property:
@@ -80,6 +131,21 @@ export default function ReorderEditPosts() {
 
     }
 
+
+
+    /**
+     * Handles the deletion of a post by its ID.
+     *
+     * @param {number} id - The ID of the post to delete. If the ID is -1, an error message is logged and the function returns early.
+     *
+     * This function performs the following actions:
+     * - Logs an error message if the ID is -1.
+     * - Calls the `deletePost` function to delete the post with the specified ID.
+     * - Calls the `fetchPosts` function to refresh the list of posts.
+     * - Updates the `filteredPosts` state by removing the post with the specified ID.
+     * - Updates the `allPosts` state by removing the post with the specified ID.
+     * - Sets the `selectedPost` state to `null`.
+     */
     const handleDeletePost = (id: number) => {
         if (id === -1){
             console.log("Error specifying post to delete")
@@ -94,7 +160,18 @@ export default function ReorderEditPosts() {
         
     };
 
-    const deletePost = async (id: number) => {
+
+    
+    /**
+     * Deletes a post by its ID.
+     *
+     * This function sends a DELETE request to the '/api/posts' endpoint with the post ID in the request body.
+     * If the deletion is successful, it sets a success message. Otherwise, it sets an error message.
+     *
+     * @param {number} id - The ID of the post to be deleted.
+     * @returns {Promise<void>} A promise that resolves when the deletion is complete.
+     */
+    const deletePost = async (id: number): Promise<void> => {
         try {
             const response = await fetch('/api/posts', {
                 method: 'DELETE',
@@ -120,6 +197,15 @@ export default function ReorderEditPosts() {
     };
 
 
+
+    /**
+     * Moves the post at the specified index up by one position in the filteredPosts array.
+     * 
+     * @param index - The index of the post to move up.
+     * 
+     * This function creates a copy of the filteredPosts array, swaps the post at the given index
+     * with the post immediately before it, updates the post order, and sets the new filteredPosts array.
+     */
     const handleMoveUp = (index: number) => {
         const updatedPosts = [...filteredPosts];
         [updatedPosts[index - 1], updatedPosts[index]] = [updatedPosts[index], updatedPosts[index - 1]];
@@ -128,6 +214,15 @@ export default function ReorderEditPosts() {
     };
 
 
+
+    /**
+     * Moves the post at the specified index down by one position in the list.
+     * 
+     * @param index - The index of the post to move down.
+     * 
+     * This function creates a copy of the `filteredPosts` array, swaps the post at the given index
+     * with the post immediately following it, updates the post order, and sets the new order in the state.
+     */
     const handleMoveDown = (index: number) => {
         const updatedPosts = [...filteredPosts];
         [updatedPosts[index], updatedPosts[index + 1]] = [updatedPosts[index + 1], updatedPosts[index]];
@@ -135,7 +230,17 @@ export default function ReorderEditPosts() {
         setFilteredPosts(updatedPosts);
     };
 
-    const updatePostOrder = async (updatedPosts: PostItem[]) => {
+
+
+    /**
+     * Updates the order of posts by sending a PUT request to the server with the new order.
+     *
+     * @param {PostItem[]} updatedPosts - An array of posts with their new order.
+     * @returns {Promise<void>} A promise that resolves when the post order update is complete.
+     *
+     * @throws Will set error messages if the update fails or an error occurs during the request.
+     */
+    const updatePostOrder = async (updatedPosts: PostItem[]): Promise<void> => {
         try {
             const updates = updatedPosts.map((post, index) => ({ id: post.id, order: index + 1 }));
             const response = await fetch('/api/posts/reorder', {
@@ -159,7 +264,26 @@ export default function ReorderEditPosts() {
         }
     };
 
-    const handleUpdate = async (e: React.FormEvent) => {
+
+
+    /**
+     * Handles the update of a post when the form is submitted.
+     *
+     * @param {React.FormEvent} e - The form submission event.
+     * @returns {Promise<void>} - A promise that resolves when the update is complete.
+     *
+     * This function performs the following steps:
+     * 1. Prevents the default form submission behavior.
+     * 2. Sets the `isSubmitting` state to `true` to indicate that the submission is in progress.
+     * 3. Determines the new order for the post based on the selected tag.
+     * 4. Sends a PUT request to update the post with the new data.
+     * 5. Handles the response from the server:
+     *    - If the update is successful, sets the success message and refreshes the posts.
+     *    - If the update fails, sets the error message.
+     * 6. Catches any errors that occur during the update process and logs them to the console.
+     * 7. Finally, sets the `isSubmitting` state to `false` to indicate that the submission is complete.
+     */
+    const handleUpdate = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
         setIsSubmitting(true);
 
@@ -210,11 +334,31 @@ export default function ReorderEditPosts() {
         }
     };
 
-    const handleSelectPost = (post: PostItem) => {
+
+
+    /**
+     * Handles the selection of a post.
+     *
+     * @param {PostItem} post - The post item to be selected.
+     * @returns {void}
+     */
+    const handleSelectPost = (post: PostItem): void => {
         setSelectedPost(post);
         loadSelectedPost(post);
     }
 
+
+
+    /**
+     * Loads the selected post data into the component's state.
+     *
+     * @param {PostItem} post - The post item to load.
+     * @param {string} post.title - The title of the post.
+     * @param {string} post.description - The description of the post.
+     * @param {boolean} post.portfolio - Indicates if the post should be included in the portfolio.
+     * @param {string} post.type - The type of the post, either 'image' or other.
+     * @param {string} post.content - The content of the post, either a comma-separated list of image links or a video string.
+     */
     const loadSelectedPost = (post: PostItem) => {
         setTitle(post.title);
         setParagraph(post.description);
@@ -229,11 +373,35 @@ export default function ReorderEditPosts() {
         }
     }
 
-    const handleCateogryChange = async (path: PathItem) => {
+
+    
+    /**
+     * Handles the change of category by updating the new tag with the provided path.
+     *
+     * @param {PathItem} path - The path item representing the new category.
+     * @returns {Promise<void>} A promise that resolves when the category change is handled.
+     */
+    const handleCateogryChange = async (path: PathItem): Promise<void> => {
         setNewTag(path);
     }
 
-    const canSubmit = () => {
+
+
+    /**
+     * Determines if the form can be submitted based on the validity of its fields.
+     *
+     * @returns {boolean} True if all fields are valid and the form can be submitted, otherwise false.
+     *
+     * Validity checks:
+     * - Title must be non-empty after trimming.
+     * - Paragraph must be non-empty after trimming.
+     * - Content must be valid:
+     *   - If `imagePost` is true, all images must be valid.
+     *   - If `imagePost` is false, `videoString` must be non-empty after trimming.
+     * - Categories must be valid:
+     *   - If `newTag` is defined, its `path` must be non-empty after trimming.
+     */
+    const canSubmit = (): boolean => {
         const validTitle = title.trim().length > 0;
         const validParagraph = paragraph.trim().length > 0;
         const validContent = imagePost ? allImagesValid : videoString.trim().length > 0;
