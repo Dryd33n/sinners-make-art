@@ -147,19 +147,116 @@ export interface SocialLink {
 }
 
 
+export type CvData = {
+  experience: ExperienceField[];
+  skills: SkillField[];
+  awards: AwardField[];
+  projects: ProjectField[];
+  education: EducationField[];
+}
 
 
 
-
-
-export const highlightsTable = pgTable("highlights_table", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "highlights_table_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	highlightTag: text("highlight_tag").notNull(),
-	highlightName: text("highlight_name").notNull(),
-	highlightDesc: text("highlight_desc").notNull(),
-	type: text().notNull(),
-	content: text().notNull(),
+export const cvExperience = pgTable("cv_experience", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_experience_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	location: text().notNull(),
+	date: text().notNull(),
+	description: text().notNull(),
 	order: integer().notNull(),
 });
+
+export type ExperienceField = {
+  title: string;
+  location: string;
+  date: string;
+  description: string;
+  order: number;
+}
+
+
+
+export const cvSkills = pgTable("cv_skills", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_skills_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	skill: text().notNull(),
+	order: integer().notNull(),
+});
+
+export type SkillField = {
+  skill: string;
+  order: number;
+}
+
+export const cvAwards = pgTable("cv_awards", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_awards_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	description: text().notNull(),
+	order: integer().notNull(),
+});
+
+export type AwardField = {
+  title: string;
+  description: string;
+  order: number;
+}
+
+
+
+export const cvProjects = pgTable("cv_projects", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_projects_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	genre: text().notNull(),
+	description: text().notNull(),
+	order: integer().notNull(),
+});
+
+export type ProjectField = {
+  title: string;
+  genre: string;
+  description: string;
+  order: number;
+}
+
+
+
+export const cvEducation = pgTable("cv_education", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_education_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	location: text().notNull(),
+	type: text().notNull(),
+	date: text().notNull(),
+	order: integer().notNull(),
+});
+
+export type EducationField = {
+  title: string;
+  location: string;
+  type: string;
+  date: string;
+  order: number;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const highlightsTable = pgTable("highlights_table", {
+// 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "highlights_table_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+// 	highlightTag: text("highlight_tag").notNull(),
+// 	highlightName: text("highlight_name").notNull(),
+// 	highlightDesc: text("highlight_desc").notNull(),
+// 	type: text().notNull(),
+// 	content: text().notNull(),
+// 	order: integer().notNull(),
+// });
 
 

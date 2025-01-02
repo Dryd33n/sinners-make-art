@@ -10,6 +10,15 @@ export const hometable = pgTable("hometable", {
 	images: text().notNull(),
 });
 
+export const cvEducation = pgTable("cv_education", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_education_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	location: text().notNull(),
+	type: text().notNull(),
+	date: text().notNull(),
+	order: integer().notNull(),
+});
+
 export const navTree = pgTable("nav_tree", {
 	id: serial().primaryKey().notNull(),
 	name: text().notNull(),
@@ -42,5 +51,35 @@ export const highlightsTable = pgTable("highlights_table", {
 	highlightDesc: text("highlight_desc").notNull(),
 	type: text().notNull(),
 	content: text().notNull(),
+	order: integer().notNull(),
+});
+
+export const cvExperience = pgTable("cv_experience", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_experience_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	location: text().notNull(),
+	date: text().notNull(),
+	description: text().notNull(),
+	order: integer().notNull(),
+});
+
+export const cvSkills = pgTable("cv_skills", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_skills_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	skill: text().notNull(),
+	order: integer().notNull(),
+});
+
+export const cvAwards = pgTable("cv_awards", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_awards_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	description: text().notNull(),
+	order: integer().notNull(),
+});
+
+export const cvProjects = pgTable("cv_projects", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_projects_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	genre: text().notNull(),
+	description: text().notNull(),
 	order: integer().notNull(),
 });

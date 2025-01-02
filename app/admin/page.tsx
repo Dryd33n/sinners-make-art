@@ -9,6 +9,7 @@ import ReorderEditPosts from './components/reorder_edit_posts';
 import ExpandableSection from './components/shared/expandable_section';
 import Tooltip from './components/shared/tooltip';
 import SocialLinks from './components/social_links';
+import ManageCv from './components/manage_cv';
 
 export const metadata = {
   title: 'Admin Panel',
@@ -41,6 +42,10 @@ export default async function AdminPage() {
       </ExpandableSection>
       <ExpandableSection title="Social Media Links">
         <SocialLinks />
+      </ExpandableSection>
+
+      <ExpandableSection title="Manage CV">
+        <ManageCv />
       </ExpandableSection>
 
       <h1 className='text-3xl font-extralight mx-14 mb-5 mt-10'>MANAGE POSTS:</h1>
