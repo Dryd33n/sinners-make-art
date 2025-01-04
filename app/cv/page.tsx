@@ -1,87 +1,55 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../components/global/footer";
 import Header from "../components/global/header"
-import { AwardField, ProjectField, EducationField, ExperienceField } from "@/db/schema";
-
-
-
-// const experienceData: ExperienceField[] = [
-//     {
-//         title: "Interoception",
-//         location: "Uvic Audain Gallery",
-//         date: "December 2024",
-//         description: "306 and 395 come together with their works from the semester."
-//     },
-//     {
-//         title: "Photo lab assistant",
-//         location: "University of Victoria",
-//         date: "September 2024",
-//         description: "Large format printing assistant as well as large format lamination and di-bond mounting."
-//     },
-//     {
-//         title: "Cognito",
-//         location: "The Vault — Video Exhibition",
-//         date: "February 2024",
-//         description: "A group video exhibition at The Vault gallery with dueling video projectors curated by Leanne Olsen."
-//     },
-//     {
-//         title: "Achievement Unlocked",
-//         location: "Salmon Arm arts center",
-//         date: "March 2022",
-//         description: "Group exhibition of students with different works to show off their achievements."
-//     }
-// ]
-
-// const skillData: string[] = [
-//     "Sculpture - wire, welding, plasma cutting, polymer clay",
-//     "Photography - scenery, portraits, events, urban, digital, analog",
-//     "Videography - edits, montages, urban identities",
-//     "Stained glass"
-// ]
-
-// const awardData: AwardField[] = [
-//     {
-//         title: "Alan Steven John Award in Fine Arts",
-//         description: "Offered to students with a 4.0/9.0 GPA"
-//     },
-//     {
-//         title: "District Authority Award in Fine Arts",
-//         description: "Offered to grade 12 students going to post-secondary"
-//     }
-// ]
-
-// const projectData: ProjectField[] = [
-//     {
-//         title: "Roger, as a Journal. Who is he?",
-//         genre: "Journalistic Document",
-//         description: "4th time working with the theme of roger"
-//     }
-// ]
-
-// const educationData: EducationField[] = [
-// {
-//     title: "University of Victoria",
-//     location: "Victoria",
-//     type: "BFA in Visual Arts",
-//     date: "September 2022 - Current"
-// },
-// {
-//     title: "Salmon Arm Secondary",
-//     location: "Salmon Arm",
-//     type: "Dogwood",
-//     date: "June 2022"
-// }
-// ]
+import { AwardField, EducationField, ExhibitionField, WorkField, SkillField, CvData } from "@/db/schema";
 
 
 export default function CVPage() {
-    const [experienceData, setExperienceData] = useState<ExperienceField[]>([]);
-    const [skillData, setSkillData] = useState<string[]>([]);
-    const [awardData, setAwardData] = useState<AwardField[]>([]);
-    const [projectData, setProjectData] = useState<ProjectField[]>([]);
-    const [educationData, setEducationData] = useState<EducationField[]>([]);
+    const [cvData, setCvData] = useState<CvData>({
+        exhibition: [],
+        skills: [],
+        awards: [],
+        work: [],
+        education: [],
+    });
+
+      const fetchCv = async () => {
+        try {
+          const response = await fetch('/api/cv', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (response.ok) {
+            const result = await response.json();
+            setCvData(result.data); // Assuming the API returns { success: true, data: CvData }
+          } else {
+            const error = await response.json();
+            console.error('Error fetching CV data:', error);
+            alert('Failed to fetch CV data. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error fetching CV:', error);
+          alert('An error occurred while fetching the CV. Please try again.');
+        }
+      };
+
+      const sortCvData = () => {
+        //sort each array in cv data by order property
+        cvData.exhibition.sort((a, b) => a.order - b.order);
+        cvData.skills.sort((a, b) => a.order - b.order);
+        cvData.awards.sort((a, b) => a.order - b.order);
+        cvData.work.sort((a, b) => a.order - b.order);
+        cvData.education.sort((a, b) => a.order - b.order);
+      };
+    
+      useEffect(() => {
+        fetchCv(); // Fetch CV data when the component mounts
+      }, []);
 
 
     return (<>
@@ -97,16 +65,31 @@ export default function CVPage() {
                 <div className="flex flex-col basis-2/3">
 
                     {/* EXPERIENCE */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mb-3">EXPERIENCE</p>
+                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mb-3">EXHIBITIONS</p>
                     <div className="flex flex-col gap-3">
-                        {experienceData.map((experience, index) => (
+                        {cvData.exhibition.map((exhibition: ExhibitionField, index: number) => (
                             <div key={index} className="mb-5">
                                 <div className="flex flex-row text-xl gap-1 flex-wrap">
-                                    <h1 className="font-bold">{experience.title},</h1>
-                                    <h1>{experience.location}</h1>
+                                    <h1 className="font-bold">{exhibition.title},</h1>
+                                    <h1>{exhibition.location}</h1>
                                 </div>
-                                <p className="font-sans text-sm text-grey-300 my-1">{experience.date}</p>
-                                <p>{experience.description}</p>
+                                <p className="font-sans text-sm text-grey-300 my-1">{exhibition.date}</p>
+                                <p>{exhibition.description}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* PROJECTS */}
+                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-12 mb-3">WORK EXPERIENCE</p>
+                    <div className="flex flex-col gap-3">
+                        {cvData.work.map((work: WorkField, index) => (
+                            <div key={index} className="mb-5">
+                                <div className="flex flex-row text-xl gap-1 flex-wrap">
+                                    <h1 className="font-bold">{work.title},</h1>
+                                    <h1>{work.location}</h1>
+                                </div>
+                                <p className="font-sans text-sm text-grey-300 my-1">{work.date}</p>
+                                <p>{work.description}</p>
                             </div>
                         ))}
                     </div>
@@ -114,7 +97,7 @@ export default function CVPage() {
                     {/* EDUCATION */}
                     <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-12 mb-3">EDUCATION</p>
                     <div className="flex flex-col gap-3">
-                        {educationData.map((education, index) => (
+                        {cvData.education.map((education: EducationField, index) => (
                             <div key={index} className="mb-5">
                                 <div className="flex flex-row text-xl gap-1 flex-wrap">
                                     <h1 className="font-bold">{education.title},</h1>
@@ -126,48 +109,36 @@ export default function CVPage() {
                             </div>
                         ))}
                     </div>
-
-                    {/* PROJECTS */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-12 mb-3">PROJECTS</p>
-                    <div className="flex flex-col gap-3">
-                        {projectData.map((project, index) => (
-                            <div key={index} className="mb-5">
-                                <div className="flex flex-row text-xl gap-1 flex-wrap">
-                                    <h1 className="font-bold">{project.title}</h1>
-                                    <p>—</p>
-                                    <h1 className="italic">{project.genre}</h1>
-                                </div>
-                                <p className="font-sans text-sm text-grey-300 my-1">{project.description}</p>
-                            </div>
-                        ))}
-                    </div>
-
                 </div>
                 {/* RIGHT SIDE */}
                 <div className="flex flex-col basis-1/3">
 
                     {/* SKILLS */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm">SKILLS</p>
-                    <div className="flex flex-col gap-2 mt-5">
-                        {skillData.map((skill, index) => (
-                            <p key={index} className="text-grey-200 mb-7">{skill}</p>
-                        ))}
+                    <div className="flex-basis-1">
+                        <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm">SKILLS</p>
+                        <div className="flex flex-col gap-2 mt-5">
+                            {cvData.skills.map((skill: SkillField, index) => (
+                                <p key={index} className="text-grey-200 mb-7">{skill.skill}</p>
+                            ))}
+                        </div>
                     </div>
 
                     {/* AWARDS */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-56 mb-7 ">AWARDS</p>
-                    <div>
-                        {awardData.map((award, index) => (
-                            <div key={index} className="mb-5">
-                                <p className="font-bold inline mr-1">{award.title}</p>
-                                <div className="inline-block w-[1px] h-full bg-white align-middle mx-2"> </div>
-                                <p className="text-grey-300 inline">{award.description}</p>
-                            </div>
-                        ))}
+                    <div className="mt-auto">
+                        <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-56 mb-7 ">AWARDS</p>
+                        <div>
+                            {cvData.awards.map((award: AwardField, index) => (
+                                <div key={index} className="mb-5">
+                                    <p className="font-bold inline mr-1">{award.title}</p>
+                                    <br />
+                                    <p className="text-grey-300 inline">{award.description}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <Footer/>
+        <Footer />
     </>)
 }

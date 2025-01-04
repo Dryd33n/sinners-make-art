@@ -148,16 +148,16 @@ export interface SocialLink {
 
 
 export type CvData = {
-  experience: ExperienceField[];
+  exhibition: ExhibitionField[];
   skills: SkillField[];
   awards: AwardField[];
-  projects: ProjectField[];
+  work: WorkField[];
   education: EducationField[];
 }
 
 
 
-export const cvExperience = pgTable("cv_experience", {
+export const cvExperience = pgTable("cv_exhibition", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_experience_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	title: text().notNull(),
 	location: text().notNull(),
@@ -166,7 +166,7 @@ export const cvExperience = pgTable("cv_experience", {
 	order: integer().notNull(),
 });
 
-export type ExperienceField = {
+export type ExhibitionField = {
   title: string;
   location: string;
   date: string;
@@ -202,17 +202,19 @@ export type AwardField = {
 
 
 
-export const cvProjects = pgTable("cv_projects", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_projects_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+export const cvWorkexperience = pgTable("cv_workexperience", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_workexperience_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	title: text().notNull(),
-	genre: text().notNull(),
+	location: text().notNull(),
+	date: text().notNull(),
+  order: integer().notNull(),
 	description: text().notNull(),
-	order: integer().notNull(),
 });
 
-export type ProjectField = {
+export type WorkField = {
   title: string;
-  genre: string;
+  location: string;
+  date: string;
   description: string;
   order: number;
 }

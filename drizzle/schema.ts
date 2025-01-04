@@ -54,7 +54,13 @@ export const highlightsTable = pgTable("highlights_table", {
 	order: integer().notNull(),
 });
 
-export const cvExperience = pgTable("cv_experience", {
+export const cvSkills = pgTable("cv_skills", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_skills_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	skill: text().notNull(),
+	order: integer().notNull(),
+});
+
+export const cvExhibition = pgTable("cv_exhibition", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_experience_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	title: text().notNull(),
 	location: text().notNull(),
@@ -63,23 +69,17 @@ export const cvExperience = pgTable("cv_experience", {
 	order: integer().notNull(),
 });
 
-export const cvSkills = pgTable("cv_skills", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_skills_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	skill: text().notNull(),
-	order: integer().notNull(),
+export const cvWorkexperience = pgTable("cv_workexperience", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_workexperience_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+	title: text().notNull(),
+	location: text().notNull(),
+	date: text().notNull(),
+	description: text().notNull(),
 });
 
 export const cvAwards = pgTable("cv_awards", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_awards_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	title: text().notNull(),
-	description: text().notNull(),
-	order: integer().notNull(),
-});
-
-export const cvProjects = pgTable("cv_projects", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "cv_projects_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
-	title: text().notNull(),
-	genre: text().notNull(),
 	description: text().notNull(),
 	order: integer().notNull(),
 });

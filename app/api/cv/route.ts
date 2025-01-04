@@ -1,20 +1,20 @@
 import { db } from '@/db';
 import { NextResponse } from 'next/server';
-import { cvExperience, cvSkills, cvAwards, cvProjects, cvEducation } from '@/db/schema'; // Import your tables
-import { ExperienceField, SkillField, AwardField, ProjectField, EducationField } from '@/db/schema';
+import { cvExperience, cvSkills, cvAwards, cvEducation, cvWorkexperience } from '@/db/schema'; // Import your tables
+import { ExhibitionField, SkillField, AwardField, WorkField, EducationField } from '@/db/schema';
 
 export type CvData = {
-  experience: ExperienceField[];
+  exhibition: ExhibitionField[];
   skills: SkillField[];
   awards: AwardField[];
-  projects: ProjectField[];
+  work: WorkField[];
   education: EducationField[];
 };
 
 export async function GET() {
   try {
     // Fetching data from all the cv_* tables
-    const experiences = await db.select({
+    let experiences = await db.select({
       title: cvExperience.title,
       location: cvExperience.location,
       date: cvExperience.date,
@@ -22,25 +22,26 @@ export async function GET() {
       order: cvExperience.order,
     }).from(cvExperience).execute();
 
-    const skills = await db.select({
+    let skills = await db.select({
       skill: cvSkills.skill,
       order: cvSkills.order,
     }).from(cvSkills).execute();
 
-    const awards = await db.select({
+    let awards = await db.select({
       title: cvAwards.title,
       description: cvAwards.description,
       order: cvAwards.order,
     }).from(cvAwards).execute();
 
-    const projects = await db.select({
-      title: cvProjects.title,
-      genre: cvProjects.genre,
-      description: cvProjects.description,
-      order: cvProjects.order,
-    }).from(cvProjects).execute();
+    let work = await db.select({
+      title: cvWorkexperience.title,
+      location: cvWorkexperience.location,
+      date: cvWorkexperience.date,
+      description: cvWorkexperience.description,
+      order: cvWorkexperience.order,
+    }).from(cvWorkexperience).execute();
 
-    const education = await db.select({
+    let education = await db.select({
       title: cvEducation.title,
       location: cvEducation.location,
       type: cvEducation.type,
@@ -49,14 +50,19 @@ export async function GET() {
     }).from(cvEducation).execute();
 
     // Formatting the response data
+    if (!experiences) experiences = [];
+    if (!skills) skills = [];
+    if (!awards) awards = [];
+    if (!work) work = [];
+    if (!education) education = [];
+
     const cvData: CvData = {
-      experience: experiences,
+      exhibition: experiences,
       skills: skills,
       awards: awards,
-      projects: projects,
+      work: work,
       education: education,
     };
-
     return NextResponse.json({ success: true, data: cvData }, { status: 200 });
   } catch (error) {
     console.error('Error loading CV data:', error);
@@ -65,15 +71,17 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-    const { experience, skills, awards, projects, education } = await req.json();
-    const cvData: CvData = { experience, skills, awards, projects, education };
+    const { exhibition, skills, awards, work, education } = await req.json();
+    const cvData: CvData = { exhibition, skills, awards, work, education };
+
+    console.log('Received CV data:', cvData);
 
     //clear all tables
     try{
         await db.delete(cvExperience).execute();
         await db.delete(cvSkills).execute();
         await db.delete(cvAwards).execute();
-        await db.delete(cvProjects).execute();
+        await db.delete(cvWorkexperience).execute();
         await db.delete(cvEducation).execute();
     }catch(error){
         console.error('Error clearing tables:', error);
@@ -82,10 +90,10 @@ export async function POST(req: Request) {
 
     // Insert data into tables
     try{
-        await db.insert(cvExperience).values(cvData.experience).execute();
+        await db.insert(cvExperience).values(cvData.exhibition).execute();
         await db.insert(cvSkills).values(cvData.skills).execute();
         await db.insert(cvAwards).values(cvData.awards).execute();
-        await db.insert(cvProjects).values(cvData.projects).execute();
+        await db.insert(cvWorkexperience).values(cvData.work).execute();
         await db.insert(cvEducation).values(cvData.education).execute();
 
         return NextResponse.json({ success: true }, { status: 200 });

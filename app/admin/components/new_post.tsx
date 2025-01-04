@@ -26,7 +26,7 @@ interface PathItem {
  * This component allows users to create a new post by filling out a form with the post's title, description, and content.
  * Users can choose between an image post or a video post, and can optionally include the post in their portfolio.
  */
-export default function NewPost() {
+export default function NewPost(): JSX.Element {
     /* FORM VARS */
     const [title, setTitle] = useState("");
     const [paragraph, setParagraph] = useState("");
