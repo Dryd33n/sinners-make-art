@@ -1,5 +1,4 @@
 import { CvData, EducationField } from "@/db/schema";
-import { date } from "drizzle-orm/mysql-core";
 import { useState } from "react";
 
 type ManageEducationProps = {

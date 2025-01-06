@@ -1,5 +1,4 @@
 import { CvData, ExhibitionField } from "@/db/schema";
-import { date } from "drizzle-orm/mysql-core";
 import { useState } from "react";
 
 type ManageExhibitionProps = {

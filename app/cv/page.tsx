@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Footer from "../components/global/footer";
 import Header from "../components/global/header"
 import { AwardField, EducationField, ExhibitionField, WorkField, SkillField, CvData } from "@/db/schema";
+import NavBar from "../components/global/navBar";
 
 
 export default function CVPage() {
@@ -37,24 +38,27 @@ export default function CVPage() {
           alert('An error occurred while fetching the CV. Please try again.');
         }
       };
-
-      const sortCvData = () => {
-        //sort each array in cv data by order property
-        cvData.exhibition.sort((a, b) => a.order - b.order);
-        cvData.skills.sort((a, b) => a.order - b.order);
-        cvData.awards.sort((a, b) => a.order - b.order);
-        cvData.work.sort((a, b) => a.order - b.order);
-        cvData.education.sort((a, b) => a.order - b.order);
-      };
     
       useEffect(() => {
-        fetchCv(); // Fetch CV data when the component mounts
-      }, []);
+        const sortCvData = () => {
+            //sort each array in cv data by order property
+            cvData.exhibition.sort((a, b) => a.order - b.order);
+            cvData.skills.sort((a, b) => a.order - b.order);
+            cvData.awards.sort((a, b) => a.order - b.order);
+            cvData.work.sort((a, b) => a.order - b.order);
+            cvData.education.sort((a, b) => a.order - b.order);
+          };
+
+          fetchCv(); // Fetch CV data when the component mounts
+          sortCvData();
+          document.title = "CV | Mary-Jane Laronde";
+      });
 
 
     return (<>
         <Header mainText="CURRICULUM VITAE" />
-        <div className="font-serif m-3 text-grey-200 sm:m-5 md:m-10 lg:m-20 xl:m-40 2xl:m-60">
+        <NavBar/>
+        <div className="font-serif mt-0 m-3 text-grey-200 sm:mt-20 sm:m-5 md:mt-20 md:m-10 lg:mt-20 lg:m-20 xl:mt-20 xl:m-40 2xl:mt-20 2xl:m-60">
             <div className="flex flex-col">
                 <h1 className="text-5xl tracking-wider">Mary-Jane Laronde</h1>
                 <p className="font-sans text-grey-300 font-medium text-xl tracking-wider mt-5 mb-2">Practicing Artist</p>
@@ -65,7 +69,7 @@ export default function CVPage() {
                 <div className="flex flex-col basis-2/3">
 
                     {/* EXPERIENCE */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mb-3">EXHIBITIONS</p>
+                    <p className=" text-white tracking-wider font-sans mb-8 font-extralight underline text-xl">EXHIBITIONS</p>
                     <div className="flex flex-col gap-3">
                         {cvData.exhibition.map((exhibition: ExhibitionField, index: number) => (
                             <div key={index} className="mb-5">
@@ -80,7 +84,7 @@ export default function CVPage() {
                     </div>
 
                     {/* PROJECTS */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-12 mb-3">WORK EXPERIENCE</p>
+                    <p className=" text-white tracking-wider font-sans mt-12 mb-8 font-extralight underline text-xl">WORK EXPERIENCE</p>
                     <div className="flex flex-col gap-3">
                         {cvData.work.map((work: WorkField, index) => (
                             <div key={index} className="mb-5">
@@ -95,7 +99,7 @@ export default function CVPage() {
                     </div>
 
                     {/* EDUCATION */}
-                    <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-12 mb-3">EDUCATION</p>
+                    <p className=" text-white tracking-wider font-sans mt-12 mb-8 font-extralight underline text-xl">EDUCATION</p>
                     <div className="flex flex-col gap-3">
                         {cvData.education.map((education: EducationField, index) => (
                             <div key={index} className="mb-5">
@@ -103,7 +107,7 @@ export default function CVPage() {
                                     <h1 className="font-bold">{education.title},</h1>
                                     <h1>{education.location}</h1>
                                     <p>—</p>
-                                    <h1 className="italic">{education.type}</h1>
+                                    <h1 className="font-extralight">{education.type}</h1>
                                 </div>
                                 <p className="font-sans text-sm text-grey-300 my-1">{education.date}</p>
                             </div>
@@ -115,7 +119,7 @@ export default function CVPage() {
 
                     {/* SKILLS */}
                     <div className="flex-basis-1">
-                        <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm">SKILLS</p>
+                        <p className=" text-white tracking-wider font-sans mb-8 font-extralight underline text-xl">SKILLS</p>
                         <div className="flex flex-col gap-2 mt-5">
                             {cvData.skills.map((skill: SkillField, index) => (
                                 <p key={index} className="text-grey-200 mb-7">{skill.skill}</p>
@@ -125,7 +129,7 @@ export default function CVPage() {
 
                     {/* AWARDS */}
                     <div className="mt-auto">
-                        <p className="font-semibold text-blue-400 tracking-wider font-sans text-sm mt-56 mb-7 ">AWARDS</p>
+                        <p className=" text-white tracking-wider font-sans  mt-56 mb-8 font-extralight underline text-xl">AWARDS</p>
                         <div>
                             {cvData.awards.map((award: AwardField, index) => (
                                 <div key={index} className="mb-5">

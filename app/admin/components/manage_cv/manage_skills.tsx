@@ -1,5 +1,4 @@
-import { CvData, SkillField, WorkField } from "@/db/schema";
-import { date } from "drizzle-orm/mysql-core";
+import { CvData, SkillField } from "@/db/schema";
 import { useState } from "react";
 
 type ManageSkillProps = {

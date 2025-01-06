@@ -1,4 +1,4 @@
-import { AwardField, CvData, SkillField } from "@/db/schema";
+import { AwardField, CvData } from "@/db/schema";
 import { useState } from "react";
 
 type ManageAwardProps = {
