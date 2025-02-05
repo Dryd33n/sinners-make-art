@@ -32,7 +32,9 @@ export async function generateMetadata({ params, }: { params: Promise<{ category
 
 const fetchPosts = async () => {
   try {
-    const response = await fetch(`${baseUrl}/api/posts`);
+    const response = await fetch(`${baseUrl}/api/posts`, {
+      next: { revalidate: 60 }, // Cache for 60 seconds
+    });
     const result = await response.json();
 
     if (result.success) {
