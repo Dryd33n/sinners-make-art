@@ -9,7 +9,9 @@ const Footer = () => {
   useEffect(() => {
     const fetchLinks = async () => {
       try {
-        const response = await fetch('/api/social_links');
+        const response = await fetch('/api/social_links',{
+          next: { revalidate: 3600 }, // Cache for 1 hour
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

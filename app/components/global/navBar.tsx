@@ -42,7 +42,9 @@ function WebNavBar() {
     useEffect(() => {
         const fetchTreeData = async () => {
             try {
-                const response = await fetch('/api/admin/navtree');
+                const response = await fetch('/api/admin/navtree', {
+                    next: { revalidate:  3600}, // Cache for 1 hour
+                  });
                 const result = await response.json();
 
                 if (result.success) {

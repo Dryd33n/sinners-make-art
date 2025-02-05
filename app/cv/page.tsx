@@ -19,6 +19,7 @@ export default function CVPage() {
       const fetchCv = async () => {
         try {
           const response = await fetch('/api/cv', {
+            next: { revalidate: 3600 }, // Cache for 1 hour
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
