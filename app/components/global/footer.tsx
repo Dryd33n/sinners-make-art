@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { SocialLink } from '@/db/schema';
 
