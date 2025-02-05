@@ -72,7 +72,7 @@ function WebPost(props: PostProps) {
                 <div className={`md:basis-1/3 w-full basis-1/5 ${screenWidth < 768 ? 'mb-10' : 'mr-10'}`}>
                     <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
                     <div className="bg-white h-0.5 w-full mt-5"></div>
-                    <p className="mt-3">{props.post.description}</p>
+                    <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
                 </div>
                 <div className="md:basis-2/3 basis-4/5 w-full grid place-content-center">
                     {props.post.type === 'image' ? (
