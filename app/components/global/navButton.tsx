@@ -22,6 +22,7 @@ const NavButton: React.FC<NavButtonProps> = ({ text, link, links }) => {
       <a
         href={link}
         className="flex items-center px-4 py-2 bg-grey-900 text-white group-hover:bg-grey-700 w-full h-14 border-r border-white"
+        
       >
         <div className="m-auto">
           <span className="font-extralight tracking-wider">{text}</span>

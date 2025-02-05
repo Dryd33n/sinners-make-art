@@ -70,6 +70,7 @@ export default function MobileNavBar() {
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className="text-2xl focus:outline-none"
+                    aria-label="Toggle Main Menu"
                 >
                     {isMenuOpen ? <HiX /> : <HiMenu />}
                 </button>
@@ -124,6 +125,7 @@ const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, links }) => {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex justify-between items-center w-full px-4 py-2 bg-grey-800 text-left hover:bg-grey-700"
+                aria-label={`Toggle ${text} Menu`}
             >
                 <span>{text.toUpperCase()}</span>
                 <span>{isOpen ? "-" : "+"}</span>

@@ -64,6 +64,7 @@ function WebPost(props: PostProps) {
     const images = props.post.content.split(',').map((url: string) => ({
         original: url, // Use the full-size image
         thumbnail: url, // Generate thumbnails dynamically (adjust as needed)
+        originalAlt: props.post.title, // Alt text for full-size image
     }));
 
     return (
