@@ -28,12 +28,18 @@ const Footer = () => {
     fetchLinks();
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer className="text-center p-4 font-light bg-grey-850 mt-10 text-white w-full">
       <p className='text-grey-200'>&copy; {new Date().getFullYear()} Sinners Make Art. All rights reserved.</p>
       <p className='italic text-grey-200'>Thank you for visiting!</p>
       <div className="mt-5 mb-3 flex flex-col">
-        <Link href='/' className=" underline mx-2 text-white hover:text-gray-400 my-3">Back To Home</Link>
+        <button onClick={scrollToTop}>
+          <p className=" underline mx-2 text-white hover:text-gray-400 my-3">Back To Top</p>
+        </button>
 
         <div>
           {socialLinks.map((link, index) => (

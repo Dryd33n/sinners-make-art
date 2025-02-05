@@ -81,11 +81,12 @@ function WebPost(props: PostProps) {
                                 items={images}
                                 showThumbnails={false}
                                 showPlayButton={false}
-                                showBullets={true}
+                                showBullets={images.length === 1 ? false : true}
                                 showNav={false}
                                 showFullscreenButton={true}
                                 autoPlay={true}
                                 slideInterval={7500}
+                                useBrowserFullscreen={false}
                             />
                         </div>
                     ) : (
