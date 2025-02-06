@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { SocialLink } from '@/db/schema';
+import Link from 'next/link';
 
 const Footer = () => {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
