@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
     /* INSERT DATA */
     try {
         const response = await db.insert(postsTable).values(data).execute();
-        console.log('Data inserted successfully:', response);
         return NextResponse.json({ success: true, response }, { status: 200 });
     } catch (error) {
         console.error('Error inserting data:', error);
@@ -63,7 +62,6 @@ export async function DELETE(req: NextRequest) {
 
     try {
         await db.delete(postsTable).where(eq(postsTable.id, Number(postId))).execute();
-        console.log('Post deleted successfully:', postId);
         return NextResponse.json({ success: true, message: 'Post deleted successfully' }, { status: 200 });
     } catch (error) {
         console.error('Error deleting post:', error);
@@ -90,7 +88,6 @@ export async function PUT(req: NextRequest) {
 
     try {
         await db.update(postsTable).set(data).where(eq(postsTable.id, id)).execute();
-        console.log('Post updated successfully:', id);
         return NextResponse.json({ success: true, message: 'Post updated successfully' }, { status: 200 });
     } catch (error) {
         console.error('Error updating post:', error);

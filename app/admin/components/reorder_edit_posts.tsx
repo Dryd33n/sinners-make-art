@@ -1,8 +1,9 @@
 'use client';
-import Tooltip from "@/app/components/tooltip";
-import Image from 'next/image';
 import { useEffect, useState } from "react";
-import ReactPlayer from 'react-player';
+import { PostItem } from "@/db/schema";
+import PathSelector from "./shared/path_selector";
+import ImageSelector from "./shared/image_selector";
+import VideoSelector from "./shared/video_selector";
 
 interface PathItem {
     id: number;
@@ -10,25 +11,30 @@ interface PathItem {
     linkOverride: string;
 }
 
-interface ImageStatus {
-    status: "loading" | "success" | "error";
-}
-
-interface PostItem {
-    id: number;
-    title: string;
-    description: string;
-    type: string;        // photo or video
-    content: string;     // images urls csv or video link
-    tag: string;         // category
-    order: number;       // order in category
-    portfolio: boolean;  // show in portfolio
-}
-
-export default function ReorderEditPosts() {
+/**
+ * Component for reordering and editing posts in the admin panel.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @description
+ * This component allows the admin to manage posts by category, reorder posts, and edit post details.
+ * It includes functionalities to fetch posts, filter posts by tag, delete posts, move posts up or down in order,
+ * and update post details including title, description, type (image or video), content, and category.
+ *
+ * @example
+ * <ReorderEditPosts />
+ *
+ * @remarks
+ * The component uses several state variables to manage the posts and their properties:
+ * - `reorderPostSuccessMessage`, `reorderPostErrorMessage`, `updatePostSuccessMessage`, `updatePostErrorMessage`: Status messages for various operations.
+ * - `isSubmitting`: Indicates if a form submission is in progress.
+ * - `tag`, `newTag`: The current and new tags for filtering and updating posts.
+ * - `allPosts`, `filteredPosts`, `selectedPost`: Arrays and objects to manage all posts, filtered posts, and the currently selected post.
+ * - `title`, `paragraph`, `imagePost`, `allImagesValid`, `includeInPortfolio`, `imageLinks`, `videoString`: Variables for managing post details.
+ */
+export default function ReorderEditPosts(): JSX.Element {
     {/* STATUS MESSAGES */ }
-    const [categorySuccessMessage, setCategorySuccessMessage] = useState("");
-    const [categoryErrorMessage, setCategoryErrorMessage] = useState("");
     const [reorderPostSuccessMessage, setReorderPostSuccessMessage] = useState("");
     const [reorderPostErrorMessage, setReorderPostErrorMessage] = useState("");
     const [updatePostSuccessMessage, setUpdateSuccessMessage] = useState("");
@@ -37,7 +43,6 @@ export default function ReorderEditPosts() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     {/* POST TAGS */ }
-    const [allPaths, setAllPaths] = useState<PathItem[]>([]); // All available paths
     const [tag, setTag] = useState<PathItem>();
 
     {/* POSTS */ }
@@ -49,14 +54,27 @@ export default function ReorderEditPosts() {
     const [title, setTitle] = useState("");
     const [paragraph, setParagraph] = useState("");
     const [imagePost, setImagePost] = useState(true);
+    const [allImagesValid, setAllImagesValid] = useState(false);
     const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
-    const [tagId, setTagId] = useState("");
+    const [newTag, setNewTag] = useState<PathItem>();
     /* CONTENT VARS */
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
-    const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
     const [videoString, setVideoString] = useState("");
 
-    const fetchPosts = async () => {
+
+
+    /**
+     * Fetches all posts from the server.
+     * 
+     * This function sends a GET request to the '/api/posts' endpoint to retrieve all posts.
+     * If the request is successful and the response contains a success flag, it updates the state
+     * with the retrieved posts and sets a success message. If the request fails or the response
+     * does not contain a success flag, it sets an error message.
+     * 
+     * @async
+     * @returns {Promise<void>} A promise that resolves when the posts have been fetched and the state has been updated.
+     */
+    const fetchPosts = async (): Promise<void> => {
         try {
             const response = await fetch('/api/posts');
             const result = await response.json();
@@ -77,38 +95,29 @@ export default function ReorderEditPosts() {
         }
     }
 
-    useEffect(() => {
-        const fetchPaths = async () => {
-            try {
-                const response = await fetch('/api/admin/navtree/overrides');
-                const result = await response.json();
-
-                if (result.success) {
-                    setAllPaths(result.data.filter((item: PathItem) => item.linkOverride == 'auto'));
-                    setCategoryErrorMessage('');
-                    setCategorySuccessMessage('Tags successfully loaded');
-                } else {
-                    console.error('Failed to fetch tags');
-                    setCategorySuccessMessage('');
-                    setCategoryErrorMessage('Failed to fetch tags');
-                }
-            } catch (error) {
-                console.error('Error fetching tags:', error);
-                setCategorySuccessMessage('');
-                setCategoryErrorMessage('Error fetching tags');
-            }
-        };
-
-        fetchPaths();
+    // Fetch posts on component mount
+    useEffect(() => {fetchPosts();}, []);
 
 
 
-        fetchPosts();
-    }, []);
-
-    const handleTagChange = async (path: PathItem) => {
+    /**
+     * Handles the change of the selected tag and updates the filtered posts accordingly.
+     * 
+     * @param {PathItem} path - The selected tag path item.
+     * @returns {Promise<void>} - A promise that resolves when the tag change handling is complete.
+     * 
+     * This function performs the following actions:
+     * 1. Sets the selected tag.
+     * 2. Filters the posts based on the selected tag.
+     * 3. Sorts the filtered posts by their order property.
+     * 4. Updates the state with the filtered posts and resets the selected post.
+     * 5. Sets success or error messages based on the availability of posts for the selected tag.
+     */
+    const handleTagChange = async (path: PathItem): Promise<void> => {
         setTag(path);
         const filteredPosts = allPosts.filter((post) => post.tag === path.path);
+        //sort posts by order property:
+        filteredPosts.sort((a, b) => a.order - b.order);
         setFilteredPosts(filteredPosts);
         setSelectedPost(null);
 
@@ -122,7 +131,27 @@ export default function ReorderEditPosts() {
 
     }
 
+
+
+    /**
+     * Handles the deletion of a post by its ID.
+     *
+     * @param {number} id - The ID of the post to delete. If the ID is -1, an error message is logged and the function returns early.
+     *
+     * This function performs the following actions:
+     * - Logs an error message if the ID is -1.
+     * - Calls the `deletePost` function to delete the post with the specified ID.
+     * - Calls the `fetchPosts` function to refresh the list of posts.
+     * - Updates the `filteredPosts` state by removing the post with the specified ID.
+     * - Updates the `allPosts` state by removing the post with the specified ID.
+     * - Sets the `selectedPost` state to `null`.
+     */
     const handleDeletePost = (id: number) => {
+        if (id === -1){
+            console.log("Error specifying post to delete")
+            return;
+        }
+
         deletePost(id);
         fetchPosts();
         setFilteredPosts(filteredPosts.filter(post => post.id !== id));
@@ -131,7 +160,18 @@ export default function ReorderEditPosts() {
         
     };
 
-    const deletePost = async (id: number) => {
+
+    
+    /**
+     * Deletes a post by its ID.
+     *
+     * This function sends a DELETE request to the '/api/posts' endpoint with the post ID in the request body.
+     * If the deletion is successful, it sets a success message. Otherwise, it sets an error message.
+     *
+     * @param {number} id - The ID of the post to be deleted.
+     * @returns {Promise<void>} A promise that resolves when the deletion is complete.
+     */
+    const deletePost = async (id: number): Promise<void> => {
         try {
             const response = await fetch('/api/posts', {
                 method: 'DELETE',
@@ -157,6 +197,15 @@ export default function ReorderEditPosts() {
     };
 
 
+
+    /**
+     * Moves the post at the specified index up by one position in the filteredPosts array.
+     * 
+     * @param index - The index of the post to move up.
+     * 
+     * This function creates a copy of the filteredPosts array, swaps the post at the given index
+     * with the post immediately before it, updates the post order, and sets the new filteredPosts array.
+     */
     const handleMoveUp = (index: number) => {
         const updatedPosts = [...filteredPosts];
         [updatedPosts[index - 1], updatedPosts[index]] = [updatedPosts[index], updatedPosts[index - 1]];
@@ -165,6 +214,15 @@ export default function ReorderEditPosts() {
     };
 
 
+
+    /**
+     * Moves the post at the specified index down by one position in the list.
+     * 
+     * @param index - The index of the post to move down.
+     * 
+     * This function creates a copy of the `filteredPosts` array, swaps the post at the given index
+     * with the post immediately following it, updates the post order, and sets the new order in the state.
+     */
     const handleMoveDown = (index: number) => {
         const updatedPosts = [...filteredPosts];
         [updatedPosts[index], updatedPosts[index + 1]] = [updatedPosts[index + 1], updatedPosts[index]];
@@ -172,7 +230,17 @@ export default function ReorderEditPosts() {
         setFilteredPosts(updatedPosts);
     };
 
-    const updatePostOrder = async (updatedPosts: PostItem[]) => {
+
+
+    /**
+     * Updates the order of posts by sending a PUT request to the server with the new order.
+     *
+     * @param {PostItem[]} updatedPosts - An array of posts with their new order.
+     * @returns {Promise<void>} A promise that resolves when the post order update is complete.
+     *
+     * @throws Will set error messages if the update fails or an error occurs during the request.
+     */
+    const updatePostOrder = async (updatedPosts: PostItem[]): Promise<void> => {
         try {
             const updates = updatedPosts.map((post, index) => ({ id: post.id, order: index + 1 }));
             const response = await fetch('/api/posts/reorder', {
@@ -196,17 +264,36 @@ export default function ReorderEditPosts() {
         }
     };
 
-    const handleUpdate = async (e: React.FormEvent) => {
+
+
+    /**
+     * Handles the update of a post when the form is submitted.
+     *
+     * @param {React.FormEvent} e - The form submission event.
+     * @returns {Promise<void>} - A promise that resolves when the update is complete.
+     *
+     * This function performs the following steps:
+     * 1. Prevents the default form submission behavior.
+     * 2. Sets the `isSubmitting` state to `true` to indicate that the submission is in progress.
+     * 3. Determines the new order for the post based on the selected tag.
+     * 4. Sends a PUT request to update the post with the new data.
+     * 5. Handles the response from the server:
+     *    - If the update is successful, sets the success message and refreshes the posts.
+     *    - If the update fails, sets the error message.
+     * 6. Catches any errors that occur during the update process and logs them to the console.
+     * 7. Finally, sets the `isSubmitting` state to `false` to indicate that the submission is complete.
+     */
+    const handleUpdate = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
             let newOrder: number;
-            if (tag?.path === tagId) {
+            if (tag?.path === newTag?.path) {
                 newOrder = selectedPost?.order ?? 0;
             } else {
                 const filtered = allPosts.filter(
-                    (post) => post.tag.trim().toUpperCase() === tagId.trim().toUpperCase()
+                    (post) => newTag && post.tag.trim().toUpperCase() === newTag.path.trim().toUpperCase()
                 );
                 newOrder = filtered.reduce((max, post) => (post.order > max ? post.order : max), 0) + 1;
             }
@@ -222,7 +309,7 @@ export default function ReorderEditPosts() {
                     description: paragraph,
                     type: imagePost ? "image" : "video",
                     content: imagePost ? imageLinks.join(',') : videoString,
-                    tag: tagId,
+                    tag: newTag?.path,
                     order: newOrder,
                     portfolio: includeInPortfolio,
                 }),
@@ -247,72 +334,79 @@ export default function ReorderEditPosts() {
         }
     };
 
-    const handleSelectPost = (post: PostItem) => {
+
+
+    /**
+     * Handles the selection of a post.
+     *
+     * @param {PostItem} post - The post item to be selected.
+     * @returns {void}
+     */
+    const handleSelectPost = (post: PostItem): void => {
         setSelectedPost(post);
         loadSelectedPost(post);
     }
 
+
+
+    /**
+     * Loads the selected post data into the component's state.
+     *
+     * @param {PostItem} post - The post item to load.
+     * @param {string} post.title - The title of the post.
+     * @param {string} post.description - The description of the post.
+     * @param {boolean} post.portfolio - Indicates if the post should be included in the portfolio.
+     * @param {string} post.type - The type of the post, either 'image' or other.
+     * @param {string} post.content - The content of the post, either a comma-separated list of image links or a video string.
+     */
     const loadSelectedPost = (post: PostItem) => {
         setTitle(post.title);
         setParagraph(post.description);
         setIncludeInPortfolio(post.portfolio);
         setImagePost(post.type === 'image');
-        setTagId(post.tag);
+        setNewTag(tag);
         if (post.type === 'image') {
             const links = post.content.split(',');
             setImageLinks(links);
-            links.forEach((link, index) => checkImageStatus(index, link));
         } else {
             setVideoString(post.content);
         }
     }
 
-    const handleImageLinkChange = (index: number, value: string) => {
-        const updatedLinks = [...imageLinks];
-        updatedLinks[index] = value;
-        setImageLinks(updatedLinks);
-        checkImageStatus(index, value);
-    };
 
-    // Add a new image link input
-    const handleAddImageLink = () => {
-        setImageLinks((prevLinks) => [...prevLinks, ""]);
-        setImageStatuses((prevStatuses) => [...prevStatuses, { status: "loading" }]);
-    };
-
-    // Remove an image link input
-    const handleRemoveImageLink = (index: number) => {
-        const updatedLinks = imageLinks.filter((_, i) => i !== index);
-        const updatedStatuses = imageStatuses.filter((_, i) => i !== index);
-        setImageLinks(updatedLinks);
-        setImageStatuses(updatedStatuses);
-    };
-
-    // Check if an image URL is valid by attempting to load it
-    const checkImageStatus = (index: number, url: string) => {
-        if (!url) return;
-
-        const image = new window.Image();
-        image.src = url;
-        image.onload = () => updateImageStatus(index, "success");
-        image.onerror = () => updateImageStatus(index, "error");
-    };
-
-    // Update the status of the image (loading, success, error)
-    const updateImageStatus = (index: number, status: "loading" | "success" | "error") => {
-        setImageStatuses((prevStatuses) => {
-            const updatedStatuses = [...prevStatuses];
-            updatedStatuses[index] = { status };
-            return updatedStatuses;
-        });
-    };
-
-    const handleCateogryChange = async (path: PathItem) => {
-        setTagId(path.path);
+    
+    /**
+     * Handles the change of category by updating the new tag with the provided path.
+     *
+     * @param {PathItem} path - The path item representing the new category.
+     * @returns {Promise<void>} A promise that resolves when the category change is handled.
+     */
+    const handleCateogryChange = async (path: PathItem): Promise<void> => {
+        setNewTag(path);
     }
 
-    const canSubmit = () => {
-        return true;
+
+
+    /**
+     * Determines if the form can be submitted based on the validity of its fields.
+     *
+     * @returns {boolean} True if all fields are valid and the form can be submitted, otherwise false.
+     *
+     * Validity checks:
+     * - Title must be non-empty after trimming.
+     * - Paragraph must be non-empty after trimming.
+     * - Content must be valid:
+     *   - If `imagePost` is true, all images must be valid.
+     *   - If `imagePost` is false, `videoString` must be non-empty after trimming.
+     * - Categories must be valid:
+     *   - If `newTag` is defined, its `path` must be non-empty after trimming.
+     */
+    const canSubmit = (): boolean => {
+        const validTitle = title.trim().length > 0;
+        const validParagraph = paragraph.trim().length > 0;
+        const validContent = imagePost ? allImagesValid : videoString.trim().length > 0;
+        const validCategories = newTag? newTag.path.trim().length > 0 : false;
+        return validTitle && validParagraph && validContent && validCategories;
     }
 
 
@@ -326,26 +420,11 @@ export default function ReorderEditPosts() {
                     <label htmlFor="title" className="block text-lg font-medium mb-4">
                         Manage Posts Under Category:
                     </label>
-                    <div className="flex content-center">
-                        <Tooltip>
-                            <p>Tags / Categories with a link overide set cannot be selected</p>
-                        </Tooltip>
-                        <h2 className="font-semibold mb-2 mt-[2]">Available Paths</h2>
-                    </div>
-                    <div className="h-[500] overflow-y-auto bg-grey-700 rounded-md p-2">
-                        {allPaths.map((path) => (
-                            <div
-                                key={path.id}
-                                className="flex justify-between items-center p-2 hover:bg-grey-600 cursor-pointer"
-                                onClick={() => handleTagChange(path)}
-                            >
-                                <span className="text-white">{path.path}</span>
-                            </div>
-                        ))}
-                    </div>
+                    <PathSelector selectedPathMsg="Viewing Posts Tagged As:" 
+                                  excludeOverriden={true} onSelect={(path) => 
+                                  handleTagChange(path)}
+                                  selectedPath={tag || { id: -1, path: '', linkOverride: '' }}/>
                 </div>
-                {categorySuccessMessage && <p className="text-green-500">{categorySuccessMessage}</p>}
-                {categoryErrorMessage && <p className="text-red-500">{categoryErrorMessage}</p>}
             </div>
 
             {/* SELECT AND REORDER POSTS */}
@@ -372,7 +451,7 @@ export default function ReorderEditPosts() {
                                     {/* Action Buttons */}
                                     <div className="mt-2 flex gap-2">
                                         <button
-                                            onClick={() => handleDeletePost(post.id)}
+                                            onClick={() => handleDeletePost(post.id || -1)}
                                             className="px-4 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
                                         >
                                             Delete
@@ -414,33 +493,10 @@ export default function ReorderEditPosts() {
                     {/* Left Side */}
 
                     <div className=" flex-1 basis-1/4">
-                        <div className="mb-4">
-                            <label htmlFor="title" className="block text-lg font-medium mb-4">
-                                Post Category:
-                            </label>
-
-                            <div className="flex content-center">
-                                <Tooltip>
-                                    <p>Tags / Categories with a link overide set cannot be selected</p>
-                                </Tooltip>
-                                <h2 className="font-semibold mb-2 mt-[2]">Available Paths</h2>
-                            </div>
-                            <div className="h-64 overflow-y-auto bg-grey-700 rounded-md p-2">
-                                {allPaths.map((path) => (
-                                    <div
-                                        key={path.id}
-                                        className="flex justify-between items-center p-2 hover:bg-grey-600 cursor-pointer"
-                                        onClick={() => handleCateogryChange(path)}
-                                    >
-                                        <span className="text-white">{path.path}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <h2 className="font-semibold mt-3 mb-2">Post Classified Under:</h2>
-                            <p className="bg-grey-700 rounded-md p-2">
-                                {tagId}
-                            </p>
-                        </div>
+                        <PathSelector excludeOverriden={true} 
+                                      selectedPathMsg="Change Category to:" 
+                                      onSelect={handleCateogryChange} 
+                                      selectedPath={newTag || { id: -1, path: '', linkOverride: '' }}/>
 
                         {/* Include in Portfolio Checkbox */}
                         <div className="mb-4">
@@ -497,105 +553,28 @@ export default function ReorderEditPosts() {
                         </label>
 
                         <div className="flex">
-                            <button className={`text-white basis-1/2 rounded-md p-2 hover:bg-grey-700
-                        ${selectedPost?.type === 'image' ? 'bg-blue-500 text-white' : 'bg-grey-800 text-black'}`}
+                            <button className={`text-white basis-1/2 rounded-md p-2 
+                        ${imagePost ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-grey-800 text-black hover:bg-grey-700'}`}
                                 onClick={() => setImagePost(true)}
                                 type="button">
                                 Image Post
                             </button>
-                            <button className={`text-white basis-1/2 rounded-md p-2 hover:bg-grey-700
-                        ${selectedPost?.type === 'video' ? 'bg-blue-500 text-white' : 'bg-grey-800 text-black'}`}
+                            <button className={`text-white basis-1/2 rounded-md p-2
+                        ${imagePost ? 'bg-grey-800 text-black hover:bg-grey-700' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
                                 onClick={() => setImagePost(false)}
                                 type="button">
                                 Video Post
                             </button>
                         </div>
 
-                        {selectedPost?.type === 'image' ?
+                        {imagePost?
                             /* IMAGE LINKS */
-                            (<div className="bg-grey-700 p-2">
-                                <h3 className="text-lg font-medium mb-4">Image Links</h3>
-
-                                {imageLinks.map((link, index) => (
-                                    <div key={index} className="mb-4 flex items-center">
-                                        <input
-                                            type="url"
-                                            value={link}
-                                            onChange={(e) => handleImageLinkChange(index, e.target.value)}
-                                            className="flex-1 p-2 border border-gray-300 rounded mr-2 text-black"
-                                            placeholder="Enter image URL"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => handleRemoveImageLink(index)}
-                                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                                        >
-                                            Remove
-                                        </button>
-                                        {imageStatuses[index]?.status === "loading" && <p className="text-gray-500 ml-2">Loading...</p>}
-                                        {imageStatuses[index]?.status === "success" && (
-                                            <Image
-                                                src={link}
-                                                alt={`Preview ${index}`}
-                                                width={150}
-                                                height={150}
-                                                className="ml-2 w-16 h-16 object-cover border border-gray-300 rounded"
-                                            />
-                                        )}
-                                        {imageStatuses[index]?.status === "error" && (
-                                            <p className="text-red-500 ml-2">Invalid image URL</p>
-                                        )}
-                                    </div>
-                                ))}
-                                <div className="mb-4">
-                                    <button
-                                        type="button"
-                                        onClick={handleAddImageLink}
-                                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                                    >
-                                        Add Image Link
-                                    </button>
-                                </div>
-                            </div>)
+                            (<ImageSelector imageLinks={imageLinks} 
+                                            setImageLinks={setImageLinks} 
+                                            setImagesValid={setAllImagesValid}/>)
                             :
                             /* VIDEO LINK */
-                            (<div className="bg-grey-700 p-2">
-                                <div className="flex">
-                                    <Tooltip>
-                                        <p>Video links from the following sites are supported:</p>
-                                        <ol className="list-disc pl-4">
-                                            <li>Youtube</li>
-                                            <li>Vimeo</li>
-                                            <li>DailyMotion</li>
-                                            <li>Facebook</li>
-                                            <li>Streamable</li>
-                                            <li>Twitch</li>
-                                        </ol>
-                                        <p>And more... Refer to guide for all supported formats</p>
-                                    </Tooltip>
-                                    <h3 className="text-lg font-medium mb-4">Video Embed</h3>
-                                </div>
-                                <label>
-                                    Enter Video Embed Code:
-                                    <textarea
-                                        value={videoString}
-                                        onChange={(e) => setVideoString(e.target.value)}
-                                        rows={2}
-                                        cols={41}
-                                        placeholder="Paste your video link here:"
-                                        className=" p-2 border border-gray-300 rounded text-black m-2"
-                                    />
-                                </label>
-                                <h3 className="text-lg font-medium mb-4">Video Preview</h3>
-                                {videoString ? (
-                                    <ReactPlayer url={videoString}
-                                        controls={true}
-                                        width={400}
-                                        height={230} />
-                                ) : (
-                                    <p>No preview available. Paste an video link to see the result.</p>
-                                )}
-                            </div>)
+                            (<VideoSelector onChange={(link) => setVideoString(link)} videoLink={videoString}/>)
                         }
 
                         <button

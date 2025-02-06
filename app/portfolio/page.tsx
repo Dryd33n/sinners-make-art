@@ -1,28 +1,21 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Header from '../components/header';
-import Post from '../components/post';
-import NavBar from '../components/navBar';
-import Footer from '../components/footer';
-import Loading from '../components/loading';
-
-type Post = {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    content: string;
-    tag: string;
-    order: number;
-    portfolio: boolean;
-};
+import Header from '../components/global/header';
+import Post from '../components/global/post';
+import NavBar from '../components/global/navBar';
+import Footer from '../components/global/footer';
+import Loading from '../components/global/loading';
+import HomeButton from '../components/global/home_button';
+import { PostItem } from '@/db/schema';
 
 const PortfolioPage = () => {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<PostItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        document.title = "Portfolio | Sinners Make Art";
+
         const fetchPosts = async () => {
             try {
                 const response = await fetch("/api/portfolio");
@@ -55,6 +48,7 @@ const PortfolioPage = () => {
 
     return (
         <>
+            <HomeButton />
             <Header mainText="PORTFOLIO" />
             <NavBar />
             <div className='mt-20'>

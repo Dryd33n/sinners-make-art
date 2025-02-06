@@ -1,6 +1,6 @@
 'use client'
 
-import Header from '@/app/components/header';
+import Header from '@/app/components/global/header';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -12,6 +12,8 @@ const LoginForm = () => {
     const [isClient, setIsClient] = useState(false);
   
     useEffect(() => {
+      document.title = "Admin Login | Sinners Make Art";
+
       setIsClient(true);
     }, []);
   

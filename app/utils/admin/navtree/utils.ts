@@ -1,5 +1,13 @@
 import { Node } from "@/app/admin/components/nav_tree";
 
+interface FlattenedNode {
+  id: number;
+  name: string;
+  path: string;
+  order: number;
+  link_ovveride: string;
+}
+
 export const buildTree = (data: { id: number; name: string; path: string; order: number; link_ovveride: string; }[]): Node[] => {
   const nodeMap: Map<string, Node> = new Map(); // Map to hold nodes by path
   const roots: Node[] = [];                     // Array to hold root nodes
@@ -150,7 +158,7 @@ export function convertToDestinationLink(path: string): string {
   const segments = path.split('/').filter(Boolean); // Split and filter out empty segments
   if (segments.length === 0) {
     throw new Error("Path must have at least one segment after '/'");
-  }else if (segments.length === 1) {
+  } else if (segments.length === 1) {
     return path;
   }
 
@@ -159,5 +167,27 @@ export function convertToDestinationLink(path: string): string {
 
   return `/${base}#${remainingPath}`;
 }
+
+
+/**Converts nested node tree structure to a simple array containing all link items for the navigation tree
+ * 
+ * @param nodes Array of root nodes to flatten
+ * @param parentPath path to begin flattening
+ * @returns a one dimensional array of link item
+ */
+export const flattenTree = (nodes: Node[], parentPath: string = ''): FlattenedNode[] => {
+
+  return nodes.reduce((acc, node) => {
+    const currentPath = parentPath ? `${parentPath}/${node.name}` : node.name;
+    acc.push({ id: node.id, name: node.name, path: currentPath, order: node.order, link_ovveride: node.link_override });
+
+    if (node.children) {
+      acc = acc.concat(flattenTree(node.children, currentPath));
+    }
+
+    return acc;
+  }, [] as FlattenedNode[]);
+};
+
 
 

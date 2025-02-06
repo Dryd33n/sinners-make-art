@@ -23,6 +23,5 @@ export async function POST(req: Request) {
 
 export async function GET() {
     const authCookie = (await cookies()).get('auth');
-    console.log('Server-side authStatus check: ', authCookie);
     return NextResponse.json({ authenticated: authCookie?.value === 'true' });
 }

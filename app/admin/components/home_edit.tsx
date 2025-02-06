@@ -1,110 +1,93 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from 'next/image';
-import Tooltip from "@/app/components/tooltip";
+import Tooltip from "@/app/admin/components/shared/tooltip";
+import ImageSelector from "./shared/image_selector";
 
-interface ImageStatus {
-  status: "loading" | "success" | "error";
-}
 
+/**
+ * AboutMeForm Component
+ * 
+ * This component renders a form for editing the "About Me" section. It allows users to load current data from the database,
+ * edit the title, paragraph, and image links, and submit the updated data back to the database.
+ * 
+ * @component
+ * 
+ * @returns {JSX.Element} The rendered AboutMeForm component.
+ * 
+ * @example
+ * <AboutMeForm />
+ * 
+ * @remarks
+ * - The form includes input fields for the title, paragraph, and image links.
+ * - The form validates the input fields before allowing submission.
+ * - The form displays success and error messages based on the result of the data fetch and submission.
+
+ */
 const AboutMeForm = () => {
+  // Form Content
   const [title, setTitle] = useState("");
   const [paragraph, setParagraph] = useState("");
   const [imageLinks, setImageLinks] = useState<string[]>([""]);
-  const [imageStatuses, setImageStatuses] = useState<ImageStatus[]>([{ status: "loading" }]);
+  const [imagesValid, setImagesValid] = useState<boolean>(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Error & Success Messages
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Calculate whether the form can be submitted
+
+
+  /**CAN SUBMIT
+   * Checks to make sure all parts of the form are filled out properly before allowing the user to submit the form
+   * 
+   * @returns boolean if form has valid components or not
+   */
   const canSubmit = () => {
     const hasValidTitle = title.trim() !== "";
     const hasValidParagraph = paragraph.trim() !== "";
     const hasAtLeastOneImage = imageLinks.length > 0 && imageLinks.some((link) => link.trim() !== "");
-    const allImagesValid = imageStatuses.every((status) => status.status === "success");
-    return hasValidTitle && hasValidParagraph && hasAtLeastOneImage && allImagesValid;
+    return hasValidTitle && hasValidParagraph && hasAtLeastOneImage && imagesValid;
   };
 
-  // Handle title change
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
 
-  // Handle paragraph change
-  const handleParagraphChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setParagraph(e.target.value);
-  };
 
-  // Handle change for image links
-  const handleImageLinkChange = (index: number, value: string) => {
-    const updatedLinks = [...imageLinks];
-    updatedLinks[index] = value;
-    setImageLinks(updatedLinks);
-    checkImageStatus(index, value);
-  };
 
-  // Add a new image link input
-  const handleAddImageLink = () => {
-    setImageLinks((prevLinks) => [...prevLinks, ""]);
-    setImageStatuses((prevStatuses) => [...prevStatuses, { status: "loading" }]);
-  };
 
-  // Remove an image link input
-  const handleRemoveImageLink = (index: number) => {
-    const updatedLinks = imageLinks.filter((_, i) => i !== index);
-    const updatedStatuses = imageStatuses.filter((_, i) => i !== index);
-    setImageLinks(updatedLinks);
-    setImageStatuses(updatedStatuses);
-  };
 
-  // Check if an image URL is valid by attempting to load it
-  const checkImageStatus = (index: number, url: string) => {
-    if (!url) return;
-
-    const image = new window.Image();
-    image.src = url;
-    image.onload = () => updateImageStatus(index, "success");
-    image.onerror = () => updateImageStatus(index, "error");
-  };
-
-  // Update the status of the image (loading, success, error)
-  const updateImageStatus = (index: number, status: "loading" | "success" | "error") => {
-    setImageStatuses((prevStatuses) => {
-      const updatedStatuses = [...prevStatuses];
-      updatedStatuses[index] = { status };
-      return updatedStatuses;
-    });
-  };
-
-  // Populate the form with current data
-  const handleLoadData = async () => {
+  /**FETCH HOME FORM DATA
+   * Fetches home data from db and populates the form with the current information from the db
+   * 
+   * ROUTE: /api/about_me/route.tsx
+   */
+  const fetchHomeData = async () => {
+    // Clear success & error messages
     setSuccessMessage("");
-    setErrorMessage("");
+    setErrorMessage("");  
 
+    // Try to fetch from api 
     try {
       const response = await fetch("/api/about_me");
 
       if (!response.ok) {
-        throw new Error("Failed to load current data");
+        throw new Error("Failed to load current home data");
       }
 
       const result = await response.json();
 
       if (result.success && result.response.length > 0) {
+        // homeTable only has one row so get first row containing all data
         const data = result.response[0];
+
+        // set title and body info
         setTitle(data.about_title || "");
         setParagraph(data.about_text || "");
 
+        //split images and set image links
         const links = data.about_images ? data.about_images.split(",").map((url: string) => url.trim()) : [""];
         setImageLinks(links);
 
-        // Update image statuses
-        const statuses = links.map(() => ({ status: "loading" }));
-        setImageStatuses(statuses);
-
-        // Validate image links
-        links.forEach((link: string, index: number) => checkImageStatus(index, link));
         setSuccessMessage("Data loaded successfully");
       } else {
         setErrorMessage("No data available to load");
@@ -115,8 +98,15 @@ const AboutMeForm = () => {
     }
   };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+
+
+  /**POST HOME FORM DATA 
+   * Makes a post api request to upload form data to db to be used to populate the about me section
+   * 
+   * @param e React form event
+   */
+  const postHomeData = async (e: React.FormEvent) => {
+    //prevent page reload
     e.preventDefault();
 
     setIsSubmitting(true);
@@ -124,17 +114,19 @@ const AboutMeForm = () => {
     setErrorMessage("");
 
     try {
+      //Convert image links to csv
       const csvString = imageLinks.filter((link) => link.trim() !== "").join(",");
 
+      //API post method
       const response = await fetch("/api/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title,
-          text: paragraph,
-          images: csvString,
+          title,             // about me title
+          text: paragraph,   // about me text
+          images: csvString, // csv of image linkes
         }),
       });
 
@@ -157,7 +149,7 @@ const AboutMeForm = () => {
       <div className="p-4 max-w-4xl mx-auto bg-grey-850 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">About Me Section</h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-6">
+        <form onSubmit={postHomeData} className="flex flex-col md:flex-row gap-6">
           {/* Left Side */}
           <div className="flex-1">
             {/* Title */}
@@ -169,7 +161,7 @@ const AboutMeForm = () => {
                 type="text"
                 id="title"
                 value={title}
-                onChange={handleTitleChange}
+                onChange={(e) => setTitle(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded text-black"
                 placeholder="Enter the title"
               />
@@ -183,7 +175,7 @@ const AboutMeForm = () => {
               <textarea
                 id="aboutMe"
                 value={paragraph}
-                onChange={handleParagraphChange}
+                onChange={(e) => setParagraph(e.target.value)}
                 rows={6}
                 className="w-full p-2 border border-gray-300 rounded text-black"
                 placeholder="Write about yourself"
@@ -194,7 +186,7 @@ const AboutMeForm = () => {
             <div>
               <button
                 type="button"
-                onClick={handleLoadData}
+                onClick={fetchHomeData}
                 className="mb-4 mr-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
                 Load Current Data
@@ -219,49 +211,8 @@ const AboutMeForm = () => {
               </Tooltip>
               <h3 className="text-lg font-medium mb-4">Image Links</h3>
             </div>
-            
-            {imageLinks.map((link, index) => (
-              <div key={index} className="mb-4 flex items-center">
-                <input
-                  type="url"
-                  value={link}
-                  onChange={(e) => handleImageLinkChange(index, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 rounded mr-2 text-black"
-                  placeholder="Enter image URL"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImageLink(index)}
-                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  Remove
-                </button>
 
-                {imageStatuses[index]?.status === "loading" && <p className="text-gray-500 ml-2">Loading...</p>}
-                {imageStatuses[index]?.status === "success" && (
-                  <Image
-                    src={link}
-                    alt={`Preview ${index}`}
-                    width={150}
-                    height={150}
-                    className="ml-2 w-16 h-16 object-cover border border-gray-300 rounded"
-                  />
-                )}
-                {imageStatuses[index]?.status === "error" && (
-                  <p className="text-red-500 ml-2">Invalid image URL</p>
-                )}
-              </div>
-            ))}
-
-            <div className="mb-4">
-              <button
-                type="button"
-                onClick={handleAddImageLink}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Add Image Link
-              </button>
-            </div>
+            <ImageSelector imageLinks={imageLinks} setImageLinks={setImageLinks} setImagesValid={setImagesValid}/>
           </div>
         </form>
 

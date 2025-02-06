@@ -1,9 +1,14 @@
-'use client';
-
-import NavBar from './components/navBar';
-import Header from './components/header';
+import NavBar from './components/global/navBar';
+import Header from './components/global/header';
 import AboutSection from './components/about_section';
-import Footer from './components/footer';
+import Footer from './components/global/footer';
+
+export const metadata = {
+  title: "Sinners Make Art",
+  description: "Mary-Jane Laronde's personal website",
+};
+
+
 
 const Home = () => {
   return (
@@ -11,8 +16,8 @@ const Home = () => {
       <Header mainText="MARY-JANE LARONDE" />
       <NavBar />
 
-
       <AboutSection />
+  
       <Footer/>
     </>
   );

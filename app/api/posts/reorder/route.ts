@@ -30,7 +30,6 @@ export async function PUT(req: NextRequest) {
                 .execute();
         }
 
-        console.log('Post orders updated successfully');
         return NextResponse.json({ success: true, message: 'Post orders updated successfully' }, { status: 200 });
     } catch (error) {
         console.error('Error updating post orders:', error);
