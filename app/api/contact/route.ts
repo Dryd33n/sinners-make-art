@@ -16,12 +16,12 @@ export async function POST(req: Request) {
       text: email + " has sent you a message make sure to forward this email to them when you reply \n\n"+ message,
     });
 
-    const data2 = await resend.emails.send({
+    resend.emails.send({
         from: "no-reply@sinners-make.art",
         to: email,
         subject: 'Sinners Make Art Contact Form: "'+subject+'"',
         text: "Thank you for contacting Sinners Make Art. We will get back to you as soon as possible. \n\n"+ message,
-      });
+    });
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
