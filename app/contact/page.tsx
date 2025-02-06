@@ -1,7 +1,7 @@
 'use client'
 
-import Header from "../components/header";
-import NavBar from "../components/navBar";
+import Header from '../components/global/header';
+import NavBar from '../components/global/navBar';
 import { useState } from 'react';
 
 
