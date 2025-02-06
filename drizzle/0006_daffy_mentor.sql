@@ -1,0 +1,1 @@
+ALTER TABLE "nav_tree" ALTER COLUMN "link_ovveride" SET DEFAULT 'auto';

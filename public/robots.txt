@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin
+
+# Allow everything else
+Allow: /
+
+# Sitemap (if you have one)
+Sitemap: https://sinners-make.art/sitemap.xml

@@ -1,21 +1,28 @@
-import Header from "./components/header"; 
+import NavBar from './components/global/navBar';
+import Header from './components/global/header';
+import AboutSection from './components/about_section';
+import Footer from './components/global/footer';
 
-export default async function Home() {
+export const metadata = {
+  title: "Sinners Make Art",
+  description: "Mary-Jane Laronde's personal website",
+};
 
 
+
+const Home = () => {
+  return (
+    <>
+      <Header mainText="MARY-JANE LARONDE" />
+      <NavBar />
+
+      <AboutSection />
   
-
-  return (<>
-    <head>
-      <title>Site under Development</title>
-      <link rel="icon" href="/favicon.ico" sizes="any" />
-    </head>
-    <Header mainText="UNDER CONSTRUCTION"/>
-      <div className="flex flex-col items-center justify-center pt-20">
-        <h1 className="text-3xl mx-auto text-center">SINNERS-MAKE.ART IS CURRENTLY UNDER DEVELOPMENT</h1>
-        <p className="text-center mt-5">We are working on something great, please check back later!</p>
-      </div>
-      
+      <Footer/>
     </>
-  )
-}
+  );
+
+
+};
+
+export default Home;

@@ -44,3 +44,4 @@ next-env.d.ts
 /.next
 /.next
 .next/app-build-manifest.json
+.env.local
