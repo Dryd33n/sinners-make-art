@@ -445,7 +445,7 @@ export default function ReorderEditPosts(): JSX.Element {
                                     `}
                                 >
                                     <h3 className="text-lg font-semibold text-white">{post.title}</h3>
-                                    <p className="text-sm text-grey-400">{post.description}</p>
+                                    <p className="text-sm text-grey-400">{post.description.length > 100 ? post.description.slice(0,100) + "..." : post.description}</p>
                                     <span className="text-sm text-grey-500">Type: {post.type}</span>
 
                                     {/* Action Buttons */}
