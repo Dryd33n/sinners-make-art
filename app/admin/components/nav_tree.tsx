@@ -2,6 +2,7 @@
 
 import { addNodeRecursively, buildTree, flattenTree, removeNodeRecursively, renameNodeRecursively } from '@/app/utils/admin/navtree/utils';
 import React, { useState, useEffect } from 'react';
+import { TfiAlert } from "react-icons/tfi";
 
 export interface Node {
   link_override: string; // Link override for the node default is "auto"
@@ -215,6 +216,21 @@ export default function NavTree() {
   return (
     <div className="bg-grey-850 rounded-lg p-5">
       <h1 className="text-xl font-bold m-3">Navigation Schema</h1>
+
+      <div className='flex flex-row gap-8'>
+      <TfiAlert color='red' size={100}/>
+      
+
+        <div>
+          <h1 className='text-red-500 font-bold text-3xl'>WARNING: USE WITH EXTREME CAUTION</h1>
+          <div className='bg-red-500 w-full h-[1]'></div>
+          <p className='text-red-500'>Use of this section can cause post to become innacessible and require manual repair editing the database. 
+            Take care to ensure all posts have been moved to a new category before delting a category. Be aware that if you delete a category with subcategories, those sub categories will be deleted as well.
+          </p>
+        </div>
+      </div>
+
+
       <div className="bg-grey-800 p-3 rounded-md m-5 flex space-x-4">
         {treeData.map((node) => (
           <NavItem

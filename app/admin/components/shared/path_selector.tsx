@@ -84,6 +84,8 @@ export default function PathSelector({ onSelect, excludeOverriden, selectedPathM
         <label htmlFor="title" className="block text-lg font-medium mb-4">
             Post Category:
         </label>
+        {successMessage && <p className="mt-4 text-green-500">{successMessage}</p>}
+        {errorMessage && <p className="mt-4 text-red-500">{errorMessage}</p>}
         <div className="flex content-center">
             {excludeOverriden && (<Tooltip>
                 <p>Tags / Categories with a link overide set cannot be selected</p>
@@ -105,7 +107,6 @@ export default function PathSelector({ onSelect, excludeOverriden, selectedPathM
         <p className="bg-grey-700 rounded-md p-2">
             {selectedTag?.path}
         </p>
-        {successMessage && <p className="mt-4 text-green-500">{successMessage}</p>}
-        {errorMessage && <p className="mt-4 text-red-500">{errorMessage}</p>}
+        
     </div></>)
 };
