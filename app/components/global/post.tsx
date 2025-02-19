@@ -101,7 +101,7 @@ function WebPost(props: PostProps) {
                 <div>
                             <div style={{width: (screenWidth -200) * 0.8}}></div>
                                 <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
-                                <div className="bg-white h-0.5 mt-5 w-fit" style={{width: (screenWidth -200) * 0.2}}></div>
+                                <div className="bg-white h-0.5 mt-5 w-fit" style={{width: (screenWidth -200) * 0.24}}></div>
                             </div>
                             <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
                 </div>
@@ -133,12 +133,12 @@ function MobilePost(props: PostProps) {
         thumbnail: url, // Generate thumbnails dynamically (adjust as needed)
     }));
 
-    return (
+    return (<>
         <div className='mx-5 md:mx-20 lg:mx-40 xl:mx-64 2xl:mx-80'>
-            <div className="w-full flex flex-col md:flex-row justify-center my-10 gap-6">
-                <div className="md:basis-2/3 basis-4/5 w-full">
+            <div className=" flex flex-col">
+                <div className="basis-0">
                     {props.post.type === 'image' ? (
-                        <div className="flex-col flex-auto place-content-center">
+                        <div className="">
                             <ImageGallery
                                 items={images}
                                 showThumbnails={false}
@@ -151,19 +151,20 @@ function MobilePost(props: PostProps) {
                             />
                         </div>
                     ) : (
-                        <div className='mx-auto' style={{ width: `${screenWidth *0.8}px`, height: `${(screenWidth * 0.8) * (9 / 18)}px` }} >
+                        <div className='mx-auto mb-5 mt-20' style={{ width: `${screenWidth *0.8}px`, height: `${(screenWidth * 0.8) * (9 / 18)}px` }} >
                         <div className='w-full h-full'>
                             <ReactPlayer url={`${props.post.content}?origin=http://localhost:3000`} controls={true} height='100%' width='100%' />
                         </div>
                     </div>
                     )}
                 </div>
-                <div className={`md:basis-1/3 w-full basis-1/5 ${screenWidth < 768 ? 'mb-10' : 'mr-10'}`}>
-                    <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
-                    <div className="bg-white h-0.5 w-full mt-5"></div>
-                    <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
-                </div>
             </div>
+            
         </div>
+                        <div className='mt-5 basis-1'>
+                        <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
+                        <div className="bg-white h-0.5 w-full mt-5"></div>
+                        <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
+                    </div> </>
     );
 }
