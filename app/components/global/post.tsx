@@ -38,7 +38,7 @@ export default function Post(props: PostProps) {
 
     return (
         <>
-            <div className='mb-40 sm:mb-0'>{screenWidth > 768 ? <WebPost post={props.post} /> : <MobilePost post={props.post} />}</div>
+            <div>{screenWidth > 768 ? <WebPost post={props.post} /> : <MobilePost post={props.post} />}</div>
         </>
     );
 }
@@ -68,42 +68,45 @@ function WebPost(props: PostProps) {
     }));
 
     return (
-        <div className='mx-5 md:mx-20 lg:mx-40 xl:mx-64 2xl:mx-80'>
-            <div className="w-full flex flex-col md:flex-row justify-center my-10 gap-6">
-                <div className={`md:basis-1/3 w-full basis-1/5 ${screenWidth < 768 ? 'mb-10' : 'mr-10'}`}>
-                    <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
-                    <div className="bg-white h-0.5 w-full mt-5"></div>
-                    <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
-                </div>
-                <div className="md:basis-2/3 basis-4/5 w-full grid place-content-center mb-auto">
-                    {props.post.type === 'image' ? (
-                        <div className="flex-col flex-auto place-content-center">
-                            <ImageGallery
-                                items={images}
-                                showThumbnails={false}
-                                showPlayButton={false}
-                                showBullets={images.length === 1 ? false : true}
-                                showNav={false}
-                                showFullscreenButton={true}
-                                autoPlay={true}
-                                slideInterval={7500}
-                                useBrowserFullscreen={false}
-                            />
-                        </div>
-                    ) : (
-                        <div className='grid place-content-center my-auto'>
-
-                                <div className='my-auto' style={{ width: `${screenWidth / 2.5}px`, height: `${(screenWidth / 2.5) * (9 / 18)}px` }} >
-                                    <div className='w-full h-full'>
-                                        <ReactPlayer url={`${props.post.content}?origin=http://localhost:3000`} controls={true} height='100%' width='100%' />
+        <>
+        <div className="flex flex-wrap min-h-full mb-40 mt-10">
+            <div className='mx-5 md:mx-20 lg:mx-40 xl:mx-64 2xl:mx-80 h-fit '>
+                <div className="float-right ml-14 mb-5 grid items-center" style={{width: screenWidth * 0.43}}>
+                                    <div>
+                                        {props.post.type === 'image' ? (
+                                            <div className="flex-col flex-auto place-content-center">
+                                                <ImageGallery
+                                                    items={images}
+                                                    showThumbnails={false}
+                                                    showPlayButton={false}
+                                                    showBullets={images.length === 1 ? false : true}
+                                                    showNav={false}
+                                                    showFullscreenButton={true}
+                                                    autoPlay={true}
+                                                    slideInterval={7500}
+                                                    useBrowserFullscreen={false}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className='grid place-content-center my-auto'>
+                                                    <div className='my-auto' style={{ width: `${screenWidth / 2.5}px`, height: `${(screenWidth / 2.5) * (9 / 18)}px` }} >
+                                                        <div className='w-full h-full'>
+                                                            <ReactPlayer url={`${props.post.content}?origin=http://localhost:3000`} controls={true} height='100%' width='100%' />
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-             
-                        </div>
-                    )}
+                </div>
+                <div>
+                            <div style={{width: (screenWidth -200) * 0.8}}></div>
+                                <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
+                                <div className="bg-white h-0.5 mt-5 w-fit" style={{width: (screenWidth -200) * 0.24}}></div>
+                            </div>
+                            <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
@@ -130,12 +133,12 @@ function MobilePost(props: PostProps) {
         thumbnail: url, // Generate thumbnails dynamically (adjust as needed)
     }));
 
-    return (
+    return (<>
         <div className='mx-5 md:mx-20 lg:mx-40 xl:mx-64 2xl:mx-80'>
-            <div className="w-full flex flex-col md:flex-row justify-center my-10 gap-6">
-                <div className="md:basis-2/3 basis-4/5 w-full">
+            <div className=" flex flex-col">
+                <div className="basis-0">
                     {props.post.type === 'image' ? (
-                        <div className="flex-col flex-auto place-content-center">
+                        <div className="">
                             <ImageGallery
                                 items={images}
                                 showThumbnails={false}
@@ -148,19 +151,20 @@ function MobilePost(props: PostProps) {
                             />
                         </div>
                     ) : (
-                        <div className='mx-auto' style={{ width: `${screenWidth *0.8}px`, height: `${(screenWidth * 0.8) * (9 / 18)}px` }} >
+                        <div className='mx-auto mb-5 mt-20' style={{ width: `${screenWidth *0.8}px`, height: `${(screenWidth * 0.8) * (9 / 18)}px` }} >
                         <div className='w-full h-full'>
                             <ReactPlayer url={`${props.post.content}?origin=http://localhost:3000`} controls={true} height='100%' width='100%' />
                         </div>
                     </div>
                     )}
                 </div>
-                <div className={`md:basis-1/3 w-full basis-1/5 ${screenWidth < 768 ? 'mb-10' : 'mr-10'}`}>
-                    <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
-                    <div className="bg-white h-0.5 w-full mt-5"></div>
-                    <p className="mt-3">{props.post.description}</p>
-                </div>
             </div>
+            
         </div>
+                        <div className='mt-5 basis-1'>
+                        <h1 className="text-4xl font-extralight">{props.post.title.toUpperCase()}</h1>
+                        <div className="bg-white h-0.5 w-full mt-5"></div>
+                        <p className="mt-3 whitespace-pre-line">{props.post.description}</p>
+                    </div> </>
     );
 }

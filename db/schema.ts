@@ -42,6 +42,8 @@ export const hometable = pgTable('hometable', {
   about_title: text('about_title').notNull(),
   about_text: text('about_text').notNull(),
   about_images: text('images').notNull(),
+  second_title: text('second_title').notNull(),
+  second_text: text('second_text').notNull(),
 });
 
 export type insertHomeTableContent = typeof hometable.$inferInsert;
