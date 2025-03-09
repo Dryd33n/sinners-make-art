@@ -9,6 +9,8 @@ export default function AboutSection() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [secondText, setSecondText] = useState("");
+  const [secondTitle, setSecondTitle] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +34,8 @@ export default function AboutSection() {
           }));
 
           setImages(galleryItems);
+          setSecondText(result.response[0].second_text);
+          setSecondTitle(result.response[0].second_title);
         } else {
           setError("No images available");
         }
@@ -55,22 +59,29 @@ export default function AboutSection() {
   }
 
   return (
-    <div className="flex md:flex-row flex-col xl:mx-52 lg:mx-40 md:mx-30 sm: mx-10  object-fit">
-      <div className="flex-col mr-5 md:min-w-[50%] md:max-w-[50%] sm:min-w-[95%] sm:max-w-[95%] ">
-        <AboutMe />
+    <div className="flex flex-col xl:mx-52 lg:mx-40 md:mx-30 sm: mx-10">
+      <div>
+        <div className="flex md:flex-row flex-col object-fit">
+          <div className="flex-col mr-5 md:min-w-[50%] md:max-w-[50%] sm:min-w-[95%] sm:max-w-[95%] ">
+            <AboutMe />
+          </div>
+          <div className="flex-col flex-auto place-content-center ml-5">
+            <ImageGallery
+              items={images}
+              showThumbnails={false}
+              showPlayButton={false}
+              showBullets={true}
+              showNav={false}
+              showFullscreenButton={false}
+              autoPlay={true}
+              slideInterval={7500}
+            />
+          </div>
       </div>
-
-      <div className="flex-col flex-auto place-content-center ml-5">
-        <ImageGallery
-          items={images}
-          showThumbnails={false}
-          showPlayButton={false}
-          showBullets={true}
-          showNav={false}
-          showFullscreenButton={false}
-          autoPlay={true}
-          slideInterval={7500}
-        />
+        <div>
+          <h1 className='text-4xl font-extralight'>{secondTitle.toUpperCase()}</h1>
+          <p className='md:my-10 my-2 whitespace-pre-line'>{secondText}</p>
+        </div>
       </div>
     </div>
   );

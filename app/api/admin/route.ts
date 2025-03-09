@@ -13,13 +13,15 @@ import { hometable } from './../../../db/schema';
  */
 export async function POST(req: NextRequest) {
     /* PARSE REQUEST BODY */
-    const { title, text, images } = await req.json();
+    const { title, text, images, secondTitle, secondText } = await req.json();
 
     /* VALIDATE REQUEST BODY */
     const data = {
         about_title: title,
         about_text: text,
         about_images: images, 
+        second_title: secondTitle,
+        second_text: secondText
     };
 
     /* CLEAR TABLE */

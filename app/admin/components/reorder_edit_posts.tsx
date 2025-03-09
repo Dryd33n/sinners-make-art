@@ -417,13 +417,12 @@ export default function ReorderEditPosts(): JSX.Element {
             {/* SELECT CATEGORY */}
             <div className="basis-1/6">
                 <div className="mb-4">
-                    <label htmlFor="title" className="block text-lg font-medium mb-4">
-                        Manage Posts Under Category:
-                    </label>
-                    <PathSelector selectedPathMsg="Viewing Posts Tagged As:" 
-                                  excludeOverriden={true} onSelect={(path) => 
-                                  handleTagChange(path)}
-                                  selectedPath={tag || { id: -1, path: '', linkOverride: '' }}/>
+                    <div>
+                        <PathSelector selectedPathMsg="Viewing Posts Tagged As:"
+                                      excludeOverriden={true} onSelect={(path) =>
+                                      handleTagChange(path)}
+                                      selectedPath={tag || { id: -1, path: '', linkOverride: '' }}/>
+                    </div>
                 </div>
             </div>
 
@@ -431,9 +430,11 @@ export default function ReorderEditPosts(): JSX.Element {
 
             <div className="basis-1/6">
                 <div className="mb-4">
-                    <label htmlFor="title" className="block text-lg font-medium mb-[50]">
+                    <label htmlFor="title" className="block text-lg font-medium mb-[10]">
                         Posts Tagged with {tag?.path || "None"}:
                     </label>
+                    {reorderPostErrorMessage && <p className="text-red-500">{reorderPostErrorMessage}</p>}
+                    {reorderPostSuccessMessage && <p className="text-green-500">{reorderPostSuccessMessage}</p>}    
                     {tag ? (<div className="h-[500] overflow-y-auto bg-grey-700 rounded-md p-2">
                         {filteredPosts.length > 0 ? (
                             filteredPosts.map((post, index) => (
@@ -445,7 +446,7 @@ export default function ReorderEditPosts(): JSX.Element {
                                     `}
                                 >
                                     <h3 className="text-lg font-semibold text-white">{post.title}</h3>
-                                    <p className="text-sm text-grey-400">{post.description}</p>
+                                    <p className="text-sm text-grey-400">{post.description.length > 100 ? post.description.slice(0,100) + "..." : post.description}</p>
                                     <span className="text-sm text-grey-500">Type: {post.type}</span>
 
                                     {/* Action Buttons */}
@@ -479,8 +480,7 @@ export default function ReorderEditPosts(): JSX.Element {
                     </div>) : (<h1 className="font-bold text-red-500">SELECT A CATEGORY FIRST</h1>)}
                 </div>
 
-                {reorderPostErrorMessage && <p className="text-red-500">{reorderPostErrorMessage}</p>}
-                {reorderPostSuccessMessage && <p className="text-green-500">{reorderPostSuccessMessage}</p>}
+                
             </div>
 
 
