@@ -31,7 +31,6 @@ export default function NewPost(): JSX.Element {
     const [title, setTitle] = useState("");
     const [paragraph, setParagraph] = useState("");
     const [imagePost, setImagePost] = useState(true);
-    const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
     /* CONTENT VARS */
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
     const [allImagesValid, setAllImagesValid] = useState<boolean>(false);
@@ -125,7 +124,7 @@ export default function NewPost(): JSX.Element {
                     content: imagePost ? csvString : videoString,
                     tag: tag?.path,
                     order: maxOrder + 1,
-                    portfolio: includeInPortfolio,
+                    portfolio: false,
                 }),
             });
     

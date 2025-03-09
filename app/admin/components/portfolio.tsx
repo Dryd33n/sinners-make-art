@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import PathSelector from "./shared/path_selector";
 import { PostItem } from "@/db/schema";
 
@@ -15,10 +15,6 @@ export default function Portfolio(): JSX.Element {
     {/* STATUS MESSAGES */ }
     const [reorderPostSuccessMessage, setReorderPostSuccessMessage] = useState("");
     const [reorderPostErrorMessage, setReorderPostErrorMessage] = useState("");
-    const [updatePostSuccessMessage, setUpdateSuccessMessage] = useState("");
-    const [updatePostErrorMessage, setUpdateErrorMessage] = useState("");
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     {/* POST TAGS */ }
     const [tag, setTag] = useState<PathItem>();
@@ -31,14 +27,7 @@ export default function Portfolio(): JSX.Element {
     // PORTFOLIO POSTS
     const [portfolioPosts, setPortfolioPosts] = useState<PostItem[]>([]);
 
-    /* FORM VARS */
-    const [title, setTitle] = useState("");
-    const [paragraph, setParagraph] = useState("");
-    const [imagePost, setImagePost] = useState(true);
-    const [allImagesValid, setAllImagesValid] = useState(false);
-    const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
-    const [newTag, setNewTag] = useState<PathItem>();
-    /* CONTENT VARS */
+
 
 
 
@@ -54,7 +43,7 @@ export default function Portfolio(): JSX.Element {
      * @async
      * @returns {Promise<void>} A promise that resolves when the posts have been fetched and the state has been updated.
      */
-    const fetchPosts = async (): Promise<void> => {
+    const fetchPosts = useCallback(async (): Promise<void> => {
         try {
             const response = await fetch('/api/posts');
             const result = await response.json();
@@ -77,10 +66,10 @@ export default function Portfolio(): JSX.Element {
             setReorderPostSuccessMessage('');
             setReorderPostErrorMessage('Error fetching posts');
         }
-    }
+    }, []);
 
     // Fetch posts on component mount
-    useEffect(() => { fetchPosts();}, []);
+    useEffect(() => { fetchPosts();}, [fetchPosts]);
 
 
 
