@@ -162,19 +162,7 @@ export default function NewPost(): JSX.Element {
                                       selectedPathMsg="Post Classified Under:"
                                       selectedPath={tag ?? { id: -1, path: "", linkOverride: "" }}/>
 
-                        {/* Include in Portfolio Checkbox */}
-                        <div className="mb-4">
-                            <label className="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    checked={includeInPortfolio}
-                                    onChange={(e) => setIncludeInPortfolio(e.target.checked)}
-                                    className="form-checkbox h-5 w-5 text-blue-600"
-                                />
-                                <span className="ml-2 text-lg font-medium">Include in Portfolio</span>
-                            </label>
-                        </div>
-
+                       
                     </div>
 
                     {/* Middle */}

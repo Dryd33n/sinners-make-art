@@ -167,7 +167,7 @@ export default function Portfolio(): JSX.Element {
         }
     }
 
-    const fetchPortfolio = async (posts): Promise<void> => {
+    const fetchPortfolio = async (posts: PostItem[]): Promise<void> => {
         try {
             const response = await fetch('/api/manage_portfolio');
             const result = await response.json();
@@ -177,13 +177,11 @@ export default function Portfolio(): JSX.Element {
                 console.log("result: ", result.data);
 
                 //create an array of post id's in result.data
-                const postIds = result.data.map((post: { post_id: number }) => post.post_id);
+                const postIds = result.data.map((post: { post_id: number, order: number }) => post.post_id);
                 console.log("postIds: ", postIds);
 
-                console.log("All posts from portfolio fetch: ", posts);
-
-                // create a new array based of allPosts that have an id in postIds
-                const portfolioPosts = posts.filter((post) => postIds.includes(post.id));
+                // create a new array based of allPosts that have an id in postIds while mainting the order
+                const portfolioPosts = postIds.map((id: number) => posts.find((post) => post.id === id));
 
                 console.log("Portfolio posts: ", portfolioPosts);
 
