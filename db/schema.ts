@@ -238,6 +238,12 @@ export type EducationField = {
   order: number;
 }
 
+export const portfolio = pgTable("portfolio", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "portfolio_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
+  post_id: integer().notNull(),
+  order: integer().notNull(),
+});
+
 
 
 
