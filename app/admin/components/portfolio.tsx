@@ -43,6 +43,39 @@ export default function Portfolio(): JSX.Element {
      * @async
      * @returns {Promise<void>} A promise that resolves when the posts have been fetched and the state has been updated.
      */
+    const fetchPortfolio = useCallback(async (posts: PostItem[]): Promise<void> => {
+        try {
+            const response = await fetch('/api/manage_portfolio');
+            const result = await response.json();
+
+            if (result.success) {
+                // find posts with id equal to post_id in result.data
+                console.log("result: ", result.data);
+
+                //create an array of post id's in result.data
+                const postIds = result.data.map((post: { post_id: number, order: number }) => post.post_id);
+                console.log("postIds: ", postIds);
+
+                // create a new array based of allPosts that have an id in postIds while mainting the order
+                const portfolioPosts = postIds.map((id: number) => posts.find((post) => post.id === id));
+
+                console.log("Portfolio posts: ", portfolioPosts);
+
+                setPortfolioPosts(portfolioPosts);
+                setReorderPostErrorMessage('');
+                setReorderPostSuccessMessage('Portfolio successfully loaded');
+            } else {
+                console.error('Failed to fetch portfolio');
+                setReorderPostSuccessMessage('');
+                setReorderPostErrorMessage('Failed to fetch portfolio');
+            }
+        } catch (error) {
+            console.error('Error fetching portfolio:', error);
+            setReorderPostSuccessMessage('');
+            setReorderPostErrorMessage('Error fetching portfolio');
+        }
+    }, []);
+
     const fetchPosts = useCallback(async (): Promise<void> => {
         try {
             const response = await fetch('/api/posts');
@@ -66,7 +99,7 @@ export default function Portfolio(): JSX.Element {
             setReorderPostSuccessMessage('');
             setReorderPostErrorMessage('Error fetching posts');
         }
-    }, []);
+    }, [fetchPortfolio]);
 
     // Fetch posts on component mount
     useEffect(() => { fetchPosts();}, [fetchPosts]);
@@ -156,38 +189,7 @@ export default function Portfolio(): JSX.Element {
         }
     }
 
-    const fetchPortfolio = async (posts: PostItem[]): Promise<void> => {
-        try {
-            const response = await fetch('/api/manage_portfolio');
-            const result = await response.json();
 
-            if (result.success) {
-                // find posts with id equal to post_id in result.data
-                console.log("result: ", result.data);
-
-                //create an array of post id's in result.data
-                const postIds = result.data.map((post: { post_id: number, order: number }) => post.post_id);
-                console.log("postIds: ", postIds);
-
-                // create a new array based of allPosts that have an id in postIds while mainting the order
-                const portfolioPosts = postIds.map((id: number) => posts.find((post) => post.id === id));
-
-                console.log("Portfolio posts: ", portfolioPosts);
-
-                setPortfolioPosts(portfolioPosts);
-                setReorderPostErrorMessage('');
-                setReorderPostSuccessMessage('Portfolio successfully loaded');
-            } else {
-                console.error('Failed to fetch portfolio');
-                setReorderPostSuccessMessage('');
-                setReorderPostErrorMessage('Failed to fetch portfolio');
-            }
-        } catch (error) {
-            console.error('Error fetching portfolio:', error);
-            setReorderPostSuccessMessage('');
-            setReorderPostErrorMessage('Error fetching portfolio');
-        }
-    }
 
 
 
