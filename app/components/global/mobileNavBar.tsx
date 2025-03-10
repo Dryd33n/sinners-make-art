@@ -118,19 +118,18 @@ interface MobileNavButtonProps {
     links: MenuLink[];
 }
 
-const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, links }) => {
+const MobileNavButton: React.FC<MobileNavButtonProps> = ({ text, link, links }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (<>
         <div className="mb-2">
             {/* Main Menu Item */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
                 className="flex justify-between items-center w-full px-4 py-2 bg-grey-800 text-left hover:bg-grey-700"
                 aria-label={`Toggle ${text} Menu`}
             >
-                <span>{text.toUpperCase()}</span>
-                <span>{isOpen ? "-" : "+"}</span>
+                <Link href={convertToDestinationLink(link)}><span>{text.toUpperCase()}</span></Link>
+                <span onClick={() => setIsOpen(!isOpen)} className="min-w-16 text-right">{isOpen ? "-" : "+"}</span>
             </button>
 
             {/* Submenu */}
