@@ -10,6 +10,7 @@ import ExpandableSection from './components/shared/expandable_section';
 import Tooltip from './components/shared/tooltip';
 import SocialLinks from './components/social_links';
 import ManageCv from './components/manage_cv';
+import Portfolio from './components/portfolio';
 
 export const metadata = {
   title: 'Admin Panel',
@@ -46,6 +47,10 @@ export default async function AdminPage() {
 
       <ExpandableSection title="Manage CV">
         <ManageCv />
+      </ExpandableSection>
+
+      <ExpandableSection title="Manage Portfolio">
+        <Portfolio />
       </ExpandableSection>
 
       <h1 className='text-3xl font-extralight mx-14 mb-5 mt-10'>MANAGE POSTS:</h1>

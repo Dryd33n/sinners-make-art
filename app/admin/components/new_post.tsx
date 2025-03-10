@@ -31,7 +31,6 @@ export default function NewPost(): JSX.Element {
     const [title, setTitle] = useState("");
     const [paragraph, setParagraph] = useState("");
     const [imagePost, setImagePost] = useState(true);
-    const [includeInPortfolio, setIncludeInPortfolio] = useState(false);
     /* CONTENT VARS */
     const [imageLinks, setImageLinks] = useState<string[]>([""]);
     const [allImagesValid, setAllImagesValid] = useState<boolean>(false);
@@ -125,7 +124,7 @@ export default function NewPost(): JSX.Element {
                     content: imagePost ? csvString : videoString,
                     tag: tag?.path,
                     order: maxOrder + 1,
-                    portfolio: includeInPortfolio,
+                    portfolio: false,
                 }),
             });
     
@@ -162,19 +161,7 @@ export default function NewPost(): JSX.Element {
                                       selectedPathMsg="Post Classified Under:"
                                       selectedPath={tag ?? { id: -1, path: "", linkOverride: "" }}/>
 
-                        {/* Include in Portfolio Checkbox */}
-                        <div className="mb-4">
-                            <label className="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    checked={includeInPortfolio}
-                                    onChange={(e) => setIncludeInPortfolio(e.target.checked)}
-                                    className="form-checkbox h-5 w-5 text-blue-600"
-                                />
-                                <span className="ml-2 text-lg font-medium">Include in Portfolio</span>
-                            </label>
-                        </div>
-
+                       
                     </div>
 
                     {/* Middle */}
